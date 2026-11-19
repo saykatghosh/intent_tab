@@ -190,3 +190,5 @@ All visible text lives in `js/strings.js`, in the `en` and `bn` blocks. To chang
 ## Stored data
 
 `chrome.storage.local` keys: `settings`, `intent`, `ask` (last tab time and snooze), `todos`, `notes`, `focus` (today’s one thing), `focusAllow` (sites opened “anyway” for 5 minutes), `projects`, `sound`, `bgPhoto`, `icons` (custom tile icons), `history` (recent intents, for suggestions and summaries), `aiCache` (cached AI suggestions and summaries), `ui`, and `days` (per-day counts, kept for 60 days). Removing the extension deletes all of it.
+#   i n t e n t _ t a b  
+ 
