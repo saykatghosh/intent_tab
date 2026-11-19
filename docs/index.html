@@ -22,6 +22,7 @@
   <div class="wrap">
     <a class="brand" href="#top"><img src="assets/logo.svg" alt="" width="34" height="34">Intent <em>Tab</em></a>
     <nav class="nav-links" aria-label="Sections">
+      <a href="#video">Video</a>
       <a href="#how">How it works</a>
       <a href="#features">Features</a>
       <a href="#tour">Tour</a>
@@ -48,7 +49,10 @@
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
             Download for Chrome
           </a>
-          <a class="btn btn-ghost" href="#tour">See it in action</a>
+          <a class="btn btn-ghost" href="#video" data-play-from="0">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>
+            Watch the video
+          </a>
         </div>
         <p class="fine"><span>Free</span><span>No account</span><span>Nothing leaves your computer</span><span>English &amp; বাংলা</span></p>
       </div>
@@ -124,6 +128,28 @@
         <div><b>0</b><span>servers or accounts</span></div>
         <div><b>~240 KB</b><span>light as a feather</span></div>
         <div><b>2</b><span>languages: EN · বাংলা</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Video ================= -->
+  <section id="video" class="video-sec">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Watch · 90 seconds</span>
+        <h2 class="serif h2">See it <span class="grad">in action</span></h2>
+        <p class="lead">A quick tour of what Intent Tab does, then a step-by-step install guide. Bangla voice-over and captions.</p>
+      </div>
+      <div class="video-frame">
+        <video id="promoVideo" controls playsinline preload="none" poster="assets/video/poster.jpg" width="1920" height="1080">
+          <source src="assets/video/intent-tab-bn.mp4" type="video/mp4">
+        </video>
+      </div>
+      <div class="chapters" aria-label="Jump to">
+        <button type="button" data-play-from="0"><b>0:00</b> What it is</button>
+        <button type="button" data-play-from="12"><b>0:12</b> Features</button>
+        <button type="button" data-play-from="38"><b>0:38</b> Meet Intent</button>
+        <button type="button" data-play-from="48"><b>0:48</b> How to install</button>
       </div>
     </div>
   </section>
@@ -373,6 +399,10 @@
             <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
             Download intent-tab.zip
           </a>
+          <a class="btn btn-ghost" href="#video" data-play-from="48">
+            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg>
+            Watch how to install
+          </a>
           <div class="lang-switch" role="group" aria-label="Language">
             <button type="button" data-lang="en" aria-pressed="true">English</button>
             <button type="button" data-lang="bn" aria-pressed="false">বাংলা</button>
@@ -467,6 +497,20 @@
     }
     tabs.forEach(function (t, i) { t.addEventListener('click', function () { show(i); }); });
     show(0);
+  })();
+
+  // Video: "Watch" buttons and chapters jump to a moment and play
+  (function () {
+    var video = document.getElementById('promoVideo');
+    document.querySelectorAll('[data-play-from]').forEach(function (b) {
+      b.addEventListener('click', function (e) {
+        e.preventDefault();
+        var at = Number(b.dataset.playFrom) || 0;
+        document.getElementById('video').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        var go = function () { video.currentTime = at; var p = video.play(); if (p && p.catch) p.catch(function () {}); };
+        if (video.readyState >= 1) go(); else { video.addEventListener('loadedmetadata', go, { once: true }); video.load(); }
+      });
+    });
   })();
 
   // Install steps: English / বাংলা (remembered on this device only)
