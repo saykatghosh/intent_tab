@@ -33,10 +33,10 @@ Most tabs are opened out of habit. Intent Tab asks you why you opened each one, 
 
 | | |
 |:---:|:---:|
-| <img src="store/screenshots/1-intent-light.png" alt="The intent question in light mode"> | <img src="store/screenshots/2-ai-coach-dark.png" alt="The AI coach in dark mode"> |
-| **The question:** set an intent in one click | **AI coach:** a clear goal, a timer and tiny steps |
-| <img src="store/screenshots/3-command-palette.png" alt="The command palette"> | <img src="store/screenshots/4-breathing-week.png" alt="A breathing break and the weekly report"> |
-| **Ctrl+K:** do anything from the keyboard | **Breaks and report:** breathing, plus a week in review |
+| <img src="store/screenshots/1-intent-light.png" alt="The intent question in light mode"> | <img src="store/screenshots/2-cosmos-dark.png" alt="The quiet centre with the Cosmos background and the robot"> |
+| **The question:** set an intent in one click | **Cosmos:** next task, focus time and Intent the robot |
+| <img src="store/screenshots/3-command-palette.png" alt="The command palette"> | <img src="store/screenshots/4-project-view.png" alt="A project with its tasks, progress and links"> |
+| **Ctrl+K:** do anything from the keyboard | **Projects:** tasks, progress and links in one popup |
 
 <p align="center"><img src="store/screenshots/5-focus-mode.png" alt="Focus mode page" width="70%"><br><b>Focus mode:</b> distracting sites can wait while an intent runs</p>
 

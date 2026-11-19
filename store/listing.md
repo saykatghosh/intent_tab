@@ -88,9 +88,9 @@ Intent Tab replaces the new tab page with a calm start page that helps people op
 
 ## Store graphics (in this folder)
 - `screenshots/1-intent-light.png` (1280×800)
-- `screenshots/2-ai-coach-dark.png` (1280×800)
+- `screenshots/2-cosmos-dark.png` (1280×800)
 - `screenshots/3-command-palette.png` (1280×800)
-- `screenshots/4-breathing-week.png` (1280×800)
+- `screenshots/4-project-view.png` (1280×800)
 - `screenshots/5-focus-mode.png` (1280×800)
 - `promo-small-440x280.png`: small promo tile
 - `promo-marquee-1400x560.png`: marquee promo tile

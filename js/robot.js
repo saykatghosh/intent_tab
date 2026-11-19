@@ -88,15 +88,28 @@ function pickAnchor() {
   return ids.map($).find((el) => el && !el.hidden && el.offsetParent !== null) || null;
 }
 
-function place() {
+function place(depth = 0) {
   anchor = enabled ? pickAnchor() : null;
   const show = !!anchor;
   [robot, hands, bubble].forEach((el) => el.classList.toggle('is-gone', !show));
   // The column the robot sits on gets a little headroom, so the robot never covers the clock.
-  document.querySelectorAll('.tabi-col').forEach((col) => { if (!anchor || col !== anchor.parentElement) col.classList.remove('tabi-col'); });
+  document.querySelectorAll('.tabi-col').forEach((col) => { if (!anchor || col !== anchor.parentElement) { col.classList.remove('tabi-col'); col.style.paddingTop = ''; } });
   if (!show) return;
   anchor.parentElement.classList.add('tabi-col');
   const r = anchor.getBoundingClientRect();
+  // On shorter/narrower windows the robot could still cover the clock's date line:
+  // push the column down just enough (only grows; reset on window resize).
+  const clock = document.querySelector('.clock');
+  if (clock && depth < 2) {
+    const c = clock.getBoundingClientRect();
+    const left = r.right - 158;
+    const need = c.bottom + 8 - (r.top - 104);
+    if (need > 0.5 && left < c.right && left + 140 > c.left) {
+      const col = anchor.parentElement;
+      col.style.paddingTop = (parseFloat(getComputedStyle(col).paddingTop) + need) + 'px';
+      return place(depth + 1);
+    }
+  }
   const x = r.right + window.scrollX - 158;
   const y = r.top + window.scrollY;
   robot.style.left = x + 'px';
@@ -107,13 +120,16 @@ function place() {
   bubble.style.left = (x + 128) + 'px';
   bubble.style.maxWidth = Math.max(180, Math.min(360, window.innerWidth - (x + 128) - 16)) + 'px';
   // Sit above the search bar, never on top of it.
+  // ...and below the bookmarks bar, never over it.
+  const bar = $('bookmarksModule');
+  const floor = bar && !bar.hidden ? bar.getBoundingClientRect().bottom + window.scrollY + 8 : 8;
   const search = $('searchForm').getBoundingClientRect();
   const limit = search.top + window.scrollY - bubble.offsetHeight - 12;
-  bubble.style.top = Math.max(8, Math.min(y - 150, limit)) + 'px';
+  bubble.style.top = Math.max(floor, Math.min(y - 150, limit)) + 'px';
   if (x + 128 + 180 > window.innerWidth) {
     // No room on the right: put the bubble above-left instead.
     bubble.style.left = Math.max(8, x - 150) + 'px';
-    bubble.style.top = Math.max(8, y - 190) + 'px';
+    bubble.style.top = Math.max(floor, y - 190) + 'px';
     bubble.classList.add('is-above');
   } else {
     bubble.classList.remove('is-above');
@@ -290,11 +306,14 @@ export async function initRobot(on = true) {
   await refresh();
 
   // The robot is positioned in page coordinates, so scrolling never needs a re-place.
-  const placeSoon = perFrame(place);
+  const placeSoon = perFrame(() => place()); // never pass event args as "depth"
   window.addEventListener('pointermove', perFrame(lookAt), { passive: true });
-  window.addEventListener('resize', placeSoon);
+  window.addEventListener('resize', () => {
+    document.querySelectorAll('.tabi-col').forEach((col) => { col.style.paddingTop = ''; });
+    placeSoon();
+  });
   new ResizeObserver(placeSoon).observe(document.querySelector('.layout'));
-  document.addEventListener('intent:settings', () => setTimeout(place, 50));
+  document.addEventListener('intent:settings', () => setTimeout(() => place(), 50));
   document.addEventListener('intent:lang', () => { robot.title = t('tabiLabel'); refresh(); });
   chrome.storage.onChanged.addListener(async (c, area) => {
     if (area !== 'local' || !(c.todos || c.focus || c.intent)) return;
