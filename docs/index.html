@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Intent Tab — open tabs on purpose</title>
+  <meta name="description" content="A calm new tab for Chrome that asks why you opened it. Focus timer, to-dos, projects, bookmarks bar, Ctrl+K palette and private on-device AI. Free, no account, nothing leaves your computer.">
+  <meta name="theme-color" content="#07061a">
+  <link rel="icon" type="image/png" href="assets/favicon.png">
+  <link rel="apple-touch-icon" href="assets/icon128.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Intent Tab — open tabs on purpose">
+  <meta property="og:description" content="A calm new tab that asks why you opened it. Free, private, no account.">
+  <meta property="og:image" content="assets/og.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preload" href="assets/fonts/instrument-serif.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/logo.svg" alt="" width="34" height="34">Intent <em>Tab</em></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#how">How it works</a>
+      <a href="#features">Features</a>
+      <a href="#tour">Tour</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="btn btn-primary btn-sm" href="#install">Get it free</a>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- ================= Hero ================= -->
+  <section class="hero">
+    <div class="aurora" aria-hidden="true"></div>
+    <div class="wrap">
+      <div class="hero-copy">
+        <img class="hero-logo" src="assets/logo.svg" alt="" width="88" height="88">
+        <span class="eyebrow">Free for Chrome · Version 1.4</span>
+        <h1 class="serif">Open tabs<br><span class="grad">on purpose.</span></h1>
+        <p class="lead">Every new tab asks one gentle question: <b>why are you here?</b> Then it helps you stay on it, with a focus timer, your to-dos, your projects and a friendly robot called Intent.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="download/intent-tab.zip" download>
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+            Download for Chrome
+          </a>
+          <a class="btn btn-ghost" href="#tour">See it in action</a>
+        </div>
+        <p class="fine"><span>Free</span><span>No account</span><span>Nothing leaves your computer</span><span>English &amp; বাংলা</span></p>
+      </div>
+
+      <div class="hero-visual">
+        <div class="peek" aria-hidden="true"><svg class="tabi-svg" viewBox="0 0 140 150" aria-hidden="true">
+  <defs>
+    <linearGradient id="tabiShell" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7f9ff"/><stop offset="1" stop-color="#c9d2ea"/>
+    </linearGradient>
+    <linearGradient id="tabiVisor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b2550"/><stop offset="1" stop-color="#0a0f26"/>
+    </linearGradient>
+    <radialGradient id="tabiGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" style="stop-color: var(--tabi-eye); stop-opacity: .9"/><stop offset="1" style="stop-color: var(--tabi-eye); stop-opacity: 0"/>
+    </radialGradient>
+  </defs>
+  
+  <g class="tabi-arm">
+    <path d="M104 96 C 116 88, 122 74, 124 60" stroke="#c9d2ea" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <circle cx="124" cy="56" r="9" fill="url(#tabiShell)" stroke="#aab5d4" stroke-width="1.5"/>
+  </g>
+  
+  <rect x="38" y="92" width="64" height="58" rx="18" fill="url(#tabiShell)" stroke="#aab5d4" stroke-width="1.5"/>
+  <circle class="tabi-heart" cx="70" cy="112" r="5"/>
+  
+  <line x1="70" y1="24" x2="70" y2="10" stroke="#aab5d4" stroke-width="3" stroke-linecap="round"/>
+  <circle class="tabi-bulb-glow" cx="70" cy="8" r="10" fill="url(#tabiGlow)"/>
+  <circle class="tabi-bulb" cx="70" cy="8" r="5"/>
+  
+  <rect x="17" y="46" width="12" height="24" rx="6" fill="#b9c3df"/>
+  <rect x="111" y="46" width="12" height="24" rx="6" fill="#b9c3df"/>
+  
+  <g class="tabi-head">
+    <rect x="24" y="22" width="92" height="72" rx="28" fill="url(#tabiShell)" stroke="#aab5d4" stroke-width="1.5"/>
+    <rect x="34" y="34" width="72" height="46" rx="20" fill="url(#tabiVisor)"/>
+    <ellipse cx="56" cy="42" rx="14" ry="4" fill="#fff" opacity=".12"/>
+    <g class="tabi-eyes">
+      <g class="tabi-eye-l"><ellipse class="tabi-eye" cx="55" cy="56" rx="7" ry="9"/><circle class="tabi-pupil" cx="57" cy="53" r="2.4" fill="#fff"/></g>
+      <g class="tabi-eye-r"><ellipse class="tabi-eye" cx="85" cy="56" rx="7" ry="9"/><circle class="tabi-pupil" cx="87" cy="53" r="2.4" fill="#fff"/></g>
+    </g>
+    
+    <g class="tabi-happy" fill="none" stroke-width="4" stroke-linecap="round">
+      <path d="M48 58 Q55 49 62 58"/><path d="M78 58 Q85 49 92 58"/>
+    </g>
+    <path class="tabi-mouth" d="M62 69 Q70 75 78 69" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="42" cy="70" r="4.5" fill="#ff8fb0" opacity=".45"/>
+    <circle cx="98" cy="70" r="4.5" fill="#ff8fb0" opacity=".45"/>
+  </g>
+</svg></div>
+        <div class="peek-hands" aria-hidden="true"><i></i><i></i></div>
+        <div class="frame">
+          <div class="frame-bar" aria-hidden="true"><i></i><i></i><i></i><span><img src="assets/favicon.png" alt="">New Tab</span></div>
+          <img src="assets/shots/2-cosmos-dark.png" width="1280" height="800" alt="Intent Tab in dark mode: a starry background, the greeting “Good morning.”, the next task, focus time today, a to-do list, a daily report and the robot Intent offering today’s goal.">
+        </div>
+
+        <div class="float float-1" aria-hidden="true">
+          <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg></span>
+          <span>Focus today<b>1h 35m</b></span>
+        </div>
+        <div class="float float-2" aria-hidden="true">
+          <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></span>
+          <span>Intent Tab project<b>3 of 5 done</b><span class="mini-bar"><i></i></span></span>
+        </div>
+        <div class="float float-3" aria-hidden="true">
+          <span class="ico"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.5l1.8 5.7 5.7 1.8-5.7 1.8L12 17.5l-1.8-5.7L4.5 10l5.7-1.8z"/></svg></span>
+          <span>On-device AI<b>100% private</b></span>
+        </div>
+      </div>
+
+      <div class="stats">
+        <div><b>0</b><span>trackers or ads</span></div>
+        <div><b>0</b><span>servers or accounts</span></div>
+        <div><b>~240 KB</b><span>light as a feather</span></div>
+        <div><b>2</b><span>languages: EN · বাংলা</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- ================= How it works ================= -->
+  <section id="how">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">How it works</span>
+        <h2 class="serif h2">One question. <span class="grad">A calmer day.</span></h2>
+        <p class="lead">Most tabs are opened out of habit. Intent Tab adds one small, kind pause.</p>
+      </div>
+      <div class="flow">
+        <article>
+          <div class="num">1</div>
+          <h3>Open a new tab</h3>
+          <p>It asks why you’re here. Type a reason or pick a chip; it takes two seconds, and Esc always skips.</p>
+        </article>
+        <article>
+          <div class="num">2</div>
+          <h3>Stay on it</h3>
+          <p>Your intent shows big with a focus timer. Distracting sites can wait, and calm sounds can play.</p>
+        </article>
+        <article>
+          <div class="num">3</div>
+          <h3>Finish and feel it</h3>
+          <p>Press Done. Your focus time, streak and a facts-only report grow, without guilt.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Features (bento) ================= -->
+  <section id="features">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Everything on one calm page</span>
+        <h2 class="serif h2">Less habit. <span class="grad">More intent.</span></h2>
+      </div>
+
+      <div class="bento">
+        <article class="card s8 r2 hero-card">
+          <div class="ring-demo">
+            <svg viewBox="0 0 120 120" aria-hidden="true">
+              <defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5ff2d2"/><stop offset="1" stop-color="#8a7bff"/></linearGradient></defs>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="7"/>
+              <circle cx="60" cy="60" r="50" fill="none" stroke="url(#rg)" stroke-width="7" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="110" transform="rotate(-90 60 60)"/>
+              <text x="60" y="68" text-anchor="middle" fill="#f4f2ff" font-family="Inter, sans-serif" font-size="22" font-weight="300">16:24</text>
+            </svg>
+            <div>
+              <div class="say"><small>Your intent</small>Ship the landing page</div>
+              <div class="chips"><span>5 min</span><span>10 min</span><span>25 min</span><span>50 min</span></div>
+            </div>
+          </div>
+          <div>
+            <span class="tag">The heart of it</span>
+            <h3>Intent &amp; focus timer</h3>
+            <p>Say why you opened the tab and it stays in front of you, big and calm, with a timer from 5 to 50 minutes, a gentle “Time’s up” and a breathing break after long sessions.</p>
+          </div>
+        </article>
+
+        <article class="card s4">
+          <div class="vis" style="display:flex;align-items:center;gap:16px">
+            <div class="prog-ring">60%</div>
+            <div class="fav-row" style="margin:0"><i style="background:#24292f">G</i><i style="background:#a259ff">F</i><i style="background:#5e6ad2">L</i><i style="background:#10a37f">L</i></div>
+          </div>
+          <h3>Projects</h3>
+          <p>Links and tasks for each project, with a progress ring, one click away.</p>
+        </article>
+
+        <article class="card s4">
+          <div class="vis wait"><span>youtube.com</span><br>can wait.</div>
+          <h3>Focus mode</h3>
+          <p>Sites you pick show a calm reminder while an intent runs. You can always open them anyway.</p>
+        </article>
+
+        <article class="card s6">
+          <div class="vis pal" aria-hidden="true">
+            <div class="pal-in"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg>intent<kbd>Ctrl K</kbd></div>
+            <div class="pal-row on"><i style="background:#24292f">G</i>Intent Tab › Repo<em>github.com</em></div>
+            <div class="pal-row"><i style="background:#10a37f">L</i>Intent Tab › Local<em>localhost:5173</em></div>
+          </div>
+          <h3>Ctrl+K command palette</h3>
+          <p>Open any project link or bookmark, add to-dos, set intents and change settings from the keyboard.</p>
+        </article>
+
+        <article class="card s6">
+          <div class="vis ai-line">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.5l1.8 5.7 5.7 1.8-5.7 1.8L12 17.5l-1.8-5.7L4.5 10l5.7-1.8z"/></svg>
+            <span>Goal: ship the hero section. Try 25 minutes. Steps: write the headline, pick the screenshot, polish the button.</span>
+          </div>
+          <h3>Private on-device AI</h3>
+          <p>Suggestions, a coach, a day summary and Ask AI from Chrome’s built-in Gemini Nano. Nothing is sent anywhere.</p>
+        </article>
+
+        <article class="card s3">
+          <div class="small-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7l2 2 4-4M4 17l2 2 4-4M13 7h7M13 17h7"/></svg></div>
+          <h3>To-do &amp; one thing</h3>
+          <p>Daily tasks, a 7-day chart and one goal for the day.</p>
+        </article>
+        <article class="card s3">
+          <div class="small-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="13" r="7.5"/><path d="M12 9v4l2.5 2M9.5 2.5h5"/></svg></div>
+          <h3>Focus time</h3>
+          <p>How long you really focused today, counted honestly.</p>
+        </article>
+        <article class="card s3">
+          <div class="small-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"><path d="M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z"/></svg></div>
+          <h3>Bookmarks bar</h3>
+          <p>Folders, drag and drop, right-click menu and custom icons.</p>
+        </article>
+        <article class="card s3">
+          <div class="small-ico"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 7l-5 5 5 5M15 7l5 5-5 5"/></svg></div>
+          <h3>Developer tools</h3>
+          <p>JSON, JWT, colours, regex, units and <code>gh</code> <code>npm</code> shortcuts.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Tour ================= -->
+  <section id="tour">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Take a look</span>
+        <h2 class="serif h2">A quick <span class="grad">tour</span></h2>
+      </div>
+      <div class="tabs" role="tablist" aria-label="Screenshots">
+        <button class="tab" role="tab" aria-selected="true">The question</button>
+        <button class="tab" role="tab" aria-selected="false">Cosmos</button>
+        <button class="tab" role="tab" aria-selected="false">Ctrl+K</button>
+        <button class="tab" role="tab" aria-selected="false">Projects</button>
+        <button class="tab" role="tab" aria-selected="false">Focus mode</button>
+      </div>
+      <figure class="gallery" style="margin:0 auto">
+        <div class="frame">
+          <div class="frame-bar" aria-hidden="true"><i></i><i></i><i></i><span><img src="assets/favicon.png" alt="">New Tab</span></div>
+          <img id="shot" src="assets/shots/1-intent-light.png" width="1280" height="800" alt="" loading="lazy">
+        </div>
+        <figcaption id="shotCaption"></figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ================= Robot ================= -->
+  <section class="robot-sec">
+    <div class="wrap">
+      <div>
+        <span class="eyebrow">Meet your companion</span>
+        <h2 class="serif h2">Say hi to <span class="grad">Intent.</span></h2>
+        <p class="lead">A small robot that peeks over your To-do card. It points at the task to do next, keeps watch while you focus, breathes with you on breaks and hops for joy when you finish something.</p>
+        <div class="bubbles">
+          <div class="bubble"><b>Intent</b>Let’s do this one 👉 Ship the landing page</div>
+          <div class="bubble"><b>Intent</b>Focusing on “Write the docs”. I’ll keep watch 👀</div>
+          <div class="bubble"><b>Intent</b>Everything’s done! Look at you go 🎉</div>
+        </div>
+      </div>
+      <div class="stage" aria-hidden="true">
+        <svg class="tabi-svg" viewBox="0 0 140 150" aria-hidden="true">
+  <defs>
+    <linearGradient id="tabiShell" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7f9ff"/><stop offset="1" stop-color="#c9d2ea"/>
+    </linearGradient>
+    <linearGradient id="tabiVisor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b2550"/><stop offset="1" stop-color="#0a0f26"/>
+    </linearGradient>
+    <radialGradient id="tabiGlow" cx=".5" cy=".5" r=".5">
+      <stop offset="0" style="stop-color: var(--tabi-eye); stop-opacity: .9"/><stop offset="1" style="stop-color: var(--tabi-eye); stop-opacity: 0"/>
+    </radialGradient>
+  </defs>
+  
+  <g class="tabi-arm">
+    <path d="M104 96 C 116 88, 122 74, 124 60" stroke="#c9d2ea" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <circle cx="124" cy="56" r="9" fill="url(#tabiShell)" stroke="#aab5d4" stroke-width="1.5"/>
+  </g>
+  
+  <rect x="38" y="92" width="64" height="58" rx="18" fill="url(#tabiShell)" stroke="#aab5d4" stroke-width="1.5"/>
+  <circle class="tabi-heart" cx="70" cy="112" r="5"/>
+  
+  <line x1="70" y1="24" x2="70" y2="10" stroke="#aab5d4" stroke-width="3" stroke-linecap="round"/>
+  <circle class="tabi-bulb-glow" cx="70" cy="8" r="10" fill="url(#tabiGlow)"/>
+  <circle class="tabi-bulb" cx="70" cy="8" r="5"/>
+  
+  <rect x="17" y="46" width="12" height="24" rx="6" fill="#b9c3df"/>
+  <rect x="111" y="46" width="12" height="24" rx="6" fill="#b9c3df"/>
+  
+  <g class="tabi-head">
+    <rect x="24" y="22" width="92" height="72" rx="28" fill="url(#tabiShell)" stroke="#aab5d4" stroke-width="1.5"/>
+    <rect x="34" y="34" width="72" height="46" rx="20" fill="url(#tabiVisor)"/>
+    <ellipse cx="56" cy="42" rx="14" ry="4" fill="#fff" opacity=".12"/>
+    <g class="tabi-eyes">
+      <g class="tabi-eye-l"><ellipse class="tabi-eye" cx="55" cy="56" rx="7" ry="9"/><circle class="tabi-pupil" cx="57" cy="53" r="2.4" fill="#fff"/></g>
+      <g class="tabi-eye-r"><ellipse class="tabi-eye" cx="85" cy="56" rx="7" ry="9"/><circle class="tabi-pupil" cx="87" cy="53" r="2.4" fill="#fff"/></g>
+    </g>
+    
+    <g class="tabi-happy" fill="none" stroke-width="4" stroke-linecap="round">
+      <path d="M48 58 Q55 49 62 58"/><path d="M78 58 Q85 49 92 58"/>
+    </g>
+    <path class="tabi-mouth" d="M62 69 Q70 75 78 69" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <circle cx="42" cy="70" r="4.5" fill="#ff8fb0" opacity=".45"/>
+    <circle cx="98" cy="70" r="4.5" fill="#ff8fb0" opacity=".45"/>
+  </g>
+</svg>
+        <span class="orbit-chip a">👉 Points the way</span>
+        <span class="orbit-chip b">👀 Keeps watch</span>
+        <span class="orbit-chip c">🫁 Breathes with you</span>
+        <span class="orbit-chip d">🎉 Cheers you on</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Privacy ================= -->
+  <section id="privacy">
+    <div class="wrap">
+      <div class="privacy-wrap">
+        <div class="head" style="margin-bottom:0">
+          <div class="shield" aria-hidden="true"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 8-7 10-4-2-7-5.5-7-10V6z"/><path d="M9 12l2 2 4-4"/></svg></div>
+          <h2 class="serif h2">Your tabs are <span class="grad">your business.</span></h2>
+          <p class="lead">No servers, no accounts, no analytics and no tracking. Everything stays in your own browser.</p>
+        </div>
+        <div class="ppoints">
+          <article><h3>Stays on your computer</h3><p>Intents, to-dos, notes, projects and stats live in Chrome’s local storage. Remove the extension and they’re gone.</p></article>
+          <article><h3>AI without the cloud</h3><p>AI runs on Chrome’s built-in on-device model. Your prompts never leave your machine.</p></article>
+          <article><h3>Asks only when needed</h3><p>Focus mode asks for access per site, only for the sites you add, only while an intent runs.</p></article>
+        </div>
+        <div class="pill-list" aria-label="Permissions">
+          <span>storage</span><span>bookmarks</span><span>favicon</span><span>topSites</span><span>alarms</span><span>notifications</span><span>declarativeNetRequest</span><span>offscreen</span>
+        </div>
+        <p style="text-align:center;margin:26px 0 0"><a href="privacy.html">Read the full privacy policy →</a></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Install ================= -->
+  <section id="install">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Two minutes</span>
+        <h2 class="serif h2">Install <span class="grad">Intent Tab</span></h2>
+        <p class="lead">It’s coming to the Chrome Web Store. Until then, install it in Chrome’s developer mode. It works exactly the same.</p>
+      </div>
+
+      <div class="install-box">
+        <div class="install-top">
+          <a class="btn btn-primary" href="download/intent-tab.zip" download>
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+            Download intent-tab.zip
+          </a>
+          <div class="lang-switch" role="group" aria-label="Language">
+            <button type="button" data-lang="en" aria-pressed="true">English</button>
+            <button type="button" data-lang="bn" aria-pressed="false">বাংলা</button>
+          </div>
+        </div>
+
+        <ol class="steps" data-steps="en">
+          <li><div><p><b>Unzip</b> the downloaded file (right-click → <i>Extract All…</i>).</p><p>Keep the folder somewhere permanent, such as Documents. Chrome loads it from there.</p></div></li>
+          <li><div><p>Open <code>chrome://extensions</code> in Chrome.</p><p>Type it into the address bar and press Enter.</p></div></li>
+          <li><div><p>Turn on <b>Developer mode</b> with the switch in the top right corner.</p></div></li>
+          <li><div><p>Click <b>Load unpacked</b> and choose the unzipped folder (the one with <code>manifest.json</code> inside).</p></div></li>
+          <li><div><p><b>Open a new tab.</b> If Chrome asks whether to keep the new tab page, choose <b>Keep it</b>.</p><p>Tip: to hide Chrome’s bar under the page, click <i>Customize Chrome</i> → <i>Footer</i> → turn off <i>Show footer</i>.</p></div></li>
+        </ol>
+
+        <ol class="steps bn" data-steps="bn" lang="bn" hidden>
+          <li><div><p>ডাউনলোড করা ফাইলটা <b>আনজিপ</b> করুন (রাইট ক্লিক → <i>Extract All…</i>)।</p><p>ফোল্ডারটা স্থায়ী কোনো জায়গায় রাখুন, যেমন Documents-এ। Chrome ওখান থেকেই চালায়।</p></div></li>
+          <li><div><p>Chrome-এ <code>chrome://extensions</code> খুলুন।</p><p>অ্যাড্রেস বারে লিখে Enter চাপুন।</p></div></li>
+          <li><div><p>উপরে ডানদিকের সুইচ দিয়ে <b>Developer mode</b> চালু করুন।</p></div></li>
+          <li><div><p><b>Load unpacked</b> চাপুন, তারপর আনজিপ করা ফোল্ডারটা (যেটার ভেতরে <code>manifest.json</code> আছে) সিলেক্ট করুন।</p></div></li>
+          <li><div><p><b>নতুন ট্যাব খুলুন।</b> Chrome জিজ্ঞেস করলে <b>Keep it</b> চাপুন।</p><p>টিপ: পেজের নিচে Chrome-এর বার লুকাতে <i>Customize Chrome</i> → <i>Footer</i> → <i>Show footer</i> বন্ধ করুন।</p></div></li>
+        </ol>
+
+        <p class="note" data-steps="en"><b>Updating:</b> download the new ZIP, replace the old folder’s files, then click ↻ on Intent Tab in <code>chrome://extensions</code>. Your data stays. Also works in Edge, Brave and other Chromium browsers.</p>
+        <p class="note bn" data-steps="bn" lang="bn" hidden><b>আপডেট করতে:</b> নতুন ZIP ডাউনলোড করে পুরনো ফোল্ডারের ফাইলগুলো বদলে দিন, তারপর <code>chrome://extensions</code>-এ Intent Tab-এর ↻ চাপুন। আপনার ডেটা থেকে যাবে। Edge, Brave সহ অন্য Chromium ব্রাউজারেও চলে।</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section id="faq">
+    <div class="wrap">
+      <div class="head">
+        <span class="eyebrow">Questions</span>
+        <h2 class="serif h2">Good to <span class="grad">know</span></h2>
+      </div>
+      <div class="faq">
+        <details><summary>Is it really free?</summary><p>Yes. No account, no subscription and no ads.</p></details>
+        <details><summary>Why isn’t it on the Chrome Web Store yet?</summary><p>It’s on its way. Once it’s there you’ll get one-click install and automatic updates, and this page will link to it. Until then, developer mode works exactly the same.</p></details>
+        <details><summary>Will it slow down Chrome?</summary><p>No. The whole extension is about 240 KB with no frameworks. The background draws its still parts once, runs at a gentle 24 FPS and pauses completely when the tab is hidden or you haven’t touched the page for a minute.</p></details>
+        <details><summary>Does the AI send my data anywhere?</summary><p>No. AI features use Chrome’s built-in on-device model (Gemini Nano). If your device doesn’t support it, simple built-in rules take over, still on your computer.</p></details>
+        <details><summary>Will it nag me on every tab?</summary><p>Only if you want it to. By default it asks after a break of more than 10 minutes. You can choose Always, Work hours or Off, snooze it for an hour or for the day, and Esc always dismisses it.</p></details>
+        <details><summary>Does it work in Edge, Brave or Arc?</summary><p>Yes, in any Chromium-based browser that allows developer-mode extensions. On-device AI depends on the browser.</p></details>
+        <details><summary>How do I get rid of the bar under the page?</summary><p>Chrome adds that bar to every extension’s new tab, and extensions can’t hide it. Click <i>Customize Chrome</i> → <i>Footer</i> → turn off <i>Show footer</i>.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= Final CTA ================= -->
+  <section class="final">
+    <div class="wrap">
+      <div class="box">
+        <img src="assets/logo.svg" alt="" width="96" height="96">
+        <h2 class="serif h2">Your next tab,<br><span class="grad">on purpose.</span></h2>
+        <p class="lead" style="margin:0 auto 32px">Free, private and calm. Ready in two minutes.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="download/intent-tab.zip" download>Download for Chrome</a>
+          <a class="btn btn-ghost" href="#install">How to install</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="assets/logo.svg" alt="" width="26" height="26">Intent <em>Tab</em></a>
+    <span>© 2026 Intent Tab · Made for calmer browsing</span>
+    <nav aria-label="Footer">
+      <a href="#install">Install</a>
+      <a href="#faq">FAQ</a>
+      <a href="privacy.html">Privacy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  // Screenshot tour
+  (function () {
+    var shots = [
+      ['assets/shots/1-intent-light.png', 'Every new tab asks why you’re here, with suggestions from your tasks.', 'The intent question in light mode with suggestions, a to-do list and a daily report.'],
+      ['assets/shots/2-cosmos-dark.png', 'The Cosmos world: your next task, focus time today, and Intent the robot.', 'Dark Cosmos background with the greeting, next task, focus time and the robot.'],
+      ['assets/shots/3-command-palette.png', 'Ctrl+K: open any project link, bookmark or tool from the keyboard.', 'The command palette listing a project’s links.'],
+      ['assets/shots/4-project-view.png', 'Projects: tasks, a progress ring and every link in one popup.', 'A project popup with a 60% progress ring, tasks and links.'],
+      ['assets/shots/5-focus-mode.png', 'Focus mode: distracting sites can wait while your intent runs.', 'A calm page saying youtube.com can wait, with the running intent and time left.']
+    ];
+    var img = document.getElementById('shot');
+    var cap = document.getElementById('shotCaption');
+    var tabs = document.querySelectorAll('.tab');
+    function show(i) {
+      img.src = shots[i][0]; img.alt = shots[i][2]; cap.textContent = shots[i][1];
+      tabs.forEach(function (t, j) { t.setAttribute('aria-selected', String(i === j)); });
+    }
+    tabs.forEach(function (t, i) { t.addEventListener('click', function () { show(i); }); });
+    show(0);
+  })();
+
+  // Install steps: English / বাংলা (remembered on this device only)
+  (function () {
+    var buttons = document.querySelectorAll('.lang-switch button');
+    function setLang(lang) {
+      buttons.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.lang === lang)); });
+      document.querySelectorAll('[data-steps]').forEach(function (el) { el.hidden = el.dataset.steps !== lang; });
+      try { localStorage.setItem('intent-site-lang', lang); } catch (e) { /* ignore */ }
+    }
+    buttons.forEach(function (b) { b.addEventListener('click', function () { setLang(b.dataset.lang); }); });
+    var saved = null;
+    try { saved = localStorage.getItem('intent-site-lang'); } catch (e) { /* ignore */ }
+    if (saved === 'bn' || (!saved && /^bn/i.test(navigator.language || ''))) setLang('bn');
+  })();
+</script>
+</body>
+</html>

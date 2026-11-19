@@ -10,3 +10,6 @@ node_modules/
 Thumbs.db
 desktop.ini
 *.log
+
+# The website serves the latest build for download
+!docs/download/intent-tab.zip

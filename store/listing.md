@@ -63,6 +63,14 @@ Everything is stored locally in your browser. No analytics, no tracking, no serv
 
 ---
 
+## Website and privacy policy URL
+- Website: https://saykatghosh.github.io/intent_tab/
+- Privacy policy (paste into the Privacy tab): https://saykatghosh.github.io/intent_tab/privacy.html
+
+Both go live once GitHub Pages is turned on for the `docs/` folder.
+
+---
+
 ## Single purpose (Privacy practices tab)
 Intent Tab replaces the new tab page with a calm start page that helps people open tabs with a clear intention, using a focus timer, to-dos, bookmarks and optional on-device AI.
 

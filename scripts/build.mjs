@@ -16,7 +16,7 @@ import { fileURLToPath } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
-const EXCLUDE = new Set(['.git', '.github', '.vscode', 'dist', 'node_modules', 'scripts', 'store', 'package.json', 'package-lock.json', '.gitignore', '.gitattributes', 'README.md', 'CHANGELOG.md']);
+const EXCLUDE = new Set(['.git', '.github', '.vscode', 'dist', 'node_modules', 'scripts', 'store', 'docs', 'package.json', 'package-lock.json', '.gitignore', '.gitattributes', 'README.md', 'CHANGELOG.md']);
 // Element ids created at runtime, and string keys built from a prefix (e.g. 'sound_' + kind).
 const DYNAMIC_IDS = new Set(['focusInput', 'cardDropLine', 'tabiText', 'tabiActions']);
 const KEY_PREFIXES = ['sound_', 'accent_', 'tool_', 'devShort_'];
@@ -224,6 +224,13 @@ function build() {
   writeZip(out, files);
   const kb = (fs.statSync(out).size / 1024).toFixed(1);
   console.log(c.green(c.bold('✓ built ')) + rel(out) + c.dim(` — ${files.length} files, ${kb} KB`));
+  // The website's Download button serves this copy (docs/download/intent-tab.zip).
+  const site = path.join(ROOT, 'docs', 'download');
+  if (fs.existsSync(path.join(ROOT, 'docs'))) {
+    fs.mkdirSync(site, { recursive: true });
+    fs.copyFileSync(out, path.join(site, 'intent-tab.zip'));
+    console.log(c.dim('  website copy: docs/download/intent-tab.zip'));
+  }
   console.log(c.dim('  upload it at https://chrome.google.com/webstore/devconsole'));
 }
 
