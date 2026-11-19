@@ -366,9 +366,11 @@ async function markDone() {
   burstFrom($('doneBtn'), { count: 28, spread: 120 });
   recordIntentDone(state.intent.text);
   await creditFocus();
+  const startedAt = state.intent.startedAt || Date.now();
   state.intent = null;
   await set({ intent: null });
-  await updateDay((d) => { d.intentsDone += 1; });
+  // Count it on the day it was set, so a late-night intent never shows "1 of 0".
+  await updateDay((d) => { d.intentsDone += 1; }, dayKey(new Date(startedAt)));
   show('idle');
   state.toast(t('doneToast'));
 }

@@ -1,8 +1,9 @@
 <div align="center">
 
-<img src="icons/icon128.png" width="96" height="96" alt="Intent Tab icon">
-
-# Intent Tab
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="store/brand/wordmark-dark.png">
+  <img src="store/brand/wordmark-light.png" width="520" alt="Intent Tab">
+</picture>
 
 ### A calm new tab that asks one question: *“Why did you open this tab?”*
 
@@ -50,6 +51,8 @@ Most tabs are opened out of habit. Intent Tab asks you why you opened each one, 
 5. Open a new tab. If Chrome asks about the changed new tab page, choose **Keep it**.
 
 After you edit a file, click ↻ on the extension card and open a new tab.
+
+> **The bar under the page** ("Intent Tab · Customize Chrome") comes from Chrome itself. Chrome adds it to every extension's new tab, and extensions can't hide it. To turn it off: **Customize Chrome → Footer → turn off "Show footer"**. Intent Tab shows this tip once.
 
 <details>
 <summary><b>ইনস্টল (বাংলায়)</b></summary>

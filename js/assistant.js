@@ -348,7 +348,7 @@ let summaryInflight = null; // { key } while the AI is writing a summary
 
 function ruleSummary(d, intents) {
   const pct = d.tabs ? Math.round((Math.min(d.intentTabs, d.tabs) / d.tabs) * 100) : 0;
-  let text = t('sumRules', { tabs: d.tabs, pct, done: d.intentsDone, set: d.intentsSet });
+  let text = t('sumRules', { tabs: d.tabs, pct, done: d.intentsDone, set: Math.max(d.intentsSet, d.intentsDone) });
   const counts = {};
   intents.forEach((i) => { const c = category(i.text); if (c) counts[c] = (counts[c] || 0) + 1; });
   const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
@@ -393,7 +393,7 @@ export async function renderSummary(key, d, { force = false } = {}) {
   const facts = {
     tabsOpened: d.tabs,
     tabsWithIntentPercent: Math.round((Math.min(d.intentTabs, d.tabs) / d.tabs) * 100),
-    intentsSet: d.intentsSet,
+    intentsSet: Math.max(d.intentsSet, d.intentsDone),
     intentsCompleted: d.intentsDone,
     tasksDone: d.todoDone,
     tasksTotal: d.todoTotal,

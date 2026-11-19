@@ -50,6 +50,20 @@ export function openTour() {
   $('tourNext').focus();
 }
 
+// Chrome adds its own bar under every extension's new tab ("Intent Tab ·
+// Customize Chrome"). Extensions can't hide it, so tell people once how to.
+function initFooterTip(ui) {
+  if (ui.footerTipDismissed) return;
+  const show = () => setTimeout(() => { $('footerTip').hidden = false; }, 1200);
+  if ($('tour').open) $('tour').addEventListener('close', show, { once: true });
+  else show();
+  $('footerTipClose').addEventListener('click', async () => {
+    $('footerTip').hidden = true;
+    const { ui: cur = {} } = await get('ui');
+    await set({ ui: { ...cur, footerTipDismissed: true } });
+  });
+}
+
 export async function initOnboarding() {
   $('tourNext').addEventListener('click', () => {
     if (step < STEPS.length - 1) { step++; render(); } else finish();
@@ -62,4 +76,5 @@ export async function initOnboarding() {
 
   const { ui = {} } = await get('ui');
   if (!ui.onboarded) openTour();
+  initFooterTip(ui);
 }

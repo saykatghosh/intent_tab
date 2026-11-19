@@ -164,7 +164,7 @@ async function render() {
 
     const done = tile('wkDone');
     done.dt.textContent = t('reportDone');
-    done.dd.textContent = t('reportDoneValue', { done: agg.intentsDone, set: agg.intentsSet });
+    done.dd.textContent = t('reportDoneValue', { done: agg.intentsDone, set: Math.max(agg.intentsSet, agg.intentsDone) });
     order.push(done);
 
     const st = tile('streak');
@@ -193,7 +193,7 @@ async function render() {
 
     const done = tile('done');
     done.dt.textContent = t('reportDone');
-    done.dd.textContent = t('reportDoneValue', { done: d.intentsDone, set: d.intentsSet });
+    done.dd.textContent = t('reportDoneValue', { done: d.intentsDone, set: Math.max(d.intentsSet, d.intentsDone) });
     order.push(done);
 
     if (off === 0) {

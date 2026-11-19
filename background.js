@@ -4,7 +4,7 @@
 //   • Focus sounds – rain / ocean / fan, played from an offscreen document
 // Everything is driven by chrome.storage, so the new-tab page just writes data.
 
-import { get, set, getSettings, updateDay, BREAK_RE, creditFocus } from './js/store.js';
+import { get, set, getSettings, updateDay, dayKey, BREAK_RE, creditFocus } from './js/store.js';
 import { t, setLang } from './js/strings.js';
 
 const RULE_BASE = 1000;
@@ -110,8 +110,10 @@ async function markDone() {
   for (let i = history.length - 1; i >= 0; i--) {
     if (history[i].text === intent.text && !history[i].done) { history[i].done = true; break; }
   }
+  await creditFocus();
   await set({ intent: null, history });
-  await updateDay((d) => { d.intentsDone += 1; });
+  // Count it on the day it was set, so a late-night intent never shows "1 of 0".
+  await updateDay((d) => { d.intentsDone += 1; }, dayKey(new Date(intent.startedAt || Date.now())));
 }
 
 async function addFive() {

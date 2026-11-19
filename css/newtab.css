@@ -1314,6 +1314,27 @@ input[type="text"], input[type="search"], input[type="time"] {
   padding: 4px 12px; border-radius: 999px; text-decoration: none;
   background: var(--accent-soft); color: var(--accent); font-weight: 600;
 }
+/* One-time tip pointing at Chrome's footer bar */
+.footer-tip {
+  position: fixed; left: 50%; bottom: 16px; z-index: 20;
+  display: flex; align-items: center; gap: 10px;
+  width: max-content; max-width: calc(100vw - 32px);
+  padding: 7px 7px 7px 10px; border-radius: 999px;
+  background: color-mix(in oklab, var(--surface-solid) 94%, transparent);
+  border: 1px solid var(--border-strong); box-shadow: var(--shadow-lg);
+  font-size: 13px; line-height: 1.5; color: var(--text-2);
+  transform: translateX(-50%);
+  animation: footerTipIn .5s var(--ease) both;
+}
+@keyframes footerTipIn { from { opacity: 0; transform: translate(-50%, 14px); } to { opacity: 1; transform: translate(-50%, 0); } }
+.footer-tip-icon { width: 26px; height: 26px; flex: none; border-radius: 50%; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); }
+.footer-tip b { font-weight: 600; color: var(--text); background: var(--surface-2); padding: 1px 8px; border-radius: 6px; white-space: nowrap; }
+.footer-tip .link-btn {
+  flex: none; padding: 5px 14px; border-radius: 999px; text-decoration: none;
+  background: var(--accent-soft); color: var(--accent); font-weight: 600;
+}
+@media (max-width: 760px) { .footer-tip { border-radius: 18px; align-items: flex-start; } }
+
 .bm-menu, .ctx-menu { border-radius: 18px; box-shadow: var(--shadow-lg); }
 .menu-row, .ctx-item { border-radius: 10px; }
 
