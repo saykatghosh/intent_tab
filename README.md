@@ -1,194 +1,392 @@
+<div align="center">
+
+<img src="icons/icon128.png" width="96" height="96" alt="Intent Tab icon">
+
 # Intent Tab
 
-A calm Chrome new tab page that asks one question: **“Why did you open this tab?”**
-It helps you notice tabs opened from habit. Everything is stored locally in
-`chrome.storage.local`. There is no server, no account and no tracking.
+### A calm new tab that asks one question: *“Why did you open this tab?”*
 
-Plain HTML, CSS and vanilla JavaScript (ES modules). No build step.
+To-dos, projects, a focus timer, bookmarks and on-device AI. Everything stays on your computer.
 
-## Install (Load unpacked)
+![Version](https://img.shields.io/badge/version-1.4.0-7fd6bd?style=flat-square)
+![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white)
+![No dependencies](https://img.shields.io/badge/dependencies-0-success?style=flat-square)
+![Vanilla JS](https://img.shields.io/badge/vanilla-JS%20%2B%20CSS-f7df1e?style=flat-square&logo=javascript&logoColor=black)
+![Languages](https://img.shields.io/badge/lang-English%20%C2%B7%20%E0%A6%AC%E0%A6%BE%E0%A6%82%E0%A6%B2%E0%A6%BE-b48cff?style=flat-square)
 
-1. Open `chrome://extensions` in Chrome.
-2. Turn on **Developer mode** (top-right toggle).
-3. Click **Load unpacked**.
-4. Select this folder (the one that contains `manifest.json`).
-5. Open a new tab. If Chrome asks whether to keep the changed new tab page, choose **Keep it**.
+<img src="store/promo-marquee-1400x560.png" alt="Intent Tab" width="100%">
 
-After editing any file, click the reload icon on the extension card in `chrome://extensions`, then open a new tab.
+</div>
 
-### ইনস্টল (বাংলায়)
+---
 
-1. Chrome-এ `chrome://extensions` খুলুন।
-2. উপরে ডানদিকের **Developer mode** চালু করুন।
-3. **Load unpacked** চাপুন।
-4. এই ফোল্ডারটা (যেখানে `manifest.json` আছে) সিলেক্ট করুন।
-5. নতুন ট্যাব খুলুন। Chrome যদি জিজ্ঞেস করে নতুন ট্যাব পেজ রাখবেন কিনা, **Keep it** চাপুন।
+## ✨ Why
 
-## Features
+Most tabs are opened out of habit. Intent Tab asks you why you opened each one, gently. You can pick a reason with one click or skip the question, and the search bar always works. Over a day you open more tabs on purpose and fewer by reflex.
 
-- **Intent question:** type a reason or pick a chip (Check email, Research, Take a break, Not sure). The intent is then shown large with a 10-minute focus timer and **Done** / **New intent** buttons. The top line shows which tab of the day this is.
+- 🔒 **Private.** Everything is stored in `chrome.storage.local`. There's no server, no account, no analytics and no tracking.
+- 🪶 **Light.** It's plain HTML, CSS and ES modules, with no framework and no build step. Animations pause when the page is idle.
+- 🌏 **Bilingual.** It works fully in English and বাংলা, with Bangla digits too.
+
+## 📸 Screenshots
+
+| | |
+|:---:|:---:|
+| <img src="store/screenshots/1-intent-light.png" alt="The intent question in light mode"> | <img src="store/screenshots/2-ai-coach-dark.png" alt="The AI coach in dark mode"> |
+| **The question:** set an intent in one click | **AI coach:** a clear goal, a timer and tiny steps |
+| <img src="store/screenshots/3-command-palette.png" alt="The command palette"> | <img src="store/screenshots/4-breathing-week.png" alt="A breathing break and the weekly report"> |
+| **Ctrl+K:** do anything from the keyboard | **Breaks and report:** breathing, plus a week in review |
+
+<p align="center"><img src="store/screenshots/5-focus-mode.png" alt="Focus mode page" width="70%"><br><b>Focus mode:</b> distracting sites can wait while an intent runs</p>
+
+## 🚀 Install
+
+> Not on the Chrome Web Store yet. Load it unpacked, which takes about 30 seconds.
+
+1. Download or clone this repository.
+2. Open **`chrome://extensions`** in Chrome.
+3. Turn on **Developer mode** (top right).
+4. Click **Load unpacked** and select this folder (the one with `manifest.json`).
+5. Open a new tab. If Chrome asks about the changed new tab page, choose **Keep it**.
+
+After you edit a file, click ↻ on the extension card and open a new tab.
+
+<details>
+<summary><b>ইনস্টল (বাংলায়)</b></summary>
+
+1. এই রিপোজিটরি ডাউনলোড বা clone করুন।
+2. Chrome-এ **`chrome://extensions`** খুলুন।
+3. উপরে ডানদিকের **Developer mode** চালু করুন।
+4. **Load unpacked** চাপুন, তারপর এই ফোল্ডারটা (যেখানে `manifest.json` আছে) সিলেক্ট করুন।
+5. নতুন ট্যাব খুলুন। Chrome জিজ্ঞেস করলে **Keep it** চাপুন।
+
+</details>
+
+## 🧭 Highlights
+
+| | Feature | What it does |
+|:-:|---|---|
+| 🎯 | **Intent question** | Type a reason or pick a chip. Your intent then shows large, with a focus timer and **Done**. |
+| 🌌 | **Cosmos** | A deep-space sky with stars, a nebula, shooting stars and a ringed planet. In light mode it's a pastel sky. |
+| 🤖 | **Tabi** | A small robot that peeks over your To-do card, points at the next task and cheers when you finish one. |
+| ✅ | **To-do and today's one thing** | Daily tasks with progress and a 7-day chart, plus one goal for the day. |
+| 🗂️ | **Projects** | Links, tasks and progress for each project, in a popup that opens with one click. |
+| ⏱️ | **Focus time** | Counts how long you really focused today, with a session count. |
+| 🛡️ | **Focus mode** | Distracting sites you choose redirect to a calm page while an intent runs. |
+| 🧠 | **On-device AI** | Suggestions, a coach, a day summary and Ask AI, all from Gemini Nano on your computer. |
+| ⌨️ | **Command palette** | Press Ctrl+K to search bookmarks, run tools, set intents and change settings. |
+| 🛠️ | **Developer card** | Seven dev tools, search shortcuts and your projects on the page. |
+| 🔖 | **Bookmarks bar** | A full bookmarks bar with folders, drag and drop, a right-click menu and custom icons. |
+| 🌧️ | **Focus sounds** | Rain, ocean or fan noise, generated live with Web Audio. |
+
+## 📖 Features in detail
+
+<details>
+<summary><b>🎯 Intent, timer and when to ask</b></summary>
+
+- **Intent question.** Type a reason or pick a chip (*Check email, Research, Take a break, Not sure*). The intent then shows large, with a focus timer and **Done** / **New intent** buttons. The top line shows which tab of the day this is.
+- **Timer length.** Choose 5, 10 (the default), 25 or 50 minutes in Settings, or switch under a running timer. After 20 or more minutes, **Take a 5-min break** appears.
 - **When to ask** (Settings):
-  - **Smart** (default): asks on the first tab after a break of more than 10 minutes. If an intent is running, it is shown instead of the question.
-  - **Always:** asks on every new tab, with a “Continue: …” chip for the running intent.
+  - **Smart** (default): asks on the first tab after a break of more than 10 minutes.
+  - **Always:** asks on every tab, with a *Continue: …* chip.
   - **Work hours:** like Smart, but only between the times you set.
-  - **Off:** never asks. You can still click “Set an intent”.
-  - “Don’t ask for 1 hour” and “Not today” pause the question. **Esc** dismisses it. It never blocks the page, and the search bar always works.
-- **To-do list:** add, tick and delete tasks. Shows a progress bar for today and a bar chart of the last 7 days. Tasks finished on earlier days are cleared automatically; unfinished tasks carry over.
-- **Bookmarks bar:** a bar at the very top of the page shows everything from Chrome’s Bookmarks bar, with icons. Click a folder to open a drop-down; sub-folders open inside it (use ‹ to go back, arrow keys to move). Items that don’t fit go into the **»** menu. **Other bookmarks** / **Mobile bookmarks** sit on the right.
-  - **Hide Chrome’s own bar:** extensions cannot hide it, but you can: press **Ctrl+Shift+B** (Chrome menu → Bookmarks and lists → Show bookmarks bar). A one-time tip on the page reminds you.
-  - **Add a bookmark:** click **+** in the bar (saves to the Bookmarks bar), or **Add bookmark here** at the bottom of any folder menu. Enter a URL (`example.com` is enough) and an optional name, then click **Save**.
-  - **Right-click menu (like Chrome’s):** right-click any bookmark or folder in the bar or in a folder menu (or use the ⋯ button in folder menus):
-    - Bookmark: Open in new tab / new window / Incognito window, **Edit…** (name and URL), Change icon…, Copy link, **Delete**, Add page…, Add folder…, Bookmark manager.
-    - Folder: Open all (N) / in new window / in Incognito window, **Rename…**, Change icon…, **Delete** (with everything inside), Add page…, Add folder…, Bookmark manager.
-    - After a delete, the toast at the bottom offers **Undo** for 7 seconds. It restores the item in its old place, with everything inside and its custom icons.
-    - Chrome’s root folders (Bookmarks bar, Other bookmarks) can’t be renamed or deleted.
-  - **Drag & drop (like Chrome):**
-    - Drag a bookmark or folder along the bar to reorder it; a line shows where it will land.
-    - Drop it on the middle of a folder to move it inside (the folder highlights).
-    - Hold it over a folder (or **»**) for a moment and the folder opens, so you can drop it anywhere inside, including sub-folders.
-    - Reorder inside folder menus too, or drag items from a menu back onto the bar.
-    - Drag a link from any web page (or the address bar) onto the bar or into a folder menu to bookmark it.
-  - **Most visited tiles** have a right-click menu too: open in new tab / window / Incognito, change icon, copy link, add to bookmarks bar.
-  - **Create a folder:** click **+** and switch to **Folder**, or choose **New folder here** at the bottom of any folder menu (folders can be nested). Give it a name and click **Save**. It is a real Chrome bookmark folder, so it also appears in Chrome’s Bookmark manager.
-  - You can also add one the usual Chrome way: press **Ctrl+D** (or the ☆ star in the address bar) on any page and choose **Bookmarks bar** as the folder.
-  - Changes made in Chrome’s Bookmark manager (`Ctrl+Shift+O`) show up on the page immediately, and the other way round.
-  - **Custom icons:** right-click any bookmark or folder in the bar, or any most-visited tile (in folder menus and on tiles you can also hover and click the small ✎ button). Pick an emoji, type any emoji, or upload your own image, and choose a background colour. **Reset** brings back the original icon.
-  - **Emoji in a name becomes the icon:** if a bookmark or folder name starts with an emoji (e.g. `📁 Work`, `🎵 Music`), Intent Tab shows that emoji as its icon and hides it from the name, so you never see two icons side by side.
-  - **Chrome’s bookmark bar:** Chrome does not let extensions change the icons in its own bar. In the icon dialog, tick **“Also show this emoji in Chrome’s bookmark bar”** and the emoji is added to the start of the bookmark’s name (for example `🎨 Design`), so it shows in the bar too. Choosing another emoji or **Reset** updates or removes it again. On the Intent Tab page itself the name is shown without the extra emoji.
-- **Most visited:** from `chrome.topSites`.
-- **Google search bar and clock.** Press **/** anywhere to jump to the search bar.
-- **Report** (Today / Yesterday / Week): tabs opened, the share of tabs that had an intent, intents completed, open tabs right now, and your streak (days in a row with a finished intent). **Week** adds a 7-day chart (tabs with an intent vs. other tabs) and an AI week summary. Facts only, never judgement.
-- **Notes:** a small scratchpad card that saves as you type (also from the palette: “Add to notes: …”).
-- **Rearrange cards:** hover a card (To-do, Notes, Report) and drag its ⠿ handle to move it within or between the left and right columns. **Settings → Your data → Reset card layout** puts them back.
-- **Focus mode** (Settings → Focus): add sites such as `youtube.com`. While an intent is running, visiting them shows a calm page (“youtube.com can wait.”) with your intent and the time left, plus **Back to my intent** and **Open anyway for 5 min**. Chrome asks once for permission for each site you add; nothing else is read or blocked. Breaks never trigger it.
-- **Notifications:** when the focus timer ends, a “Time’s up” notification appears with **Done** and **+5 min** (works even when no Intent Tab page is open). Turn it off in Settings → Focus.
-- **Focus sounds:** under a running intent’s timer, choose **Rain**, **Ocean** or **Fan** (plus volume). The sounds are generated live with Web Audio (no audio files), keep playing while you work in other tabs, and stop when the timer ends.
-- **Search engine:** Settings → Search engine: Google, Bing, DuckDuckGo, Brave Search, YouTube, Perplexity or ChatGPT. Used by the search bar, the palette and Ask AI’s “search instead” link.
-- **Accent colour:** Sage (default), Ocean, Violet, Amber or Rose, in light and dark.
-- **Background photo:** Settings → Background → **Photo** → *Choose a photo…*, with a **Darken** slider. The photo is resized and stored locally.
-- **Your data:** **Export backup** downloads everything as a JSON file; **Import backup** restores it. **Sync settings** copies your settings (not to-dos, notes or history) through Chrome sync to your other computers.
-- **For developers**
-  - **Developer card** on the page (right column; drag it anywhere, or turn it off in Settings → Show on page): one-click buttons for all 7 tools, your projects with their link icons (and ↗ to open all), and search-shortcut chips that pre-fill the search bar. The **</>** button in the top bar opens the tools from anywhere.
-  - **Search shortcuts:** in the search bar or Ctrl+K, type a keyword, a space and your query: `mdn`, `npm`, `gh` (`gh owner/repo` opens the repo), `so` (Stack Overflow), `can` (Can I use), `dd` (DevDocs), `pypi`, `crates`, `bundle` (Bundlephobia), `tw` (Tailwind), `yt`, `w` (Wikipedia). A hint shows where Enter will go.
-  - **Projects:** Settings → Developer → *Projects…* (or Ctrl+K → “Manage projects”). Keep each project’s links together — Repo, Local (`localhost:3000` works), Staging, Production, Design, Tracker. Type the project name in Ctrl+K to open one link, or “Open all” in new tabs.
-  - **Developer tools** (Ctrl+K or Settings → Developer → *Developer tools…*), all local:
-    **JSON** format / minify / validate · **Encode** Base64, URL, JWT decode (with iat/exp as dates) · **Timestamp** ↔ date (local, ISO, UTC, relative) · **Color** HEX / RGB / HSL / OKLCH + WCAG contrast on white/black · **Generate** UUID v4 and strong passwords · **Regex** tester with highlighted matches and groups · **Units** px ↔ rem, bytes (KB/KiB…), time zones.
-  - **Instant answers in Ctrl+K:** type `2*(3+4)` → = 14, `1732032000` → the date, `#7fd6bd` → RGB/OKLCH, `24px` → 1.5rem, a JWT → decode it, JSON → format it. Enter copies or opens the tool.
-- **Welcome tour:** three short steps on first run (also in the palette: “Show the welcome tour”).
-- **Command palette — Ctrl+K (⌘K on Mac):** or click **Search** in the top bar. Type to:
-  set an intent, ask the AI, add a to-do, set today’s one thing, or search Google;
-  find any bookmark (all folders); tick/untick to-dos; mark the intent done, add time or change the timer;
-  start a breathing break; change theme, language or background; open settings. ↑↓ to move, Enter to run, Esc to close.
-- **Today’s one thing:** above the question, set one goal for the day (“What would make today a good day?”). It stays as a small pill with ✓ (done) and ✎ (change), and the AI suggestions and coach take it into account. “Skip today” hides it until tomorrow.
-- **Timer length:** Settings → Focus timer: 5, 10 (default), 25 or 50 minutes. Under a running intent’s timer you can switch between them. After a session of 20+ minutes, **Take a 5-min break** appears.
-- **Breathing breaks:** choosing **Take a break** (or a 5-min break) shows a calm breathing orb — breathe in 4 s, hold 4 s, breathe out 6 s — with a 5-minute timer. With reduced motion, only the words change.
-- **On-device AI** (Chrome’s built-in Gemini Nano via the Prompt API — runs locally, no API key, no server, nothing leaves the computer):
-  - **Smart suggestions:** under the question, “✦ Suggested” chips based on your open tasks, recent intents and the time of day.
-  - **AI coach:** after you set an intent, it rewrites it as one clear goal, suggests a realistic timer length (**Set timer to N min**) and 2–3 tiny steps (**Add steps to to-do**). For “Not sure” it offers concrete things to pick instead.
-  - **Day summary:** a short, neutral summary in the report card (↻ to rewrite it). Cached; today’s is refreshed at most every 30 minutes unless you press ↻.
-  - **Ask AI:** type a question in the search bar and press **Tab** (or click **✦ Ask AI**) to get an answer right on the page. **Enter** still searches Google.
-  - **Settings → AI (on this device):** turn AI on/off, see the model status, and start the one-time model download. A glowing **✦ AI** badge in the top bar shows it is ready (and spins while it is thinking).
-  - **Without the model** (unsupported device, not downloaded yet, or AI turned off) everything still works with simple built-in rules: suggestions from your tasks and habits, timer lengths by topic, and a facts-only summary.
-  - Requirements come from Chrome: a recent desktop Chrome on Windows, macOS, Linux or ChromeOS, plenty of free disk space for the model, and a capable GPU or enough RAM. AI replies are in English for now.
-- **Cosmos — another world (default background):** in dark mode a deep-space sky with twinkling stars, a drifting nebula, the odd shooting star, a ringed planet on the horizon and floating dust; in light mode a dreamy pastel sky. Cards turn to glass with a faint starlight edge. Everything leans gently toward the mouse. Settings → Background → **Cosmos** (other choices: Animated, Still, Plain, Photo).
-- **Tabi, the robot companion:** peeks over the top of the To-do card with its hands on the edge, waves hello, blinks, follows your mouse with its eyes, and points at the task to do next (“Let’s do this one 👉 …”) — that task glows in the list. Its speech bubble has **Start** (sets it as your intent) and **Next**. It reminds you of today’s one thing, keeps watch while an intent runs, breathes with you on breaks, and hops for joy when you finish a task. Click Tabi for the next suggestion; × hides the bubble. Turn it off in Settings → Show on page → *Tabi, the robot companion*.
-- **Ambient background:** soft colour fields drift slowly behind the page, with gentle wave lines near the bottom and a light paper grain. The colours follow the time of day (morning, day, evening, night) and the light/dark theme. In Settings → Background choose **Animated** (default), **Still** (no motion) or **Plain**. The animation pauses while the tab is hidden and stays still if the system asks for reduced motion.
-- **Visual effects:** soft cross-fades between views, themes and languages; the question and your intent appear word by word; a small particle burst when you mark an intent Done or finish every task; animated strike-through, slide-in and fold-away for tasks; chart bars that grow in; report numbers that count up; a cursor spotlight on cards; and a ripple on buttons. All motion turns off when the system asks for reduced motion.
-- **Settings panel:** turn modules on or off, choose the ask mode, the background, the language and the theme (System / Light / Dark).
+  - **Off:** never asks.
+  - *Don't ask for 1 hour* and *Not today* pause it, and **Esc** dismisses it.
+- **The quiet centre.** When the question isn't asked, the middle of the page shows:
+  - a greeting
+  - your **next task** (▶ starts it as an intent)
+  - your **focus time today**
+  - a **Set an intent** button and quick-start chips
+- **Focus time.** It's counted when an intent ends: when you press Done, start a new intent, or the timer runs out. It counts even when no tab is open, only up to the timer's end, never twice, and never for breaks.
+- **Breathing breaks.** *Take a break* shows a breathing orb: in for 4 s, hold for 4 s, out for 6 s.
+- **Notifications.** When the timer ends you get *Time's up*, with **Done** and **+5 min**.
+- **Focus sounds.** Rain, Ocean or Fan, with volume. They keep playing in other tabs and stop when the timer ends.
 
-## Permissions
+</details>
 
-| Permission  | Why |
-|-------------|-----|
-| `storage`   | Save settings, intents, to-dos, notes and daily counts locally (settings in Chrome sync only if you turn sync on) |
-| `bookmarks` | Show your bookmarks and let you add, edit, move and delete them from the page |
-| `favicon`   | Show site icons via `chrome-extension://<id>/_favicon/` |
-| `topSites`  | Show most visited sites |
-| `alarms`    | Wake up when the focus timer ends (notification, end focus mode) |
-| `notifications` | “Time’s up” notification |
+<details>
+<summary><b>✅ To-do, today's one thing and the report</b></summary>
+
+- **To-do.** Add, tick and delete tasks, with a progress bar for today and a chart of the last 7 days. Finished tasks clear the next day; unfinished ones carry over.
+- **Today's one thing.** *What would make today a good day?* It sits as a small pill with ✓ and ✎, and the AI takes it into account.
+- **Report** (Today / Yesterday / Week) shows:
+  - tabs opened
+  - the share of tabs that had an intent
+  - intents completed
+  - tabs open right now
+  - your streak
+
+  **Week** adds a chart and an AI summary. It reports facts only, never judgement.
+- **Notes.** A scratchpad card that saves as you type.
+- **Rearrange cards.** Drag a card's ⠿ handle between the two columns. *Reset card layout* in Settings puts them back.
+
+</details>
+
+<details>
+<summary><b>🗂️ Projects</b></summary>
+
+Keep everything about a project in one place.
+
+- **Create one.** Use **Edit** in the Developer card, *Settings → Developer → Projects…*, or Ctrl+K → *New project*. Each project starts with link slots for **Repo, Local, Staging, Production, Design and Tracker**. Fill in only what you need: `localhost:3000` and `github.com/me/app` both work.
+- **In the Developer card.** Every project shows right after you create it, with a small progress bar (`3/5`), its link icons and ↗ to open all of its links.
+- **Project view.** Click a project to open its popup:
+  - a progress ring
+  - a task list (add, tick, delete; finished tasks move down)
+  - link cards with favicons
+  - **Open all** and **Edit** buttons
+- **Ctrl+K.** Type the project's name to open the project, any one of its links, or all of them.
+
+</details>
+
+<details>
+<summary><b>🔖 Bookmarks bar and Most visited</b></summary>
+
+- **The whole Bookmarks bar at the top of the page**, with icons:
+  - Folders open as drop-downs, and sub-folders open inside them (‹ goes back, arrow keys move).
+  - Items that don't fit go into **»**.
+  - *Other bookmarks* and *Mobile bookmarks* sit on the right.
+  - To hide Chrome's own bar, press **Ctrl+Shift+B**.
+- **Add** a bookmark or a folder with **+**, or with *Add bookmark here* / *New folder here* in any folder menu. These are real Chrome bookmarks.
+- **Right-click menu, like Chrome's:**
+  - Open in a new tab, a new window or Incognito.
+  - Edit, rename, change the icon, copy the link, delete, add a page or folder, open the Bookmark manager.
+  - Deleting offers **Undo** for 7 seconds.
+- **Drag and drop:**
+  - Reorder bookmarks along the bar or inside menus.
+  - Drop an item on a folder to move it inside, or hover over a folder until it springs open.
+  - Drag a link from any page onto the bar to bookmark it.
+- **Custom icons.** Use an emoji, your own image, or a background colour.
+  - A name that starts with an emoji (`📁 Work`) uses that emoji as its icon.
+  - You can also show the emoji in Chrome's own bar.
+- **Most visited.** Your top sites in a centred dock. Right-click a site to open it, change its icon, copy its link or bookmark it.
+- **Live sync with Chrome.** Changes in Chrome's Bookmark manager show on the page immediately, and the other way round.
+
+</details>
+
+<details>
+<summary><b>🧠 On-device AI (Gemini Nano)</b></summary>
+
+This runs entirely on your computer through Chrome's Prompt API. There's no API key and no server, and nothing leaves the device.
+
+- **Smart suggestions.** *✦ Suggested* chips, based on your tasks, recent intents and the time of day.
+- **AI coach.** It rewrites your intent as one clear goal, suggests a timer length and offers 2–3 tiny steps (**Add steps to to-do**).
+- **Day summary.** A neutral summary in the report. ↻ rewrites it, and it's cached for 30 minutes.
+- **Ask AI.** Type a question in the search bar and press **Tab** for an answer on the page. **Enter** still searches.
+- **Without the model** everything still works, using simple built-in rules.
+- **Requirements** come from Chrome: a recent desktop Chrome, free disk space for the model, and a capable GPU or enough RAM. Replies are in English for now.
+
+</details>
+
+<details>
+<summary><b>🛠️ For developers</b></summary>
+
+- **Developer card.** One-click buttons for the tools, your projects and search-shortcut chips. **&lt;/&gt;** in the top bar opens the tools from anywhere.
+- **Search shortcuts.** Type a keyword, a space and your query. A hint shows where Enter will take you.
+
+  | Keyword | Goes to | Keyword | Goes to |
+  |---|---|---|---|
+  | `mdn` | MDN | `dd` | DevDocs |
+  | `npm` | npm | `pypi` | PyPI |
+  | `gh` | GitHub (`gh owner/repo` opens the repo) | `crates` | crates.io |
+  | `so` | Stack Overflow | `bundle` | Bundlephobia |
+  | `can` | Can I use | `tw` | Tailwind |
+  | `yt` | YouTube | `w` | Wikipedia |
+
+- **Developer tools**, all local:
+  - **JSON:** format, minify and validate.
+  - **Encode:** Base64, URL encoding, and JWT decoding.
+  - **Timestamp:** convert between timestamps and dates.
+  - **Color:** HEX, RGB, HSL and OKLCH, plus WCAG contrast.
+  - **Generate:** UUIDs and passwords.
+  - **Regex:** a tester with highlighted matches.
+  - **Units:** px ↔ rem, bytes, and time zones.
+- **Instant answers in Ctrl+K:**
+
+  | Type | You get |
+  |---|---|
+  | `2*(3+4)` | 14 |
+  | a Unix timestamp | the date |
+  | `#7fd6bd` | the RGB value |
+  | `24px` | 1.5rem |
+  | a JWT | the decoded token |
+  | JSON | formatted JSON |
+
+</details>
+
+<details>
+<summary><b>🎨 Look and feel</b></summary>
+
+- **Backgrounds:**
+  - **Cosmos** (default): stars, a nebula, shooting stars, a ringed planet and floating dust, leaning gently toward the mouse.
+  - **Animated:** colour fields that follow the time of day.
+  - **Still**, **Plain**, or your own **Photo** with a *Darken* slider.
+- **Tabi, the robot companion:**
+  - It waves, blinks and follows your mouse with its eyes.
+  - It points at the next task, and its bubble offers **Start** and **Next**.
+  - It keeps watch while an intent runs and hops when you finish something.
+  - Turn it off in *Settings → Show on page*.
+- **Theme and accent.** System, Light or Dark, with a Sage, Ocean, Violet, Amber or Rose accent.
+- **Motion:**
+  - soft cross-fades
+  - word-by-word reveals
+  - a particle burst when you finish something
+  - numbers that count up
+  - a card spotlight
+  - ripples on buttons
+
+  All of it turns off when the system asks for reduced motion.
+- **Welcome tour.** Three short steps on first run.
+
+</details>
+
+<details>
+<summary><b>💾 Your data and sync</b></summary>
+
+- **Export backup** downloads everything as JSON, and **Import backup** restores it.
+- **Sync settings** copies only your settings, through Chrome sync. To-dos, notes and history stay on this computer.
+- **Search engine.** Choose Google, Bing, DuckDuckGo, Brave, YouTube, Perplexity or ChatGPT.
+
+</details>
+
+## ⚡ Performance
+
+A new tab page should never slow Chrome down.
+
+- **Cosmos** paints its static layers (sky, nebula and planet) once into a cached canvas. Each frame only draws the stars, a meteor and some dust, at 24 FPS.
+- **When the page is idle** (no input for a minute) or the window is in the background, the canvas and looping CSS animations **pause**. Any mouse or keyboard input wakes them.
+- **Hidden tabs** don't animate at all, and with reduced motion only a single frame is drawn.
+- **No live blur over moving backgrounds.** Cards use a frosted surface instead of `backdrop-filter`, the biggest GPU saving.
+- **Pointer and resize handlers** run at most once per frame.
+
+## 🔐 Permissions
+
+| Permission | Why |
+|---|---|
+| `storage` | Save settings, intents, to-dos, notes, projects and daily counts locally |
+| `bookmarks` | Show your bookmarks and let you edit them from the page |
+| `favicon` | Show site icons via `chrome-extension://<id>/_favicon/` |
+| `topSites` | Show your most visited sites |
+| `alarms` | Wake up when the focus timer ends |
+| `notifications` | Show the *Time's up* notification |
 | `declarativeNetRequest` | Focus mode: redirect only the sites you listed, only while an intent runs |
-| `offscreen` | Play the optional focus sounds in the background |
-| optional `*://*/*` | Asked **per site** when you add it to focus mode — never otherwise |
+| `offscreen` | Play focus sounds in the background |
+| optional `*://*/*` | Asked **per site** when you add it to focus mode, never otherwise |
 
-No analytics and no network requests of its own. The search form opens results from the engine you chose, in the tab.
+> **No analytics, and no network requests of its own.** The search bar opens results from the engine you chose. Removing the extension deletes all of its data.
 
-## Files
+## 🧑‍💻 Development
+
+There are no dependencies; you only need **Node 18+**.
+
+```bash
+npm run check        # manifest, JS syntax, imports, element ids, en/bn strings
+npm run build        # check, then dist/intent-tab-v<version>.zip
+npm run bump:patch   # 1.4.0 → 1.4.1   (also bump:minor, bump:major)
+npm run release      # bump patch + check + zip in one go
+```
+
+The ZIP leaves out `store/`, `scripts/`, `.git`, `.github`, `package.json` and this README.
+**CI:** [`.github/workflows/build.yml`](.github/workflows/build.yml) runs the same check and build on every push and pull request, and attaches the ZIP to the run.
+
+<details>
+<summary><b>📁 Project structure</b></summary>
 
 ```
 manifest.json
-newtab.html
-background.js      service worker: focus-mode rules, timer notification, focus sounds
-offscreen.html/.js generates the focus sounds (Web Audio)
-blocked.html/.js   the calm page shown by focus mode
-store/             Chrome Web Store texts, privacy policy, screenshots, promo tiles (not part of the package)
-css/newtab.css
-js/strings.js      all UI text, English (en) and Bangla (bn)
-js/store.js        storage helpers, constants (timer length, break length)
-js/intent.js       question / running intent / timer / ask-mode rules
-js/todos.js        to-do list and 7-day chart
-js/bookmarks.js    bookmarks grid and most visited
-js/report.js       daily report
-js/settings.js     settings panel
-js/app.js          boot, theme, clock, module switching
-js/background.js   ambient canvas background (with gentle mouse parallax)
-js/palette.js      command palette (Ctrl+K); modules add commands with registerCommands()
-js/focus.js        today's one thing
-js/breathe.js      breathing guide for breaks
-js/ai.js           on-device AI wrapper (Chrome Prompt API / Gemini Nano)
-js/assistant.js    AI features: suggestions, coach, summary, Ask AI (+ rule fallbacks)
-js/contextmenu.js  the right-click menu
-js/icons.js        custom tile icons (emoji / image / colour) and the icon dialog
-js/effects.js      shared visual effects: view transitions, word reveal,
-                   count-up numbers, particle burst, ripple, card spotlight
-js/prefs.js        search engine, accent, photo, focus sites, notifications, sync, export/import, sounds
-js/search.js       search engines
-js/notes.js        notes card
-js/layout.js       drag cards between columns
-js/onboarding.js   welcome tour
-js/projects.js     project switcher (links per project)
-js/devcard.js      the Developer card on the page
-js/robot.js        Tabi, the robot companion (peeks over the To-do card)
-js/tools.js        developer tools + instant answers in the palette
-js/theme-boot.js   sets the theme (and accent) before first paint
-scripts/build.mjs  check / bump / zip (no dependencies)
-.github/workflows/ CI: check + build on every push
-fonts/             Inter + Instrument Serif (latin, WOFF2, OFL) — bundled, no web requests
-icons/             16, 48, 128 px
+newtab.html            the page
+background.js          service worker: focus-mode rules, timer notification, focus time, sounds
+offscreen.html/.js     generates focus sounds (Web Audio)
+blocked.html/.js       the calm page shown by focus mode
+css/newtab.css         all styles
+js/
+  app.js               boot, theme, clock, module switching
+  store.js             storage helpers, constants, focus-time tracking
+  strings.js           all UI text, English (en) and Bangla (bn)
+  intent.js            question / running intent / timer / quiet centre
+  todos.js             to-do list and 7-day chart
+  focus.js             today's one thing
+  breathe.js           breathing guide for breaks
+  report.js            daily and weekly report
+  notes.js             notes card
+  bookmarks.js         bookmarks bar and most visited
+  icons.js             custom icons and the icon dialog
+  contextmenu.js       the right-click menu
+  projects.js          projects: links, tasks, progress, project view
+  devcard.js           the Developer card
+  tools.js             developer tools + instant answers
+  search.js            search engines and shortcuts
+  palette.js           command palette (Ctrl+K)
+  ai.js                on-device AI wrapper (Prompt API)
+  assistant.js         suggestions, coach, summary, Ask AI (+ rule fallbacks)
+  background.js        Cosmos / animated canvas background
+  robot.js             Tabi, the robot companion
+  effects.js           transitions, word reveal, count-up, burst, ripple, idle pause
+  layout.js            drag cards between columns
+  prefs.js             engine, accent, photo, focus sites, sync, export/import, sounds
+  settings.js          settings panel
+  onboarding.js        welcome tour
+  theme-boot.js        sets theme and accent before first paint
+fonts/                 Inter + Instrument Serif (WOFF2, OFL), bundled, no web requests
+icons/                 16, 48, 128 px
+scripts/build.mjs      check / bump / zip
+store/                 Web Store listing, privacy policy, screenshots, promo tiles
 ```
 
-## Development
+</details>
 
-No dependencies — just Node 18+.
+<details>
+<summary><b>🗄️ Stored data</b></summary>
 
-```bash
-npm run check          # manifest, JS syntax, imports, element ids, en/bn strings
-npm run build          # check, then dist/intent-tab-v<version>.zip (only what Chrome needs)
-npm run bump:patch     # 1.3.0 → 1.3.1   (also bump:minor, bump:major)
-npm run release        # bump patch + check + zip in one go
-```
+All of it is in `chrome.storage.local`, under these keys:
 
-(Or run `node scripts/build.mjs …` directly.) The ZIP leaves out `store/`, `scripts/`, `.git`, `.github`, `package.json` and the README.
+| Key | What it holds |
+|---|---|
+| `settings` | Your settings |
+| `intent` | The running intent |
+| `ask` | Last tab time and snooze |
+| `todos` | Your to-dos |
+| `notes` | The notes card |
+| `focus` | Today's one thing |
+| `focusAllow` | Sites opened "anyway" for 5 minutes |
+| `projects` | Projects: links and tasks |
+| `sound` | Focus sound choice |
+| `bgPhoto` | Your background photo |
+| `icons` | Custom icons |
+| `history` | Recent intents |
+| `aiCache` | Cached AI suggestions and summaries |
+| `ui` | Small interface states |
+| `days` | Per-day counts, including focus time, kept for 60 days |
 
-**Git & CI:** the folder is a Git repository (`main`). `.github/workflows/build.yml` runs the same check and build on every push and pull request once the repo is on GitHub, and attaches the ZIP to the run.
+</details>
 
-## Publishing to the Chrome Web Store
+## 🌐 Language: English / বাংলা
 
-Everything you need is in `store/`:
+Switch in **Settings → Language**. It changes instantly, including Bangla digits in numbers and dates.
 
-- `store/listing.md` — name, short and detailed description (English + বাংলা), category, single purpose, a justification for every permission, and the data-usage answers.
-- `store/privacy-policy.md` — publish it at a public URL (for example GitHub Pages or Google Sites) and paste that URL into the **Privacy** tab. Add your contact email at the bottom first.
-- `store/screenshots/*.png` (1280×800), `store/promo-small-440x280.png`, `store/promo-marquee-1400x560.png`, and `icons/icon128.png` as the store icon.
+- **Change wording:** all text is in [`js/strings.js`](js/strings.js), in the `en` and `bn` blocks.
+- **Add a third language:**
+  1. Copy the `en` block and translate it.
+  2. Add the language's locale to `LOCALES`.
+  3. Add a button for it in `newtab.html`.
 
-Upload `dist/intent-tab-v<version>.zip` from `npm run build` (it already leaves out `store/`). Raise the version (`npm run bump:patch`) before every new upload.
+## 🏪 Publishing to the Chrome Web Store
 
-## Language: English / বাংলা
+Everything you need is in [`store/`](store/):
 
-The page comes in English and Bangla. Switch between them in **Settings → Language**. The change applies immediately, and numbers and dates also switch to Bangla digits. English is the default.
+- **Listing text:** [`listing.md`](store/listing.md) has the descriptions (English and বাংলা), a justification for each permission, and the data-usage answers.
+- **Privacy policy:** publish [`privacy-policy.md`](store/privacy-policy.md) at a public URL first, after adding your contact email to it.
+- **Images:**
+  - screenshots (1280×800)
+  - promo tiles
+  - `icons/icon128.png` as the store icon
 
-All visible text lives in `js/strings.js`, in the `en` and `bn` blocks. To change wording, edit it there. To add a third language, copy the `en` block, translate it, add its locale to `LOCALES` and add a button in the Language section of `newtab.html`.
+Raise the version with `npm run bump:patch`, run `npm run build`, then upload `dist/intent-tab-v<version>.zip`.
 
-## Stored data
+## 📜 Credits
 
-`chrome.storage.local` keys: `settings`, `intent`, `ask` (last tab time and snooze), `todos`, `notes`, `focus` (today’s one thing), `focusAllow` (sites opened “anyway” for 5 minutes), `projects`, `sound`, `bgPhoto`, `icons` (custom tile icons), `history` (recent intents, for suggestions and summaries), `aiCache` (cached AI suggestions and summaries), `ui`, and `days` (per-day counts, kept for 60 days). Removing the extension deletes all of it.
-#   i n t e n t _ t a b  
- 
+- **Fonts:** [Inter](https://github.com/rsms/inter) and [Instrument Serif](https://github.com/Instrument/instrument-serif), under the SIL Open Font License 1.1. See [`fonts/LICENSE.txt`](fonts/LICENSE.txt).
+- **Focus sounds:** made live with Web Audio. No audio files are shipped.
+
+<div align="center">
+<sub>Made with care for calmer browsing · <b>Intent Tab</b></sub>
+</div>
