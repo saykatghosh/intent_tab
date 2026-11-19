@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>New Tab</title>
+  <link rel="stylesheet" href="css/newtab.css">
+  <script src="js/theme-boot.js"></script>
+</head>
+<body>
+  <!-- Shared gradient for AI sparkle icons -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <defs>
+      <linearGradient id="aiGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#7aa7ff"/>
+        <stop offset=".5" stop-color="#b48cff"/>
+        <stop offset="1" stop-color="#ff9ac1"/>
+      </linearGradient>
+      <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" class="ring-stop-a"/>
+        <stop offset="1" class="ring-stop-b"/>
+      </linearGradient>
+    </defs>
+  </svg>
+  <canvas id="bg" class="bg-canvas" aria-hidden="true"></canvas>
+  <div class="bg-photo" id="bgPhoto" aria-hidden="true" hidden></div>
+  <div class="bg-grain" aria-hidden="true"></div>
+
+  <!-- Bookmarks bar (replaces Chrome's own bar) -->
+  <nav class="bmbar" id="bookmarksModule" data-i18n-aria="bookmarksTitle" hidden>
+    <div class="bmbar-items" id="bmbarItems"></div>
+    <span class="bmbar-empty muted" id="bmbarEmpty" data-i18n="bmBarEmpty" hidden></span>
+    <button type="button" class="bmbar-item bmbar-btn" id="bmbarMore" aria-haspopup="menu" aria-expanded="false" data-i18n-title="bmMore" data-i18n-aria="bmMore" hidden>
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 7l5 5-5 5M13 7l5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <button type="button" class="bmbar-item bmbar-btn" id="bmbarAdd" data-i18n-title="bmAddTitle" data-i18n-aria="bmAddTitle">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    </button>
+    <div class="bmbar-other" id="bmbarOther" hidden></div>
+  </nav>
+  <div class="bm-menu" id="bmMenu" role="menu" hidden></div>
+  <div class="drop-line" id="dropLine" aria-hidden="true" hidden></div>
+  <div class="bm-tip" id="bmTip" role="note" hidden>
+    <span class="bm-tip-text"><span data-i18n="bmTip"></span> <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>B</kbd></span>
+    <button type="button" class="link-btn" id="bmTipClose" data-i18n="gotIt"></button>
+  </div>
+
+  <header class="topbar">
+    <div class="clock" aria-live="off">
+      <div class="clock-time" id="clockTime"></div>
+      <div class="clock-date"><span id="clockDate"></span> · <span id="greeting"></span></div>
+    </div>
+    <div class="topbar-right">
+    <button type="button" class="kbar-btn" id="paletteBtn" data-i18n-title="palOpen">
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <span data-i18n="palShort"></span>
+      <kbd>Ctrl K</kbd>
+    </button>
+    <button type="button" class="ai-badge" id="aiBadge" hidden data-i18n-title="aiBadgeTitle">
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 2.5l1.8 5.7 5.7 1.8-5.7 1.8L12 17.5l-1.8-5.7L4.5 10l5.7-1.8z" fill="url(#aiGrad)"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" fill="url(#aiGrad)"/></svg>
+      <span data-i18n="aiBadge"></span>
+    </button>
+    <button class="icon-btn" id="settingsBtn" type="button" data-i18n-aria="settings" data-i18n-title="settings">
+      <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" d="M4 7h10M18 7h2M4 17h4M12 17h8"/><circle cx="16" cy="7" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="10" cy="17" r="2" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+    </button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <!-- Left: to-do -->
+    <aside class="side side-left">
+      <section class="card" id="todoModule" hidden>
+        <h2 class="card-title"><span class="title-icon"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M9 11l2 2 4-4M5 4h14a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span data-i18n="todoTitle"></span></h2>
+        <form id="todoForm" class="todo-form" autocomplete="off">
+          <input id="todoInput" type="text" maxlength="200" data-i18n-placeholder="todoPlaceholder" data-i18n-aria="todoPlaceholder">
+          <button type="submit" class="btn btn-quiet btn-icon" data-i18n-aria="todoAdd" data-i18n-title="todoAdd"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
+        </form>
+        <div class="progress" aria-hidden="true"><div class="progress-fill" id="todoBar"></div></div>
+        <p class="muted small" id="todoProgressText"></p>
+        <ul class="todo-list" id="todoList"></ul>
+        <p class="muted small" id="todoEmpty" data-i18n="todoEmpty" hidden></p>
+        <div class="week">
+          <div class="week-title muted small" data-i18n="todoWeek"></div>
+          <div class="week-chart" id="weekChart" role="img"></div>
+          <div class="chart-tip" id="chartTip" hidden></div>
+        </div>
+      </section>
+
+      <section class="card" id="notesModule" hidden>
+        <h2 class="card-title"><span class="title-icon"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 3h9l4 4v14H6z M14 3v5h5 M9 13h7 M9 17h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span data-i18n="notesTitle"></span><span class="notes-status" id="notesStatus" aria-live="polite"></span></h2>
+        <textarea class="notes-area" id="notesArea" spellcheck="true" data-i18n-placeholder="notesPlaceholder" data-i18n-aria="notesTitle"></textarea>
+      </section>
+    </aside>
+
+    <!-- Center: search + intent -->
+    <section class="center">
+      <form class="search" id="searchForm" action="https://www.google.com/search" method="get" role="search">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+        <input type="search" name="q" id="searchInput" autocomplete="off" data-i18n-placeholder="searchPlaceholder" data-i18n-aria="searchLabel">
+        <span class="search-shortcut" id="searchShortcut" hidden></span>
+        <kbd class="search-kbd" aria-hidden="true">/</kbd>
+        <button type="button" class="ask-ai-btn" id="askAiBtn" hidden data-i18n-title="askHint">
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 2.5l1.8 5.7 5.7 1.8-5.7 1.8L12 17.5l-1.8-5.7L4.5 10l5.7-1.8z" fill="url(#aiGrad)"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" fill="url(#aiGrad)"/></svg>
+          <span data-i18n="askAI"></span>
+          <kbd>Tab</kbd>
+        </button>
+      </form>
+
+      <!-- Ask AI answer -->
+      <section class="ai-card ai-answer" id="aiAnswer" hidden aria-live="polite">
+        <div class="ai-head">
+          <svg class="spark" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 2.5l1.8 5.7 5.7 1.8-5.7 1.8L12 17.5l-1.8-5.7L4.5 10l5.7-1.8z" fill="url(#aiGrad)"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" fill="url(#aiGrad)"/></svg>
+          <span class="ai-title" id="aiAnswerQ"></span>
+          <button type="button" class="ai-icon-btn" id="aiAnswerClose" data-i18n-aria="close" data-i18n-title="close">
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          </button>
+        </div>
+        <div class="ai-body" id="aiAnswerBody"></div>
+        <div class="ai-foot" id="aiAnswerFoot" hidden>
+          <span class="ai-tag" data-i18n="aiTag"></span>
+          <a class="link-btn" id="aiAnswerGoogle" href="#" data-i18n="askGoogle"></a>
+          <button type="button" class="link-btn" id="aiAnswerCopy" data-i18n="askCopy"></button>
+        </div>
+      </section>
+
+      <div class="intent" id="intentArea">
+        <div class="focus-strip" id="focusStrip" hidden></div>
+        <p class="eyebrow" id="tabNumber"></p>
+
+        <!-- Ask -->
+        <div id="askView" hidden>
+          <h1 class="question" data-i18n="question"></h1>
+          <form id="intentForm" class="intent-form" autocomplete="off">
+            <input id="intentInput" type="text" maxlength="140" data-i18n-placeholder="intentPlaceholder" data-i18n-aria="question">
+            <button type="submit" class="btn btn-primary btn-go" data-i18n-aria="intentSubmit" data-i18n-title="intentSubmit"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </form>
+          <div class="suggest-row" id="suggestRow" hidden></div>
+          <div class="chips" id="chips"></div>
+          <div class="ask-footer">
+            <button type="button" class="link-btn" id="snoozeHour" data-i18n="snoozeHour"></button>
+            <span class="dot" aria-hidden="true">·</span>
+            <button type="button" class="link-btn" id="snoozeToday" data-i18n="snoozeToday"></button>
+            <span class="dot" aria-hidden="true">·</span>
+            <span class="muted" data-i18n="escHint"></span>
+          </div>
+        </div>
+
+        <!-- Show running intent -->
+        <div id="showView" hidden>
+          <p class="muted small" data-i18n="yourIntent"></p>
+          <p class="intent-text" id="intentText"></p>
+          <div class="ai-card coach" id="coach" hidden></div>
+          <div class="breathe" id="breathe" hidden>
+            <div class="breathe-stage">
+              <div class="breathe-orb" id="breatheOrb"></div>
+              <span class="breathe-label" id="breatheLabel" aria-live="polite"></span>
+            </div>
+            <span class="breathe-count" id="breatheCount"></span>
+          </div>
+          <div class="timer" id="timer">
+            <svg class="ring" viewBox="0 0 44 44" aria-hidden="true">
+              <circle class="ring-track" cx="22" cy="22" r="19"/>
+              <circle class="ring-fill" id="ringFill" cx="22" cy="22" r="19"/>
+            </svg>
+            <span class="timer-text" id="timerText"></span>
+          </div>
+          <div class="dur-pick" id="durPick" role="group" data-i18n-aria="timerLength"></div>
+          <div class="sound-pick" id="soundPick" role="group" data-i18n-aria="soundTitle"></div>
+          <div class="intent-actions">
+            <button type="button" class="btn btn-primary" id="doneBtn" data-i18n="done"></button>
+            <button type="button" class="btn btn-quiet" id="newIntentBtn" data-i18n="newIntent"></button>
+            <button type="button" class="btn btn-quiet" id="addTimeBtn" data-i18n="addTime" hidden></button>
+            <button type="button" class="btn btn-quiet" id="breakBtn" data-i18n="takeBreak5" hidden></button>
+          </div>
+        </div>
+
+        <!-- Idle: nothing asked -->
+        <div id="idleView" hidden>
+          <button type="button" class="link-btn" id="setIntentBtn" data-i18n="setIntentLink"></button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: report -->
+    <aside class="side side-right">
+      <section class="card" id="reportModule" hidden>
+        <div class="seg" role="tablist">
+          <button type="button" role="tab" class="seg-btn" data-day="0" data-i18n="reportToday"></button>
+          <button type="button" role="tab" class="seg-btn" data-day="1" data-i18n="reportYesterday"></button>
+          <button type="button" role="tab" class="seg-btn" data-day="week" data-i18n="reportWeek"></button>
+        </div>
+        <dl class="stats" id="reportStats"></dl>
+        <p class="muted small" id="reportEmpty" data-i18n="reportNoData" hidden></p>
+        <div class="ai-card ai-summary" id="aiSummary" hidden>
+          <div class="ai-head">
+            <svg class="spark" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 2.5l1.8 5.7 5.7 1.8-5.7 1.8L12 17.5l-1.8-5.7L4.5 10l5.7-1.8z" fill="url(#aiGrad)"/><path d="M18.5 14.5l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8z" fill="url(#aiGrad)"/></svg>
+            <span class="ai-title" data-i18n="sumTitle"></span>
+            <span class="ai-tag" id="aiSummaryTag" data-i18n="aiTag" hidden></span>
+            <button type="button" class="ai-icon-btn" id="aiSummaryRefresh" data-i18n-aria="sumRefresh" data-i18n-title="sumRefresh">
+              <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v4h-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+          <p class="ai-summary-text" id="aiSummaryText"></p>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <footer class="bottom">
+    <section class="card" id="topSitesModule" hidden>
+      <h2 class="card-title"><span class="title-icon"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6-5.3-3-5.3 3 1.2-6L3.4 9.3l6-.7z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span><span data-i18n="topSitesTitle"></span></h2>
+      <div class="tiles" id="topSites"></div>
+    </section>
+  </footer>
+
+  <!-- Settings -->
+  <div class="scrim" id="scrim" hidden></div>
+  <aside class="panel" id="settingsPanel" hidden aria-labelledby="settingsTitle" role="dialog">
+    <div class="panel-head">
+      <h2 id="settingsTitle" data-i18n="settings"></h2>
+      <button type="button" class="icon-btn" id="closeSettings" data-i18n-aria="close" data-i18n-title="close">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <fieldset class="field">
+      <legend data-i18n="askMode"></legend>
+      <label class="radio"><input type="radio" name="askMode" value="smart"><span><strong data-i18n="modeSmart"></strong><small data-i18n="modeSmartDesc"></small></span></label>
+      <label class="radio"><input type="radio" name="askMode" value="always"><span><strong data-i18n="modeAlways"></strong><small data-i18n="modeAlwaysDesc"></small></span></label>
+      <label class="radio"><input type="radio" name="askMode" value="work"><span><strong data-i18n="modeWork"></strong><small data-i18n="modeWorkDesc"></small></span></label>
+      <div class="work-hours">
+        <span data-i18n="from"></span>
+        <input type="time" id="workStart">
+        <span data-i18n="to"></span>
+        <input type="time" id="workEnd">
+      </div>
+      <label class="radio"><input type="radio" name="askMode" value="off"><span><strong data-i18n="modeOff"></strong><small data-i18n="modeOffDesc"></small></span></label>
+      <div class="snooze-note" id="snoozeNote" hidden>
+        <span id="snoozeText"></span>
+        <button type="button" class="link-btn" id="resumeBtn" data-i18n="resume"></button>
+      </div>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="modules"></legend>
+      <label class="switch"><span data-i18n="modTodo"></span><input type="checkbox" data-module="todo"><i></i></label>
+      <label class="switch"><span data-i18n="modNotes"></span><input type="checkbox" data-module="notes"><i></i></label>
+      <label class="switch"><span data-i18n="modBookmarks"></span><input type="checkbox" data-module="bookmarks"><i></i></label>
+      <label class="switch"><span data-i18n="modTopSites"></span><input type="checkbox" data-module="topSites"><i></i></label>
+      <label class="switch"><span data-i18n="modReport"></span><input type="checkbox" data-module="report"><i></i></label>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="language"></legend>
+      <div class="seg">
+        <button type="button" class="seg-btn" data-lang-choice="en" lang="en">English</button>
+        <button type="button" class="seg-btn" data-lang-choice="bn" lang="bn">বাংলা</button>
+      </div>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="timerLength"></legend>
+      <div class="seg">
+        <button type="button" class="seg-btn" data-timer-choice="5">5</button>
+        <button type="button" class="seg-btn" data-timer-choice="10">10</button>
+        <button type="button" class="seg-btn" data-timer-choice="25">25</button>
+        <button type="button" class="seg-btn" data-timer-choice="50">50</button>
+      </div>
+      <p class="muted small field-note" data-i18n="timerNote"></p>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="focusSection"></legend>
+      <label class="switch"><span data-i18n="notifyToggle"></span><input type="checkbox" id="notifyToggle"><i></i></label>
+      <label class="switch"><span><span data-i18n="focusModeToggle"></span><small class="switch-note" data-i18n="focusModeNote"></small></span><input type="checkbox" id="focusToggle"><i></i></label>
+      <div class="focus-sites" id="focusSitesBox" hidden>
+        <div class="site-list" id="focusSites"></div>
+        <p class="muted small" id="focusSitesEmpty" data-i18n="focusSitesEmpty"></p>
+        <form class="site-form" id="focusSiteForm" autocomplete="off">
+          <input type="text" id="focusSiteInput" placeholder="youtube.com" data-i18n-aria="focusSiteAdd">
+          <button type="submit" class="btn btn-quiet btn-sm" data-i18n="focusSiteAdd"></button>
+        </form>
+        <p class="muted small field-note" data-i18n="focusPermNote"></p>
+      </div>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="engineSection"></legend>
+      <select class="select" id="engineSelect" data-i18n-aria="engineSection"></select>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="aiSection"></legend>
+      <label class="switch"><span data-i18n="aiToggle"></span><input type="checkbox" id="aiToggle"><i></i></label>
+      <div class="ai-status">
+        <span class="ai-dot" id="aiStatusDot"></span>
+        <p id="aiStatusText"></p>
+      </div>
+      <div class="meter ai-progress" id="aiProgress" hidden><div class="meter-fill" id="aiProgressFill"></div></div>
+      <button type="button" class="btn btn-primary btn-sm ai-download" id="aiDownload" data-i18n="aiDownload" hidden></button>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="background"></legend>
+      <div class="seg">
+        <button type="button" class="seg-btn" data-bg-choice="animated" data-i18n="bgAnimated"></button>
+        <button type="button" class="seg-btn" data-bg-choice="still" data-i18n="bgStill"></button>
+        <button type="button" class="seg-btn" data-bg-choice="plain" data-i18n="bgPlain"></button>
+        <button type="button" class="seg-btn" data-bg-choice="photo" data-i18n="bgPhoto"></button>
+      </div>
+      <div class="photo-row" id="photoRow" hidden>
+        <button type="button" class="btn btn-quiet btn-sm" id="photoBtn" data-i18n="photoChoose"></button>
+        <button type="button" class="link-btn small" id="photoRemove" data-i18n="photoRemove"></button>
+        <label class="dim-row"><span data-i18n="photoDim"></span><input type="range" id="bgDim" min="0" max="0.7" step="0.05"></label>
+      </div>
+      <input type="file" id="photoFile" accept="image/*" hidden>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="accentSection"></legend>
+      <div class="accent-row">
+        <button type="button" class="accent-swatch" data-accent-choice="sage" data-i18n-title="accent_sage" data-i18n-aria="accent_sage"></button>
+        <button type="button" class="accent-swatch" data-accent-choice="ocean" data-i18n-title="accent_ocean" data-i18n-aria="accent_ocean"></button>
+        <button type="button" class="accent-swatch" data-accent-choice="violet" data-i18n-title="accent_violet" data-i18n-aria="accent_violet"></button>
+        <button type="button" class="accent-swatch" data-accent-choice="amber" data-i18n-title="accent_amber" data-i18n-aria="accent_amber"></button>
+        <button type="button" class="accent-swatch" data-accent-choice="rose" data-i18n-title="accent_rose" data-i18n-aria="accent_rose"></button>
+      </div>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="theme"></legend>
+      <div class="seg">
+        <button type="button" class="seg-btn" data-theme-choice="auto" data-i18n="themeAuto"></button>
+        <button type="button" class="seg-btn" data-theme-choice="light" data-i18n="themeLight"></button>
+        <button type="button" class="seg-btn" data-theme-choice="dark" data-i18n="themeDark"></button>
+      </div>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="devSection"></legend>
+      <div class="data-row">
+        <button type="button" class="btn btn-quiet btn-sm" id="projectsBtn" data-i18n="devProjects"></button>
+        <button type="button" class="btn btn-quiet btn-sm" id="toolsBtn" data-i18n="devTools"></button>
+      </div>
+      <p class="muted small field-note" data-i18n="devShortcutsNote"></p>
+      <p class="shortcut-list"><kbd>mdn</kbd> <kbd>npm</kbd> <kbd>gh</kbd> <kbd>so</kbd> <kbd>can</kbd> <kbd>dd</kbd> <kbd>pypi</kbd> <kbd>crates</kbd> <kbd>bundle</kbd> <kbd>tw</kbd> <kbd>yt</kbd> <kbd>w</kbd></p>
+    </fieldset>
+
+    <fieldset class="field">
+      <legend data-i18n="dataSection"></legend>
+      <label class="switch"><span><span data-i18n="syncToggle"></span><small class="switch-note" data-i18n="syncNote"></small></span><input type="checkbox" id="syncToggle"><i></i></label>
+      <div class="data-row">
+        <button type="button" class="btn btn-quiet btn-sm" id="exportBtn" data-i18n="exportBtn"></button>
+        <button type="button" class="btn btn-quiet btn-sm" id="importBtn" data-i18n="importBtn"></button>
+        <button type="button" class="btn btn-quiet btn-sm" id="resetLayoutBtn" data-i18n="resetLayout"></button>
+      </div>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+      <p class="muted small field-note" data-i18n="dataNote"></p>
+    </fieldset>
+  </aside>
+
+  <!-- Add bookmark -->
+  <dialog class="dialog" id="bmDialog" aria-labelledby="bmDialogTitle">
+    <form id="bmForm" autocomplete="off" novalidate>
+      <h2 id="bmDialogTitle" data-i18n="bmAddTitle"></h2>
+      <div class="seg" role="tablist" id="bmKindTabs">
+        <button type="button" role="tab" class="seg-btn" data-bm-kind="bookmark">
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+          <span data-i18n="bmKindLink"></span>
+        </button>
+        <button type="button" role="tab" class="seg-btn" data-bm-kind="folder">
+          <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+          <span data-i18n="bmKindFolder"></span>
+        </button>
+      </div>
+      <label class="form-row">
+        <span data-i18n="bmName"></span>
+        <input type="text" id="bmName" maxlength="120" data-i18n-placeholder="bmNamePlaceholder">
+      </label>
+      <label class="form-row" id="bmUrlRow">
+        <span data-i18n="bmUrl"></span>
+        <input type="text" id="bmUrl" maxlength="2000" placeholder="example.com">
+      </label>
+      <p class="form-error" id="bmError" hidden></p>
+      <p class="muted small" id="bmWhere"></p>
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-quiet" id="bmCancel" data-i18n="cancel"></button>
+        <button type="submit" class="btn btn-primary" data-i18n="save"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Change icon -->
+  <dialog class="dialog icon-dialog" id="iconDialog" aria-labelledby="iconDialogTitle">
+    <form id="iconForm" autocomplete="off">
+      <div class="icon-head">
+        <span class="tile-icon icon-preview" id="iconPreview"></span>
+        <div>
+          <h2 id="iconDialogTitle" data-i18n="iconTitle"></h2>
+          <p class="muted small" id="iconFor"></p>
+        </div>
+      </div>
+
+      <div class="seg" role="tablist">
+        <button type="button" role="tab" class="seg-btn" data-icon-tab="emoji" data-i18n="iconEmoji"></button>
+        <button type="button" role="tab" class="seg-btn" data-icon-tab="image" data-i18n="iconImage"></button>
+      </div>
+
+      <div id="iconEmojiPane">
+        <div class="emoji-grid" id="emojiGrid"></div>
+        <label class="form-row">
+          <span data-i18n="iconCustomEmoji"></span>
+          <input type="text" id="emojiInput" maxlength="16" placeholder="😀">
+        </label>
+      </div>
+
+      <div id="iconImagePane" hidden>
+        <label class="upload" for="iconFile">
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 16V4M7 9l5-5 5 5M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span data-i18n="iconUpload"></span>
+          <small class="muted" data-i18n="iconUploadHint"></small>
+        </label>
+        <input type="file" id="iconFile" accept="image/*" hidden>
+        <p class="form-error" id="iconError" data-i18n="iconBadImage" hidden></p>
+      </div>
+
+      <div class="form-row">
+        <span data-i18n="iconColor"></span>
+        <div class="swatches" id="swatches"></div>
+      </div>
+
+      <label class="check-row" id="barSyncRow" hidden>
+        <input type="checkbox" id="barSync">
+        <span>
+          <span data-i18n="iconBarSync"></span>
+          <small class="muted" data-i18n="iconBarSyncHint"></small>
+        </span>
+      </label>
+
+      <div class="dialog-actions">
+        <button type="button" class="btn btn-quiet btn-left" id="iconReset" data-i18n="iconReset"></button>
+        <button type="button" class="btn btn-quiet" id="iconCancel" data-i18n="cancel"></button>
+        <button type="submit" class="btn btn-primary" data-i18n="save"></button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Projects -->
+  <dialog class="dialog proj-dialog" id="projDialog" aria-labelledby="projTitle">
+    <div class="proj-top">
+      <h2 id="projTitle" data-i18n="projTitle"></h2>
+      <button type="button" class="btn btn-quiet btn-sm" id="projAdd" data-i18n="projAddBtn"></button>
+    </div>
+    <p class="muted small" data-i18n="projIntro"></p>
+    <p class="muted" id="projEmpty" data-i18n="projEmptyText" hidden></p>
+    <div class="proj-list" id="projList"></div>
+    <div class="dialog-actions">
+      <button type="button" class="btn btn-primary" id="projDone" data-i18n="projDone"></button>
+    </div>
+  </dialog>
+
+  <!-- Developer tools -->
+  <dialog class="dialog tools-dialog" id="toolsDialog" aria-labelledby="toolsTitle">
+    <div class="tools-top">
+      <h2 id="toolsTitle" data-i18n="toolsTitle"></h2>
+      <button type="button" class="ai-icon-btn" id="toolsClose" data-i18n-aria="close" data-i18n-title="close">
+        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+    <div class="tool-tabs" id="toolTabs" role="tablist"></div>
+    <div class="tool-body" id="toolBody"></div>
+  </dialog>
+
+  <!-- Welcome tour -->
+  <dialog class="tour" id="tour" aria-labelledby="tourTitle">
+    <div class="tour-card" id="tourCard">
+      <div class="tour-art" id="tourArt" aria-hidden="true"></div>
+      <h2 id="tourTitle"></h2>
+      <p id="tourBody"></p>
+      <div class="tour-dots" id="tourDots" aria-hidden="true"></div>
+      <div class="tour-actions">
+        <button type="button" class="link-btn" id="tourSkip" data-i18n="tourSkip"></button>
+        <span class="tour-spacer"></span>
+        <button type="button" class="btn btn-quiet" id="tourBack" data-i18n="tourBack"></button>
+        <button type="button" class="btn btn-primary" id="tourNext"></button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Command palette -->
+  <dialog class="palette" id="palette" aria-labelledby="paletteInput">
+    <div class="pal-search">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M16 16l4 4" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <input type="text" id="paletteInput" autocomplete="off" spellcheck="false" role="combobox" aria-controls="paletteList" aria-expanded="true" data-i18n-placeholder="palPlaceholder">
+      <kbd>Esc</kbd>
+    </div>
+    <div class="pal-list" id="paletteList" role="listbox"></div>
+    <p class="pal-empty" id="paletteEmpty" data-i18n="palEmpty" hidden></p>
+    <div class="pal-foot"><span><kbd>↑</kbd><kbd>↓</kbd> <span data-i18n="palNav"></span></span><span><kbd>↵</kbd> <span data-i18n="palRun"></span></span><span><kbd>Ctrl K</kbd> <span data-i18n="palToggle"></span></span></div>
+  </dialog>
+
+  <!-- Right-click menu -->
+  <div class="ctx-menu" id="ctxMenu" role="menu" hidden></div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <span class="toast-text" id="toastText"></span>
+    <button type="button" class="toast-action" id="toastAction" hidden></button>
+  </div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
