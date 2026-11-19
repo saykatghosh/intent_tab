@@ -1,4 +1,4 @@
-// Tabi — a small robot companion that peeks over the top of the To-do card,
+// Intent — a small robot companion that peeks over the top of the To-do card,
 // waves hello, follows your mouse with its eyes, points at the task to do next
 // ("Let's do this one 👉"), cheers when you finish things, and keeps watch
 // while an intent runs. Click it for the next suggestion.
@@ -92,7 +92,7 @@ function place() {
   anchor = enabled ? pickAnchor() : null;
   const show = !!anchor;
   [robot, hands, bubble].forEach((el) => el.classList.toggle('is-gone', !show));
-  // The column Tabi sits on gets a little headroom, so Tabi never covers the clock.
+  // The column the robot sits on gets a little headroom, so the robot never covers the clock.
   document.querySelectorAll('.tabi-col').forEach((col) => { if (!anchor || col !== anchor.parentElement) col.classList.remove('tabi-col'); });
   if (!show) return;
   anchor.parentElement.classList.add('tabi-col');
@@ -103,7 +103,7 @@ function place() {
   robot.style.top = (y - 104) + 'px';
   hands.style.left = (x + 10) + 'px';
   hands.style.top = (y - 13) + 'px';
-  // Speech bubble to the right of Tabi, above the card.
+  // Speech bubble to the right of the robot, above the card.
   bubble.style.left = (x + 128) + 'px';
   bubble.style.maxWidth = Math.max(180, Math.min(360, window.innerWidth - (x + 128) - 16)) + 'px';
   // Sit above the search bar, never on top of it.
@@ -163,7 +163,7 @@ function highlightTask(text) {
   }
 }
 
-// ---------- what Tabi says ----------
+// ---------- what the robot says ----------
 async function buildTips() {
   const { todos = [], focus, intent } = await get(['todos', 'focus', 'intent']);
   const out = [];
@@ -258,7 +258,7 @@ function build() {
   bubble.setAttribute('role', 'status');
   bubble.setAttribute('aria-live', 'polite');
   bubble.innerHTML = '<span class="tabi-name"></span><p id="tabiText"></p><div class="tabi-actions" id="tabiActions"></div><button type="button" class="tabi-close" id="tabiClose"></button>';
-  bubble.querySelector('.tabi-name').textContent = 'Tabi';
+  bubble.querySelector('.tabi-name').textContent = 'Intent'; // the robot's name
   const close = bubble.querySelector('#tabiClose');
   close.innerHTML = '<svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
   close.setAttribute('aria-label', t('coachHide'));
@@ -289,7 +289,7 @@ export async function initRobot(on = true) {
   lastDone = todos.filter((x) => x.done).length;
   await refresh();
 
-  // Tabi is positioned in page coordinates, so scrolling never needs a re-place.
+  // The robot is positioned in page coordinates, so scrolling never needs a re-place.
   const placeSoon = perFrame(place);
   window.addEventListener('pointermove', perFrame(lookAt), { passive: true });
   window.addEventListener('resize', placeSoon);

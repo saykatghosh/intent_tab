@@ -71,7 +71,7 @@ After you edit a file, click ↻ on the extension card and open a new tab.
 |:-:|---|---|
 | 🎯 | **Intent question** | Type a reason or pick a chip. Your intent then shows large, with a focus timer and **Done**. |
 | 🌌 | **Cosmos** | A deep-space sky with stars, a nebula, shooting stars and a ringed planet. In light mode it's a pastel sky. |
-| 🤖 | **Tabi** | A small robot that peeks over your To-do card, points at the next task and cheers when you finish one. |
+| 🤖 | **Intent, the robot** | A small robot that peeks over your To-do card, points at the next task and cheers when you finish one. |
 | ✅ | **To-do and today's one thing** | Daily tasks with progress and a 7-day chart, plus one goal for the day. |
 | 🗂️ | **Projects** | Links, tasks and progress for each project, in a popup that opens with one click. |
 | ⏱️ | **Focus time** | Counts how long you really focused today, with a session count. |
@@ -223,7 +223,7 @@ This runs entirely on your computer through Chrome's Prompt API. There's no API 
   - **Cosmos** (default): stars, a nebula, shooting stars, a ringed planet and floating dust, leaning gently toward the mouse.
   - **Animated:** colour fields that follow the time of day.
   - **Still**, **Plain**, or your own **Photo** with a *Darken* slider.
-- **Tabi, the robot companion:**
+- **Intent, the robot companion:**
   - It waves, blinks and follows your mouse with its eyes.
   - It points at the next task, and its bubble offers **Start** and **Next**.
   - It keeps watch while an intent runs and hops when you finish something.
@@ -322,7 +322,7 @@ js/
   ai.js                on-device AI wrapper (Prompt API)
   assistant.js         suggestions, coach, summary, Ask AI (+ rule fallbacks)
   background.js        Cosmos / animated canvas background
-  robot.js             Tabi, the robot companion
+  robot.js             Intent, the robot companion
   effects.js           transitions, word reveal, count-up, burst, ripple, idle pause
   layout.js            drag cards between columns
   prefs.js             engine, accent, photo, focus sites, sync, export/import, sounds

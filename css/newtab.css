@@ -1850,12 +1850,12 @@ input[type="text"], input[type="search"], input[type="time"] {
    v1.3 — developer features: search shortcuts, projects, tools
    ========================================================= */
 /* =========================================================
-   v1.4 — "another world": Cosmos glass + Tabi the robot
+   v1.4 — "another world": Cosmos glass + Intent the robot
    ========================================================= */
 
-/* Cards sit above Tabi, so it can peek from behind them */
+/* Cards sit above the robot, so it can peek from behind them */
 .layout .card { z-index: 1; }
-/* Headroom for Tabi above the card it peeks over */
+/* Headroom for the robot above the card it peeks over */
 .side.tabi-col { padding-top: 80px; transition: padding-top .4s var(--ease); }
 @media (max-width: 1100px) { .side.tabi-col { padding-top: 96px; } }
 
@@ -1876,7 +1876,7 @@ input[type="text"], input[type="search"], input[type="time"] {
 }
 :root[data-world="cosmos"] .clock-time { text-shadow: 0 0 30px rgba(127, 214, 189, .25); }
 
-/* ---------- Tabi ---------- */
+/* ---------- Intent, the robot (classes keep the old tabi- prefix) ---------- */
 .tabi {
   --tabi-eye: #5ff2d2;
   --look-x: 0px; --look-y: 0px; --tilt: 0deg;
@@ -1967,7 +1967,7 @@ input[type="text"], input[type="search"], input[type="time"] {
 .tabi-close { position: absolute; top: 8px; right: 8px; width: 22px; height: 22px; border-radius: 7px; border: 0; background: none; color: var(--muted); display: grid; place-items: center; }
 .tabi-close:hover { background: var(--surface-2); color: var(--text); }
 
-/* The task Tabi is pointing at */
+/* The task the robot is pointing at */
 .todo-item.robot-pick {
   background: var(--accent-soft);
   box-shadow: inset 0 0 0 1.5px var(--accent);
