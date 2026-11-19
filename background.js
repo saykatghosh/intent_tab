@@ -4,7 +4,7 @@
 //   • Focus sounds – rain / ocean / fan, played from an offscreen document
 // Everything is driven by chrome.storage, so the new-tab page just writes data.
 
-import { get, set, getSettings, updateDay, BREAK_RE } from './js/store.js';
+import { get, set, getSettings, updateDay, BREAK_RE, creditFocus } from './js/store.js';
 import { t, setLang } from './js/strings.js';
 
 const RULE_BASE = 1000;
@@ -86,6 +86,7 @@ async function scheduleEnd() {
 }
 
 async function notifyEnd() {
+  await creditFocus(); // count the focus time even if no tab is open
   const s = await loadLang();
   const { intent } = await get('intent');
   if (!intent || !intent.text || intent.notified === intent.endsAt) return;

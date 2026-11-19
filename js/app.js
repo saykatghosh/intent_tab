@@ -16,6 +16,8 @@ import { initFocus } from './focus.js';
 import { engine, searchUrl, bindShortcuts, parseShortcut } from './search.js';
 import { initTools, openTool } from './tools.js';
 import { initProjects } from './projects.js';
+import { initDevCard } from './devcard.js';
+import { initRobot, setRobotEnabled } from './robot.js';
 import { pullSyncedSettings } from './store.js';
 import { initPrefs, applyAccent } from './prefs.js';
 import { initLayout } from './layout.js';
@@ -41,6 +43,9 @@ async function applyModules(settings) {
 
   $('notesModule').hidden = !m.notes;
   if (m.notes) jobs.push(initNotes());
+
+  $('devModule').hidden = !m.dev;
+  if (m.dev) jobs.push(initDevCard());
 
   $('reportModule').hidden = !m.report;
   if (m.report) jobs.push(initReport());
@@ -127,6 +132,7 @@ function registerAppCommands() {
       s(t('palThemeAuto'), 'settings', { theme: 'auto' }, 'theme system auto'),
       s('Language: English', 'globe', { lang: 'en' }, 'language english ইংরেজি'),
       s('ভাষা: বাংলা', 'globe', { lang: 'bn' }, 'language bangla bengali বাংলা'),
+      s(t('palBgCosmos'), 'image', { background: 'cosmos' }, 'background cosmos space stars world'),
       s(t('palBgAnimated'), 'image', { background: 'animated' }, 'background animation motion'),
       s(t('palBgStill'), 'image', { background: 'still' }, 'background still static'),
       s(t('palBgPlain'), 'image', { background: 'plain' }, 'background plain off'),
@@ -136,10 +142,20 @@ function registerAppCommands() {
   });
 }
 
+// v1.4: switch everyone to the Cosmos world once (they can switch back in Settings).
+async function enterNewWorld(settings) {
+  const { ui = {} } = await chrome.storage.local.get('ui');
+  if (ui.worldV14) return settings;
+  const next = { ...settings, background: 'cosmos', modules: { ...settings.modules, robot: true } };
+  await chrome.storage.local.set({ settings: next, ui: { ...ui, worldV14: true } });
+  return next;
+}
+
 // ---------- boot ----------
 async function main() {
   // Settings from Chrome sync win when sync is on (same setup on every computer).
-  const settings = await pullSyncedSettings(await getSettings());
+  let settings = await pullSyncedSettings(await getSettings());
+  settings = await enterNewWorld(settings);
   setLang(settings.lang);
   applyStrings();
   startClock();
@@ -178,6 +194,7 @@ async function main() {
     setAIEnabled(next.ai);
     updateSettings(next);
     applyModules(next);
+    setRobotEnabled(next.modules.robot !== false);
   });
 
   // v1.2: search engine, accent, photo, focus mode, sync, export; card layout; welcome tour.
@@ -187,8 +204,10 @@ async function main() {
   bindShortcuts();
   initTools(toast);
   $('toolsBtn').addEventListener('click', () => { closeSettings(); openTool(); });
+  $('devTopBtn').addEventListener('click', () => openTool());
   initProjects(toast).catch((err) => console.warn('[Intent Tab] projects', err));
   initOnboarding().catch((err) => console.warn('[Intent Tab] tour', err));
+  initRobot(settings.modules.robot !== false).catch((err) => console.warn('[Intent Tab] robot', err));
 
   // "/" jumps to the search bar (when not already typing somewhere).
   document.addEventListener('keydown', (e) => {

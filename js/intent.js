@@ -1,4 +1,4 @@
-import { get, set, updateDay, dayKey, FOCUS_MS, BREAK_MS, INTENT_MAX_AGE_MS } from './store.js';
+import { get, set, updateDay, dayKey, creditFocus, FOCUS_MS, BREAK_MS, INTENT_MAX_AGE_MS } from './store.js';
 import { t, digits } from './strings.js';
 import { transition, revealText, burstFrom } from './effects.js';
 import { renderSuggestions, renderCoach, recordIntent, recordIntentDone, category } from './assistant.js';
@@ -77,6 +77,7 @@ export async function initIntent(settings, toast) {
   const now = Date.now();
 
   const { ask = {}, intent = null } = await get(['ask', 'intent']);
+  if (intent && intent.endsAt && now >= intent.endsAt && (intent.creditedMs || 0) < intent.endsAt - intent.startedAt) creditFocus().catch(() => {});
   state.intent = isIntentActive(intent, now) ? intent : null;
 
   const view = decideView(settings, ask, intent, now);
@@ -97,6 +98,7 @@ export async function initIntent(settings, toast) {
     $('tabNumber').textContent = t('tabNumber', { n: state.tabNo });
     renderChips();
     if (state.view === 'ask') revealText(document.querySelector('.question'), t('question'));
+    if (state.view === 'idle') { $('idleTitle').textContent = idleTitle(); renderGlance(); }
     if (state.view === 'show') render('show');
   });
 
@@ -148,9 +150,46 @@ export function updateSettings(settings) {
 
 // ---------- rendering ----------
 function renderChips() {
-  const box = $('chips');
+  fillChips($('chips'), CHIP_KEYS, true);
+  fillChips($('idleChips'), CHIP_KEYS.slice(0, 3), false); // "Not sure" makes no sense as a one-click start
+}
+
+// Idle hero: "Good evening." — shown when the question isn't asked on this tab.
+function idleTitle() {
+  const h = new Date().getHours();
+  const key = h >= 5 && h < 12 ? 'greetMorning' : h >= 12 && h < 17 ? 'greetAfternoon' : h >= 17 && h < 21 ? 'greetEvening' : 'greetNight';
+  return t('idleTitle', { greet: t(key) });
+}
+
+// Idle hero: "Next task" and "Focus today" at a glance.
+function fmtDur(ms) {
+  const total = Math.round(ms / 60000);
+  const h = Math.floor(total / 60);
+  const m = total % 60;
+  return digits(h ? t('durHM', { h, m }) : t('durM', { m }));
+}
+
+async function renderGlance() {
+  const { todos = [], days = {} } = await get(['todos', 'days']);
+  const next = todos.find((x) => !x.done);
+  state.nextTask = next ? next.text : null;
+  $('glanceNext').hidden = !!(state.settings && state.settings.modules && state.settings.modules.todo === false);
+  $('glanceNext').classList.toggle('is-empty', !next);
+  $('glanceNextText').textContent = next ? next.text : t('idleNextEmpty');
+  $('glanceNextText').title = next ? next.text : '';
+  $('glanceNextGo').hidden = !next;
+
+  const d = days[dayKey()] || {};
+  const ms = d.focusMs || 0;
+  const n = d.focusSessions || 0;
+  $('glanceFocus').classList.toggle('is-empty', ms < 60000);
+  $('glanceFocusText').textContent = ms >= 60000 ? fmtDur(ms) : t('idleFocusNone');
+  $('glanceFocusSub').textContent = n ? digits(t(n === 1 ? 'idleSession' : 'idleSessions', { n })) : '';
+}
+
+function fillChips(box, keys, withContinue) {
   box.textContent = '';
-  if (state.intent && isIntentActive(state.intent)) {
+  if (withContinue && state.intent && isIntentActive(state.intent)) {
     const c = document.createElement('button');
     c.type = 'button';
     c.className = 'chip chip-continue';
@@ -158,15 +197,16 @@ function renderChips() {
     c.addEventListener('click', () => { countIntentTab(); show('show'); });
     box.append(c);
   }
-  for (const key of CHIP_KEYS) {
+  keys.forEach((key, i) => {
     const c = document.createElement('button');
     c.type = 'button';
     c.className = 'chip';
     c.innerHTML = `<svg class="chip-icon" viewBox="0 0 24 24" width="15" height="15" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${CHIP_ICONS[key]}</svg>`;
     c.append(t(key));
+    c.style.setProperty('--i', i);
     c.addEventListener('click', () => setIntent(t(key)));
     box.append(c);
-  }
+  });
 }
 
 // Switch views with a soft cross-fade (after the first paint).
@@ -182,6 +222,12 @@ function render(view) {
   $('showView').hidden = view !== 'show';
   $('idleView').hidden = view !== 'idle';
   stopTimer();
+
+  if (view === 'idle') {
+    renderGlance();
+    renderChips();
+    revealText($('idleTitle'), idleTitle());
+  }
 
   if (view === 'ask') {
     renderChips();
@@ -296,12 +342,18 @@ async function countIntentTab() {
   await updateDay((d) => { d.intentTabs += 1; });
 }
 
+// Used by the robot companion's "Start" button.
+export function startIntent(text, minutes) {
+  return setIntent(text, minutes);
+}
+
 async function setIntent(text, minutes) {
   text = String(text || '').trim();
   if (!text) return;
   const now = Date.now();
   // Breaks default to 5 minutes; everything else to the length chosen in Settings.
   const min = minutes || (isBreakIntent(text) ? 5 : Number(state.settings && state.settings.timerMin) || FOCUS_MS / 60000);
+  await creditFocus(); // the intent being replaced
   state.intent = { text, startedAt: now, endsAt: now + min * 60 * 1000 };
   await set({ intent: state.intent });
   await updateDay((d) => { d.intentsSet += 1; });
@@ -313,6 +365,7 @@ async function markDone() {
   if (!state.intent) return;
   burstFrom($('doneBtn'), { count: 28, spread: 120 });
   recordIntentDone(state.intent.text);
+  await creditFocus();
   state.intent = null;
   await set({ intent: null });
   await updateDay((d) => { d.intentsDone += 1; });
@@ -321,6 +374,7 @@ async function markDone() {
 }
 
 async function newIntent() {
+  await creditFocus();
   state.intent = null;
   await set({ intent: null });
   await show('ask');
@@ -354,6 +408,11 @@ function bindEvents() {
   $('breakBtn').addEventListener('click', () => setIntent(t('breakIntent'), 5));
   $('snoozeHour').addEventListener('click', () => snooze('hour'));
   $('snoozeToday').addEventListener('click', () => snooze('day'));
+  $('glanceNextGo').addEventListener('click', () => { if (state.nextTask) setIntent(state.nextTask); });
+  // Keep the idle glance current when tasks or stats change (in this or another tab).
+  chrome.storage.onChanged.addListener((c, area) => {
+    if (area === 'local' && state.view === 'idle' && (c.todos || c.days)) renderGlance();
+  });
   $('setIntentBtn').addEventListener('click', async () => {
     await show('ask');
     $('intentInput').focus();

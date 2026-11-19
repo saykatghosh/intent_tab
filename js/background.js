@@ -1,9 +1,10 @@
 // Ambient background: soft drifting colour fields + gentle wave lines.
 // Colours follow the time of day and the light/dark theme.
-// Modes: 'animated' (default), 'still' (one frame), 'plain' (off).
+// Modes: 'cosmos' (default — stars, nebula, planet), 'animated' (soft colour fields),
+//        'still' (one frame), 'plain' (off), 'photo' (your own image).
 // Respects prefers-reduced-motion and pauses while the tab is hidden.
 
-const FPS = 30;
+const FPS = 24; // calm, slow motion needs no more
 const DPR_MAX = 1.5;
 const WAVE_COUNT = 7;
 
@@ -120,11 +121,252 @@ function draw(time) {
   }
 }
 
+// =========================================================
+// Cosmos: another world — twinkling stars, a nebula, shooting
+// stars, a ringed planet on the horizon, floating dust.
+// Dark theme = deep space; light theme = a dreamy pastel sky.
+//
+// Performance: everything that doesn't move (sky, nebula, glow,
+// planet) is painted ONCE into a cached canvas. Each frame only
+// copies that image and draws the stars, one meteor and a little dust.
+// =========================================================
+const COSMOS = {
+  dark: {
+    sky: ['#03040b', '#090d24', '#140d2c'],
+    nebula: ['#3b2a8a', '#0f5f5c', '#6c2a74', '#1d3f86'],
+    nebulaAlpha: 0.5,
+    starAlpha: 1,
+    planet: ['#3a4fae', '#121a46', '#06081a'],
+    rim: '127, 214, 189',
+    ring: 'rgba(190, 200, 255, .35)',
+    glow: ['rgba(80, 200, 180, .16)', 'rgba(140, 100, 255, .12)'],
+    dust: '#b4e6dc',
+  },
+  light: {
+    sky: ['#c9d4ff', '#efe4f6', '#ffe6d3'],
+    nebula: ['#aebcff', '#ffc2dc', '#bfeee0', '#ffd6b0'],
+    nebulaAlpha: 0.55,
+    starAlpha: 0.85,
+    planet: ['#ffffff', '#d6d8ff', '#b7b2ea'],
+    rim: '255, 255, 255',
+    ring: 'rgba(255, 255, 255, .7)',
+    glow: ['rgba(255, 190, 160, .22)', 'rgba(170, 150, 255, .18)'],
+    dust: '#ffffff',
+  },
+};
+const PAD = 24; // extra edge on the cached scene so parallax never shows a gap
+const MAX_STARS = 200;
+const DUST_COUNT = 18;
+
+let stars = [];
+let dust = [];
+let meteor = null;
+let nextMeteor = 0;
+let scene = null; // cached static layer
+let sparkle = null; // pre-drawn glow + cross for bright stars
+let cosmosKey = '';
+
+function seedCosmos() {
+  const count = Math.min(MAX_STARS, Math.round((w * h) / 7000));
+  stars = Array.from({ length: count }, () => ({
+    x: Math.random(), y: Math.random() * (dark ? 1 : 0.62),
+    r: Math.random() < 0.06 ? 1.3 + Math.random() * 1.1 : 0.35 + Math.random() * 0.9,
+    a: 0.35 + Math.random() * 0.65, sp: 0.6 + Math.random() * 2.2, ph: Math.random() * 6.3,
+    d: 0.2 + Math.random() * 0.8,
+  }));
+  dust = Array.from({ length: DUST_COUNT }, () => ({
+    x: Math.random(), y: Math.random(), r: 0.6 + Math.random() * 1.6,
+    vy: 0.004 + Math.random() * 0.01, vx: (Math.random() - 0.5) * 0.004, ph: Math.random() * 6.3,
+  }));
+}
+
+function makeCanvas(cw, ch) {
+  const c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(cw));
+  c.height = Math.max(1, Math.round(ch));
+  return c;
+}
+
+function buildSparkle() {
+  const S = 64; // drawn once at high res, scaled down per star
+  sparkle = makeCanvas(S, S);
+  const g = sparkle.getContext('2d');
+  const c = S / 2;
+  const glow = g.createRadialGradient(c, c, 0, c, c, c);
+  glow.addColorStop(0, 'rgba(255, 255, 255, .35)');
+  glow.addColorStop(1, 'rgba(255, 255, 255, 0)');
+  g.fillStyle = glow;
+  g.fillRect(0, 0, S, S);
+  g.strokeStyle = 'rgba(255, 255, 255, .5)';
+  g.lineWidth = 1.2;
+  g.beginPath();
+  g.moveTo(c * 0.33, c); g.lineTo(c * 1.67, c);
+  g.moveTo(c, c * 0.33); g.lineTo(c, c * 1.67);
+  g.stroke();
+}
+
+function buildScene() {
+  const P = COSMOS[dark ? 'dark' : 'light'];
+  const cw = w + PAD * 2;
+  const ch = h + PAD * 2;
+  scene = makeCanvas(cw * dpr, ch * dpr);
+  const g = scene.getContext('2d');
+  g.setTransform(dpr, 0, 0, dpr, PAD * dpr, PAD * dpr); // (0,0) = screen top-left
+
+  // sky
+  const sky = g.createLinearGradient(0, 0, 0, h);
+  sky.addColorStop(0, P.sky[0]);
+  sky.addColorStop(0.55, P.sky[1]);
+  sky.addColorStop(1, P.sky[2]);
+  g.fillStyle = sky;
+  g.fillRect(-PAD, -PAD, cw, ch);
+
+  // nebula
+  const big = Math.max(w, h);
+  BLOBS.forEach((b, i) => {
+    const cx = b.x * w;
+    const cy = b.y * 0.8 * h;
+    const r = big * b.r * 0.85;
+    const grad = g.createRadialGradient(cx, cy, 0, cx, cy, r);
+    const c = P.nebula[i % P.nebula.length];
+    grad.addColorStop(0, rgba(c, P.nebulaAlpha));
+    grad.addColorStop(0.5, rgba(c, P.nebulaAlpha * 0.3));
+    grad.addColorStop(1, rgba(c, 0));
+    g.fillStyle = grad;
+    g.fillRect(-PAD, -PAD, cw, ch);
+  });
+
+  // horizon glow
+  const hg = g.createRadialGradient(w * 0.5, h * 1.15, 0, w * 0.5, h * 1.15, h * 0.9);
+  hg.addColorStop(0, P.glow[0]);
+  hg.addColorStop(0.6, P.glow[1]);
+  hg.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  g.fillStyle = hg;
+  g.fillRect(-PAD, -PAD, cw, ch);
+
+  // ringed planet low on the right
+  const pr = Math.min(w, h) * 0.3;
+  const px = w * 0.88;
+  const py = h * 1.04;
+  const ring = (from, to) => {
+    g.save();
+    g.translate(px, py);
+    g.rotate(-0.32);
+    g.scale(1, 0.22);
+    g.strokeStyle = P.ring;
+    g.lineWidth = pr * 0.09;
+    g.beginPath();
+    g.arc(0, 0, pr * 1.7, from, to);
+    g.stroke();
+    g.restore();
+  };
+  ring(Math.PI, Math.PI * 2);
+  const pg = g.createRadialGradient(px - pr * 0.45, py - pr * 0.5, pr * 0.1, px, py, pr);
+  pg.addColorStop(0, P.planet[0]);
+  pg.addColorStop(0.6, P.planet[1]);
+  pg.addColorStop(1, P.planet[2]);
+  g.fillStyle = pg;
+  g.beginPath();
+  g.arc(px, py, pr, 0, Math.PI * 2);
+  g.fill();
+  g.strokeStyle = `rgba(${P.rim}, .45)`;
+  g.lineWidth = 2;
+  g.beginPath();
+  g.arc(px, py, pr - 1, Math.PI * 1.05, Math.PI * 1.6);
+  g.stroke();
+  ring(0, Math.PI);
+}
+
+// Rebuild the cached scene only when size or theme changes.
+function ensureCosmos() {
+  const key = `${w}x${h}@${dpr}-${dark}`;
+  if (key === cosmosKey && scene) return;
+  cosmosKey = key;
+  seedCosmos();
+  buildScene();
+  if (!sparkle) buildSparkle();
+}
+
+function drawCosmos(time) {
+  ensureCosmos();
+  const t = (time - t0) / 1000;
+  const P = COSMOS[dark ? 'dark' : 'light'];
+  pointer.sx += (pointer.x - pointer.sx) * 0.04;
+  pointer.sy += (pointer.y - pointer.sy) * 0.04;
+
+  // static layer (gentle parallax by shifting the cached image)
+  ctx.globalAlpha = 1;
+  ctx.drawImage(scene, -PAD - pointer.sx * 12, -PAD - pointer.sy * 9, w + PAD * 2, h + PAD * 2);
+
+  // stars: tiny squares for the small ones, a pre-drawn sprite for the bright ones
+  ctx.fillStyle = '#fff';
+  for (const s of stars) {
+    const x = s.x * w + pointer.sx * 10 * s.d;
+    const y = s.y * h + pointer.sy * 8 * s.d;
+    ctx.globalAlpha = s.a * (0.55 + 0.45 * Math.sin(t * s.sp + s.ph)) * P.starAlpha;
+    if (s.r > 1.3) {
+      const size = s.r * 12;
+      ctx.drawImage(sparkle, x - size / 2, y - size / 2, size, size);
+      ctx.beginPath();
+      ctx.arc(x, y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      const d = s.r * 1.8;
+      ctx.fillRect(x - d / 2, y - d / 2, d, d);
+    }
+  }
+  ctx.globalAlpha = 1;
+
+  // shooting star every 7–15 s
+  if (!meteor && t > nextMeteor) {
+    meteor = { x: 0.35 + Math.random() * 0.6, y: Math.random() * 0.35, born: t, len: 140 + Math.random() * 120 };
+    nextMeteor = t + 7 + Math.random() * 8;
+  }
+  if (meteor) {
+    const k = (t - meteor.born) / 1.1;
+    if (k >= 1 || k < 0) meteor = null;
+    else {
+      const sx = meteor.x * w - k * w * 0.35;
+      const sy = meteor.y * h + k * h * 0.22;
+      const tx = sx + meteor.len * 0.85;
+      const ty = sy - meteor.len * 0.53;
+      const fade = Math.sin(k * Math.PI);
+      const g = ctx.createLinearGradient(sx, sy, tx, ty);
+      g.addColorStop(0, `rgba(255, 255, 255, ${0.9 * fade})`);
+      g.addColorStop(1, 'rgba(255, 255, 255, 0)');
+      ctx.strokeStyle = g;
+      ctx.lineWidth = 1.6;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(tx, ty);
+      ctx.stroke();
+    }
+  }
+
+  // floating dust, drifting upward
+  ctx.fillStyle = P.dust;
+  for (const d of dust) {
+    d.y -= d.vy / FPS;
+    d.x += d.vx / FPS;
+    if (d.y < -0.02) { d.y = 1.02; d.x = Math.random(); }
+    ctx.globalAlpha = (dark ? 0.25 : 0.45) + 0.25 * Math.sin(t * 1.3 + d.ph);
+    const s = d.r * 1.8;
+    ctx.fillRect(d.x * w + pointer.sx * 20 - s / 2, d.y * h + pointer.sy * 16 - s / 2, s, s);
+  }
+  ctx.globalAlpha = 1;
+}
+
+function frame(time) {
+  if (mode === 'cosmos') drawCosmos(time);
+  else draw(time);
+}
+
 function loop(time) {
   raf = requestAnimationFrame(loop);
   if (time - lastFrame < 1000 / FPS) return;
   lastFrame = time;
-  draw(time);
+  frame(time);
 }
 
 function stop() {
@@ -132,17 +374,31 @@ function stop() {
   raf = 0;
 }
 
+let paused = false; // set while the page is idle or the window is in the background
+
+// Animate only when someone is actually looking.
+function canAnimate() {
+  return mode !== 'still' && !reduceMotion.matches && !document.hidden && !paused;
+}
+
+function resume() {
+  if (raf || !canvas || canvas.hidden) return;
+  if (canAnimate()) raf = requestAnimationFrame(loop);
+}
+
 function start() {
   stop();
-  if (mode === 'plain' || mode === 'photo') { canvas.hidden = true; return; } // photo: an image is shown instead
+  const root = document.documentElement;
+  // CSS swaps live blur for a frosted surface while the background moves.
+  if ((mode === 'cosmos' || mode === 'animated') && !reduceMotion.matches) root.dataset.motion = ''; else delete root.dataset.motion;
+  if (mode === 'plain' || mode === 'photo') { canvas.hidden = true; delete root.dataset.world; return; } // photo: an image is shown instead
   canvas.hidden = false;
   pickPalette();
   resize();
-  if (mode === 'still' || reduceMotion.matches || document.hidden) {
-    draw(t0 + 40000); // a pleasant fixed moment
-    return;
-  }
-  raf = requestAnimationFrame(loop);
+  // CSS uses this for the "other world" glass look.
+  if (mode === 'cosmos') document.documentElement.dataset.world = 'cosmos'; else delete document.documentElement.dataset.world;
+  frame(mode === 'still' ? t0 + 40000 : performance.now()); // paint now, even if we don't animate
+  resume();
 }
 
 export function initBackground(initialMode) {
@@ -155,15 +411,31 @@ export function initBackground(initialMode) {
     pointer.y = (e.clientY / window.innerHeight) * 2 - 1;
   }, { passive: true });
 
-  window.addEventListener('resize', () => { if (mode === 'plain') return; resize(); if (!raf) start(); });
+  // Rebuild once the window stops resizing, not on every pixel of a drag.
+  let resizeTimer = 0;
+  window.addEventListener('resize', () => {
+    if (mode === 'plain' || mode === 'photo') return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(start, 150);
+  });
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stop();
-    else start();
+    else resume();
+  });
+  // Nobody using the page for a while, or the window is in the background:
+  // freeze on the current frame. Mouse or keyboard wakes it up again.
+  document.addEventListener('intent:idle', (e) => {
+    paused = e.detail;
+    if (paused) stop(); else resume();
   });
   darkQuery.addEventListener('change', start);
   reduceMotion.addEventListener('change', start);
   // Colours follow the time of day: re-check every 5 minutes.
-  setInterval(() => { if (mode !== 'plain') pickPalette(); if (!raf && mode !== 'plain') start(); }, 5 * 60 * 1000);
+  setInterval(() => {
+    if (mode !== 'animated' && mode !== 'still') return;
+    pickPalette();
+    if (!raf) frame(mode === 'still' ? t0 + 40000 : performance.now());
+  }, 5 * 60 * 1000);
 
   start();
 }

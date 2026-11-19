@@ -4,7 +4,7 @@
 //   intent    – { text, startedAt, endsAt } | null  (the running intent)
 //   ask       – { lastTabAt, snoozeUntil, skipDay }
 //   todos     – [{ id, text, done, createdAt, doneAt }]
-//   days      – { 'YYYY-MM-DD': { tabs, intentTabs, intentsSet, intentsDone, todoDone, todoTotal } }
+//   days      – { 'YYYY-MM-DD': { tabs, intentTabs, intentsSet, intentsDone, todoDone, todoTotal, focusMs, focusSessions } }
 
 export const FOCUS_MS = 10 * 60 * 1000;      // focus timer length
 export const BREAK_MS = 10 * 60 * 1000;      // Smart mode: gap that counts as a break
@@ -16,7 +16,7 @@ export const DEFAULT_SETTINGS = {
   workStart: '09:00',
   workEnd: '18:00',
   theme: 'auto', // auto | light | dark
-  background: 'animated', // animated | still | plain
+  background: 'cosmos', // cosmos | animated | still | plain | photo
   ai: true, // use Chrome's on-device AI when available
   timerMin: 10, // default focus timer: 5 | 10 | 25 | 50
   lang: 'en', // en | bn – English by default, Bangla can be chosen in Settings
@@ -28,7 +28,7 @@ export const DEFAULT_SETTINGS = {
   bgDim: 0.25, // darkening over a background photo (0–0.7)
   sync: false, // copy settings to chrome.storage.sync (all your Chrome browsers)
   layout: null, // { left: [...cardIds], right: [...cardIds] } — card order
-  modules: { todo: true, notes: true, bookmarks: true, topSites: true, report: true },
+  modules: { todo: true, notes: true, bookmarks: true, topSites: true, report: true, dev: true, robot: true },
 };
 
 // Small breaks shouldn't trigger focus mode; matches the "Take a break" intents.
@@ -92,7 +92,27 @@ export function daysAgo(n) {
 }
 
 export function emptyDay() {
-  return { tabs: 0, intentTabs: 0, intentsSet: 0, intentsDone: 0, todoDone: 0, todoTotal: 0 };
+  return { tabs: 0, intentTabs: 0, intentsSet: 0, intentsDone: 0, todoDone: 0, todoTotal: 0, focusMs: 0, focusSessions: 0 };
+}
+
+// Focus time: add the time spent on the current intent to the day it started.
+// Called when an intent ends (Done, replaced, timer up). Counts only up to the
+// timer's end, never twice (intent.creditedMs remembers what's already counted),
+// and breaks don't count.
+const FOCUS_CAP_MS = 4 * 60 * 60 * 1000;
+export async function creditFocus(end = Date.now()) {
+  const { intent } = await get('intent');
+  if (!intent || !intent.text || !intent.startedAt) return;
+  const spent = Math.min(FOCUS_CAP_MS, Math.max(0, Math.min(end, intent.endsAt || end) - intent.startedAt));
+  const already = intent.creditedMs || 0;
+  if (spent <= already) return;
+  await set({ intent: { ...intent, creditedMs: spent } });
+  if (BREAK_RE.test(intent.text)) return;
+  if (!already && spent < 60 * 1000) return; // under a minute isn't a session
+  await updateDay((d) => {
+    d.focusMs = (d.focusMs || 0) + (spent - already);
+    if (!already) d.focusSessions = (d.focusSessions || 0) + 1;
+  }, dayKey(new Date(intent.startedAt)));
 }
 
 // Read-modify-write one day's stats. Calls are queued so two updates

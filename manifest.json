@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Intent Tab",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "description": "A calm new tab that asks why you opened it. To-dos, bookmarks, focus timer and on-device AI.",
   "chrome_url_overrides": {
     "newtab": "newtab.html"

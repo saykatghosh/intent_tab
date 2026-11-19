@@ -1,9 +1,13 @@
-// Project switcher: keep each project's links (repo, staging, production,
-// design, tracker…) together. Type the project name in Ctrl+K to open any of them.
-// Stored as `projects`: [{ id, name, links: [{ label, url }] }]
+// Projects: keep each project's links (repo, staging, production, design,
+// tracker…) and its tasks together, with a progress bar.
+//   • Developer card: one row per project → click it to open the project view
+//   • Project view (popup): links, tasks, progress
+//   • Manage dialog: name + links
+//   • Ctrl+K: type the project name to open it or any of its links
+// Stored as `projects`: [{ id, name, links: [{ label, url }], tasks: [{ id, text, done }] }]
 
 import { get, set, uid } from './store.js';
-import { t } from './strings.js';
+import { t, digits } from './strings.js';
 import { registerCommands } from './palette.js';
 
 const $ = (id) => document.getElementById(id);
@@ -12,11 +16,12 @@ const X_SVG = '<svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true
 let projects = [];
 let saveTimer = 0;
 let toastFn = () => {};
+let viewId = null; // project open in the project view
 
-function favicon(url) {
+function favicon(url, size = 16) {
   const u = new URL(chrome.runtime.getURL('/_favicon/'));
   u.searchParams.set('pageUrl', url);
-  u.searchParams.set('size', '16');
+  u.searchParams.set('size', String(size));
   return u.toString();
 }
 
@@ -35,9 +40,22 @@ export function normalizeLink(raw) {
   try { return new URL(s).href; } catch { return ''; }
 }
 
+// Tasks done / total, and the percentage (0 when there are no tasks).
+export function progressOf(p) {
+  const tasks = (p && p.tasks) || [];
+  const done = tasks.filter((x) => x.done).length;
+  return { done, total: tasks.length, pct: tasks.length ? Math.round((done / tasks.length) * 100) : 0 };
+}
+
 function save() {
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(() => set({ projects }), 300);
+  saveTimer = setTimeout(flush, 300);
+}
+
+function flush() {
+  clearTimeout(saveTimer);
+  saveTimer = 0;
+  return set({ projects });
 }
 
 function openLinks(p) {
@@ -121,7 +139,7 @@ function renderDialog(focusId) {
 }
 
 function newProject(name = '') {
-  const p = { id: uid(), name, links: TEMPLATE.map((label) => ({ label, url: '' })) };
+  const p = { id: uid(), name, links: TEMPLATE.map((label) => ({ label, url: '' })), tasks: [] };
   projects.push(p);
   save();
   openManager(p.id);
@@ -132,32 +150,145 @@ export function openManager(focusId) {
   if (!$('projDialog').open) $('projDialog').showModal();
 }
 
+// ---------- Project view (popup) ----------
+function current() {
+  return projects.find((p) => p.id === viewId) || null;
+}
+
+function taskItem(p, task) {
+  const li = document.createElement('li');
+  li.className = 'pv-task' + (task.done ? ' is-done' : '');
+  const label = document.createElement('label');
+  const box = document.createElement('input');
+  box.type = 'checkbox';
+  box.checked = !!task.done;
+  box.addEventListener('change', () => { task.done = box.checked; save(); renderView(); });
+  const text = document.createElement('span');
+  text.textContent = task.text;
+  label.append(box, text);
+  const del = document.createElement('button');
+  del.type = 'button';
+  del.className = 'proj-x';
+  del.innerHTML = X_SVG;
+  del.setAttribute('aria-label', `${t('ctxDelete')}: ${task.text}`);
+  del.addEventListener('click', () => { p.tasks = p.tasks.filter((x) => x !== task); save(); renderView(); });
+  li.append(label, del);
+  return li;
+}
+
+function renderView() {
+  const p = current();
+  if (!p) { if ($('projView').open) $('projView').close(); return; }
+  p.tasks = p.tasks || [];
+  const links = p.links.filter((l) => l.url);
+  const pr = progressOf(p);
+
+  $('pvName').textContent = p.name || t('projUntitled');
+  $('pvMeta').textContent = digits(t('pvMeta', { links: links.length, done: pr.done, total: pr.total }));
+  $('pvRing').style.setProperty('--p', pr.pct);
+  $('pvRing').classList.toggle('is-full', pr.total > 0 && pr.done === pr.total);
+  $('pvPct').textContent = digits(pr.pct + '%');
+  $('pvBarFill').style.width = pr.pct + '%';
+  $('pvCount').textContent = pr.total ? digits(t('pvCount', { done: pr.done, total: pr.total })) : '';
+
+  // links
+  const box = $('pvLinks');
+  box.textContent = '';
+  for (const l of links) {
+    const a = document.createElement('a');
+    a.className = 'pv-link';
+    a.href = l.url;
+    a.title = l.url;
+    const img = document.createElement('img');
+    img.src = favicon(l.url, 32);
+    img.alt = '';
+    const body = document.createElement('span');
+    body.className = 'pv-link-body';
+    const name = document.createElement('span');
+    name.className = 'pv-link-name';
+    name.textContent = l.label || host(l.url);
+    const h = document.createElement('span');
+    h.className = 'pv-link-host';
+    h.textContent = host(l.url);
+    body.append(name, h);
+    a.append(img, body);
+    box.append(a);
+  }
+  $('pvNoLinks').hidden = links.length > 0;
+  $('pvOpenAll').hidden = links.length < 2;
+  $('pvOpenAll').textContent = t('pvOpenAll', { n: links.length });
+
+  // tasks: open ones first, finished ones below
+  const list = $('pvTasks');
+  list.textContent = '';
+  [...p.tasks.filter((x) => !x.done), ...p.tasks.filter((x) => x.done)].forEach((task) => list.append(taskItem(p, task)));
+  $('pvNoTasks').hidden = p.tasks.length > 0;
+}
+
+export function openProject(id) {
+  viewId = id;
+  if (!current()) return;
+  renderView();
+  if (!$('projView').open) $('projView').showModal();
+  setTimeout(() => $('pvTaskInput').focus(), 0);
+}
+
+function bindView() {
+  const dlg = $('projView');
+  $('pvClose').addEventListener('click', () => dlg.close());
+  dlg.addEventListener('click', (e) => { if (e.target === dlg) dlg.close(); });
+  dlg.addEventListener('close', () => { if (saveTimer) flush(); viewId = null; });
+  $('pvEdit').addEventListener('click', () => { const id = viewId; dlg.close(); openManager(id); });
+  $('pvOpenAll').addEventListener('click', () => { const p = current(); if (p) openLinks(p); });
+  $('pvTaskForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const p = current();
+    const input = $('pvTaskInput');
+    const text = input.value.trim();
+    if (!p || !text) return;
+    p.tasks = p.tasks || [];
+    p.tasks.push({ id: uid(), text, done: false });
+    input.value = '';
+    save();
+    renderView();
+  });
+}
+
 // ---------- Init ----------
 export async function initProjects(toast) {
   toastFn = toast || toastFn;
   const { projects: saved = [] } = await get('projects');
   projects = saved;
   chrome.storage.onChanged.addListener((c, a) => {
-    if (a === 'local' && c.projects && !$('projDialog').open) projects = c.projects.newValue || [];
+    // Changes from another tab; ignore while we're editing here (our own pending save wins).
+    if (a !== 'local' || !c.projects || $('projDialog').open || saveTimer) return;
+    projects = c.projects.newValue || [];
+    if ($('projView').open) renderView();
   });
   $('projAdd').addEventListener('click', () => newProject(''));
   $('projDone').addEventListener('click', () => $('projDialog').close());
   $('projDialog').addEventListener('close', () => {
-    clearTimeout(saveTimer);
-    // Drop empty links; keep projects that have a name or a link.
+    // Drop empty links; keep projects that have a name, a link or a task.
     projects = projects
-      .map((p) => ({ ...p, links: p.links.filter((l) => l.url) }))
-      .filter((p) => p.name.trim() || p.links.length);
-    set({ projects });
+      .map((p) => ({ ...p, links: p.links.filter((l) => l.url), tasks: p.tasks || [] }))
+      .filter((p) => p.name.trim() || p.links.length || p.tasks.length);
+    flush();
   });
   $('projDialog').addEventListener('click', (e) => { if (e.target === $('projDialog')) $('projDialog').close(); });
   $('projectsBtn').addEventListener('click', () => openManager());
+  bindView();
 
   registerCommands((q) => {
     const out = [];
     for (const p of projects) {
+      if (!p.name) continue;
+      const pr = progressOf(p);
+      out.push({
+        group: 'projects', icon: 'folder', label: t('projOpen', { name: p.name }),
+        hint: pr.total ? digits(`${pr.done}/${pr.total}`) : '',
+        keywords: `${p.name} project open tasks progress`, run: () => openProject(p.id),
+      });
       const links = p.links.filter((l) => l.url);
-      if (!links.length || !p.name) continue;
       for (const l of links) {
         out.push({
           group: 'projects', img: favicon(l.url),

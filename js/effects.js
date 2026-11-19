@@ -92,13 +92,51 @@ function ripple(e) {
   s.addEventListener('animationend', () => s.remove());
 }
 
-// ---------- Cursor spotlight on cards ----------
+// ---------- Cursor spotlight on cards (at most once per frame) ----------
+let spotEvent = null;
 function spotlight(e) {
+  if (!spotEvent) requestAnimationFrame(applySpotlight);
+  spotEvent = e;
+}
+function applySpotlight() {
+  const e = spotEvent;
+  spotEvent = null;
   const el = e.target.closest?.('.card, .search, .intent-form, .tile');
   if (!el) return;
   const r = el.getBoundingClientRect();
   el.style.setProperty('--mx', `${e.clientX - r.left}px`);
   el.style.setProperty('--my', `${e.clientY - r.top}px`);
+}
+
+// ---------- Idle: pause looping animations when nobody is using the page ----------
+// After a minute without mouse/keyboard (or as soon as the window loses focus)
+// the page sets <html class="is-idle"> and fires `intent:idle` (detail: true).
+// The background canvas stops drawing and CSS loops pause, so an open new tab
+// costs next to nothing. Any activity wakes everything up again.
+const IDLE_MS = 60 * 1000;
+let idle = false;
+let lastActive = performance.now();
+export const isIdle = () => idle;
+
+function setIdle(next) {
+  if (idle === next) return;
+  idle = next;
+  document.documentElement.classList.toggle('is-idle', next);
+  document.dispatchEvent(new CustomEvent('intent:idle', { detail: next }));
+}
+function activity() {
+  lastActive = performance.now();
+  if (idle) setIdle(false);
+}
+function watchIdle() {
+  for (const type of ['pointermove', 'pointerdown', 'keydown', 'wheel']) {
+    window.addEventListener(type, activity, { passive: true, capture: true });
+  }
+  window.addEventListener('focus', () => { lastActive = performance.now(); setIdle(false); });
+  window.addEventListener('blur', () => setIdle(true));
+  setInterval(() => {
+    if (!idle && !document.hidden && performance.now() - lastActive > IDLE_MS) setIdle(true);
+  }, 5000);
 }
 
 // ---------- Collapse an element out, then remove ----------
@@ -118,4 +156,5 @@ export function collapseOut(el) {
 export function initEffects() {
   document.addEventListener('pointerdown', ripple, { passive: true });
   document.addEventListener('pointermove', spotlight, { passive: true });
+  watchIdle();
 }

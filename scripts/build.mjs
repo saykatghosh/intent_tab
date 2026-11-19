@@ -18,8 +18,8 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST = path.join(ROOT, 'dist');
 const EXCLUDE = new Set(['.git', '.github', '.vscode', 'dist', 'node_modules', 'scripts', 'store', 'package.json', 'package-lock.json', '.gitignore', '.gitattributes', 'README.md', 'CHANGELOG.md']);
 // Element ids created at runtime, and string keys built from a prefix (e.g. 'sound_' + kind).
-const DYNAMIC_IDS = new Set(['focusInput', 'cardDropLine']);
-const KEY_PREFIXES = ['sound_', 'accent_', 'tool_'];
+const DYNAMIC_IDS = new Set(['focusInput', 'cardDropLine', 'tabiText', 'tabiActions']);
+const KEY_PREFIXES = ['sound_', 'accent_', 'tool_', 'devShort_'];
 
 const c = { red: (s) => `\x1b[31m${s}\x1b[0m`, green: (s) => `\x1b[32m${s}\x1b[0m`, dim: (s) => `\x1b[2m${s}\x1b[0m`, bold: (s) => `\x1b[1m${s}\x1b[0m` };
 const rel = (p) => path.relative(ROOT, p).split(path.sep).join('/');

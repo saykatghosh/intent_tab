@@ -68,6 +68,7 @@ After editing any file, click the reload icon on the extension card in `chrome:/
 - **Background photo:** Settings → Background → **Photo** → *Choose a photo…*, with a **Darken** slider. The photo is resized and stored locally.
 - **Your data:** **Export backup** downloads everything as a JSON file; **Import backup** restores it. **Sync settings** copies your settings (not to-dos, notes or history) through Chrome sync to your other computers.
 - **For developers**
+  - **Developer card** on the page (right column; drag it anywhere, or turn it off in Settings → Show on page): one-click buttons for all 7 tools, your projects with their link icons (and ↗ to open all), and search-shortcut chips that pre-fill the search bar. The **</>** button in the top bar opens the tools from anywhere.
   - **Search shortcuts:** in the search bar or Ctrl+K, type a keyword, a space and your query: `mdn`, `npm`, `gh` (`gh owner/repo` opens the repo), `so` (Stack Overflow), `can` (Can I use), `dd` (DevDocs), `pypi`, `crates`, `bundle` (Bundlephobia), `tw` (Tailwind), `yt`, `w` (Wikipedia). A hint shows where Enter will go.
   - **Projects:** Settings → Developer → *Projects…* (or Ctrl+K → “Manage projects”). Keep each project’s links together — Repo, Local (`localhost:3000` works), Staging, Production, Design, Tracker. Type the project name in Ctrl+K to open one link, or “Open all” in new tabs.
   - **Developer tools** (Ctrl+K or Settings → Developer → *Developer tools…*), all local:
@@ -89,6 +90,8 @@ After editing any file, click the reload icon on the extension card in `chrome:/
   - **Settings → AI (on this device):** turn AI on/off, see the model status, and start the one-time model download. A glowing **✦ AI** badge in the top bar shows it is ready (and spins while it is thinking).
   - **Without the model** (unsupported device, not downloaded yet, or AI turned off) everything still works with simple built-in rules: suggestions from your tasks and habits, timer lengths by topic, and a facts-only summary.
   - Requirements come from Chrome: a recent desktop Chrome on Windows, macOS, Linux or ChromeOS, plenty of free disk space for the model, and a capable GPU or enough RAM. AI replies are in English for now.
+- **Cosmos — another world (default background):** in dark mode a deep-space sky with twinkling stars, a drifting nebula, the odd shooting star, a ringed planet on the horizon and floating dust; in light mode a dreamy pastel sky. Cards turn to glass with a faint starlight edge. Everything leans gently toward the mouse. Settings → Background → **Cosmos** (other choices: Animated, Still, Plain, Photo).
+- **Tabi, the robot companion:** peeks over the top of the To-do card with its hands on the edge, waves hello, blinks, follows your mouse with its eyes, and points at the task to do next (“Let’s do this one 👉 …”) — that task glows in the list. Its speech bubble has **Start** (sets it as your intent) and **Next**. It reminds you of today’s one thing, keeps watch while an intent runs, breathes with you on breaks, and hops for joy when you finish a task. Click Tabi for the next suggestion; × hides the bubble. Turn it off in Settings → Show on page → *Tabi, the robot companion*.
 - **Ambient background:** soft colour fields drift slowly behind the page, with gentle wave lines near the bottom and a light paper grain. The colours follow the time of day (morning, day, evening, night) and the light/dark theme. In Settings → Background choose **Animated** (default), **Still** (no motion) or **Plain**. The animation pauses while the tab is hidden and stays still if the system asks for reduced motion.
 - **Visual effects:** soft cross-fades between views, themes and languages; the question and your intent appear word by word; a small particle burst when you mark an intent Done or finish every task; animated strike-through, slide-in and fold-away for tasks; chart bars that grow in; report numbers that count up; a cursor spotlight on cards; and a ripple on buttons. All motion turns off when the system asks for reduced motion.
 - **Settings panel:** turn modules on or off, choose the ask mode, the background, the language and the theme (System / Light / Dark).
@@ -143,6 +146,8 @@ js/notes.js        notes card
 js/layout.js       drag cards between columns
 js/onboarding.js   welcome tour
 js/projects.js     project switcher (links per project)
+js/devcard.js      the Developer card on the page
+js/robot.js        Tabi, the robot companion (peeks over the To-do card)
 js/tools.js        developer tools + instant answers in the palette
 js/theme-boot.js   sets the theme (and accent) before first paint
 scripts/build.mjs  check / bump / zip (no dependencies)

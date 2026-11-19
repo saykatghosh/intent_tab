@@ -5,8 +5,8 @@ import { t } from './strings.js';
 import { applySettings } from './settings.js';
 
 const $ = (id) => document.getElementById(id);
-const CARDS = ['todoModule', 'notesModule', 'reportModule'];
-const DEFAULT = { left: ['todoModule', 'notesModule'], right: ['reportModule'] };
+const CARDS = ['todoModule', 'notesModule', 'reportModule', 'devModule'];
+const DEFAULT = { left: ['todoModule', 'notesModule'], right: ['reportModule', 'devModule'] };
 const TYPE = 'application/x-intent-card';
 const GRIP = '<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><g fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></g></svg>';
 
