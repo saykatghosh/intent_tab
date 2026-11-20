@@ -9,7 +9,7 @@
 
 To-dos, projects, a focus timer, bookmarks and on-device AI. Everything stays on your computer.
 
-![Version](https://img.shields.io/badge/version-1.4.0-7fd6bd?style=flat-square)
+![Version](https://img.shields.io/badge/version-1.0.0-7fd6bd?style=flat-square)
 ![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white)
 ![No dependencies](https://img.shields.io/badge/dependencies-0-success?style=flat-square)
 ![Vanilla JS](https://img.shields.io/badge/vanilla-JS%20%2B%20CSS-f7df1e?style=flat-square&logo=javascript&logoColor=black)
@@ -285,7 +285,7 @@ There are no dependencies; you only need **Node 18+**.
 ```bash
 npm run check        # manifest, JS syntax, imports, element ids, en/bn strings
 npm run build        # check, then dist/intent-tab-v<version>.zip
-npm run bump:patch   # 1.4.0 → 1.4.1   (also bump:minor, bump:major)
+npm run bump:patch   # 1.0.0 → 1.0.1   (also bump:minor, bump:major)
 npm run release      # bump patch + check + zip in one go
 ```
 

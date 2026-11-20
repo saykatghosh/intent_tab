@@ -59,7 +59,7 @@ Every new tab asks one gentle question: **why did you open this tab?** Type a re
 • English and বাংলা (Bangla)
 
 **Your data stays yours**
-Everything is stored locally in your browser. No analytics, no tracking, no servers. You can export or import a backup at any time, and optionally sync settings through Chrome sync.
+Everything is stored locally in your browser. No analytics, no tracking, no servers. You can export or import a backup at any time, and optionally sync settings, to-dos, notes and projects through Chrome sync.
 
 ---
 
@@ -78,7 +78,7 @@ Intent Tab replaces the new tab page with a calm start page that helps people op
 
 | Permission | Justification |
 |---|---|
-| `storage` | Saves the user's settings, intents, to-dos, notes, custom icons and daily counts locally (and settings in Chrome sync if the user turns sync on). |
+| `storage` | Saves the user's settings, intents, to-dos, notes, custom icons and daily counts locally (and settings, to-dos, notes and projects in Chrome sync if the user turns sync on). |
 | `bookmarks` | Shows the user's bookmarks in the page's bookmarks bar and lets the user add, edit, rename, move and delete them from there. |
 | `favicon` | Shows website icons next to bookmarks and most-visited sites, using Chrome's built-in favicon cache. |
 | `topSites` | Shows the user's most visited sites on the new tab page. |

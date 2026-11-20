@@ -18,7 +18,7 @@ Intent Tab saves the following **only on your computer**, in Chrome's extension 
 
 You can delete all of it at any time by removing the extension. You can also export it to a file, or import it from one, in **Settings → Your data**.
 
-**Optional sync:** if you turn on "Sync settings across your Chrome browsers", your *settings only* are copied to Chrome sync (`chrome.storage.sync`), which Google handles under your Google account and Chrome's own privacy terms. To-dos, notes and history are never synced.
+**Optional sync:** if you turn on "Sync across your Chrome browsers", your settings, to-dos, notes and projects are copied to Chrome sync (`chrome.storage.sync`), which Google handles under your Google account and Chrome's own privacy terms. Intent Tab itself still sends nothing anywhere. History and your background photo are never synced. Turning sync off stops all copying.
 
 ## Bookmarks, most visited and tabs
 Intent Tab reads your bookmarks and most-visited sites **only to display them on the new tab page**, and changes bookmarks **only when you ask it to** (add, edit, rename, move, delete). It counts open tabs to show the number; it does not read tab addresses or contents.
