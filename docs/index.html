@@ -144,13 +144,43 @@
     summary{font-weight:700;font-size:17px;cursor:pointer}
     details p{margin:10px 0 0;color:var(--muted)}
 
-    @media (max-width:720px){
-      .fl-stats,.fl-streak,.fl-focus{display:none}
-      .fl-robot{left:-2%;top:auto;bottom:-14%;min-width:0;width:62%}
-      .fl-robot svg{width:80px;height:80px}
-      .fl-robot .floatcard{padding:10px 12px !important}
-      .fl-wait{right:-2%;bottom:-9%}
-      .stage{padding-bottom:110px}
+    /* Tablet: keep the floating cards inside the screen */
+    @media (max-width:1100px){
+      .fl-robot{left:-2%}
+      .fl-stats{right:-2%;min-width:150px}
+      .fl-streak{right:-1%}
+      .fl-focus{left:-1%}
+      .fl-wait{right:4%}
+    }
+    @media (max-width:860px){
+      .fl-robot .floatcard{max-width:220px !important}
+      .fl-robot .floatcard p:nth-child(2){font-size:13px !important}
+      .fl-stats{width:20%;min-width:130px}
+      .fl-stats .it-stats{height:90px !important;background-size:1100px auto;background-position:-823px -211px}
+      .streak{width:104px;height:104px}
+      .streak span:first-child{font-size:22px !important}
+    }
+    /* Phone */
+    @media (max-width:640px){
+      .hdr{padding:12px}
+      .hdr-in{flex-wrap:nowrap;width:100%;justify-content:space-between}
+      .nav a:not(.nav-cta){display:none}
+      .hero-ctas .btn{width:100%;justify-content:center}
+      .stage{padding-top:44px;padding-bottom:90px}
+      .fl-stats,.fl-streak,.fl-focus,.fl-robot .floatcard{display:none}
+      .fl-robot{left:-1%;top:auto;bottom:-12%;width:auto;min-width:0}
+      .fl-robot svg{width:76px;height:76px;margin:0 !important}
+      .fl-wait{right:-1%;bottom:-7%}
+      .fl-wait > span{font-size:12px !important;padding:8px 12px !important}
+      .nums{grid-template-columns:1fr 1fr;gap:12px}
+      .num{min-height:150px;padding:20px;border-radius:20px;margin-top:0 !important}
+      .num b{font-size:44px !important}
+      .num span{font-size:13px;line-height:1.4}
+      .buddy{gap:32px}
+      .chapters button{font-size:13px;padding:8px 12px}
+      .step{padding:24px}
+      details{padding:16px 18px}
+      summary{font-size:16px}
     }
     @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important}html{scroll-behavior:auto}html.it-anim .rv{opacity:1;transform:none}}
   </style>
