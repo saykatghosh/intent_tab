@@ -32,6 +32,9 @@ If you turn on focus mode and add sites (for example `youtube.com`), Chrome asks
 ## On-device AI
 AI features use **Chrome's built-in model (Gemini Nano)**, which runs on your computer. Prompts and answers are processed locally by Chrome and are not sent to Intent Tab or to any other server by this extension. If the model is not available, simple built-in rules are used instead. You can turn AI features off in Settings.
 
+## Update check (ZIP installs only)
+If you installed Intent Tab from the ZIP file rather than the Chrome Web Store, it asks GitHub (`api.github.com`) once a day for the latest version number, so it can tell you when an update is out. Nothing about you or your data is sent; GitHub sees an ordinary web request under its own privacy statement. Copies from the Chrome Web Store never do this, because Chrome updates them.
+
 ## Search
 The search bar sends your query to the search engine you choose (Google by default), the same way typing into that site would. Intent Tab does not see or keep these searches.
 

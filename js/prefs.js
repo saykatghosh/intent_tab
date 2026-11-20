@@ -137,7 +137,7 @@ async function setSound(kind) {
 
 // ---------- Export / import ----------
 // Bookkeeping that belongs to this computer only, never to a backup file.
-const LOCAL_ONLY = ['syncMeta', 'syncState'];
+const LOCAL_ONLY = ['syncMeta', 'syncState', 'update', 'updateDismissed'];
 
 export async function exportData() {
   const all = await chrome.storage.local.get(null);

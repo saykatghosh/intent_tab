@@ -5,16 +5,19 @@
 //   • Notification – "Time's up" when the focus timer ends (with Done / +5 min)
 //   • Focus sounds – rain / ocean / fan, played from an offscreen document
 //   • Data sync    – to-dos, notes and projects through Chrome sync (js/sync.js)
+//   • Update check – ZIP installs: once a day, is there a newer release on GitHub? (js/update.js)
 // Everything is driven by chrome.storage, so the new-tab page just writes data.
 
 import { get, set, getSettings, updateDay, dayKey, BREAK_RE, creditFocus, badgeFor } from './js/store.js';
 import { t, setLang, digits } from './js/strings.js';
 import { initSync, reconcileAll } from './js/sync.js';
+import { checkForUpdate } from './js/update.js';
 
 const RULE_BASE = 1000;
 const ALARM_SYNC = 'focus-sync';
 const ALARM_END = 'intent-end';
 const ALARM_BADGE = 'badge';
+const ALARM_UPDATE = 'update-check';
 const NOTIFY_ID = 'intent-end';
 
 async function loadLang() {
@@ -272,6 +275,10 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     await syncBadge();
     return;
   }
+  if (alarm.name === ALARM_UPDATE) {
+    await checkForUpdate();
+    return;
+  }
   if (alarm.name === ALARM_SYNC) {
     await syncRules();
     await syncSound();
@@ -287,3 +294,10 @@ chrome.runtime.onInstalled.addListener(syncAll);
 initSync();
 chrome.runtime.onStartup.addListener(reconcileAll);
 chrome.runtime.onInstalled.addListener(reconcileAll);
+
+// Is a newer version out? (ZIP installs only; the Web Store updates by itself.)
+function scheduleUpdateCheck() {
+  chrome.alarms.create(ALARM_UPDATE, { delayInMinutes: 1, periodInMinutes: 24 * 60 });
+}
+chrome.runtime.onStartup.addListener(scheduleUpdateCheck);
+chrome.runtime.onInstalled.addListener(scheduleUpdateCheck);

@@ -11,7 +11,7 @@ It asks one quick question every time you open a tab, remembers the answer, and 
 
 **[🌐 Website](https://saykatghosh.github.io/intent_tab/)** · **[⬇️ Download .zip](https://saykatghosh.github.io/intent_tab/download/intent-tab.zip)** · **[▶️ Video tour](https://saykatghosh.github.io/intent_tab/#video)** · **[🔒 Privacy](https://saykatghosh.github.io/intent_tab/privacy.html)**
 
-![Version](https://img.shields.io/badge/version-1.2.0-7FE0C0?style=flat-square)
+![Version](https://img.shields.io/badge/version-1.3.0-7FE0C0?style=flat-square)
 ![Free](https://img.shields.io/badge/price-free-7FE0C0?style=flat-square)
 ![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white)
 ![No dependencies](https://img.shields.io/badge/dependencies-0-success?style=flat-square)
@@ -309,7 +309,7 @@ A new tab page should never slow Chrome down.
 | `activeTab`, `scripting` | When you click the toolbar icon, show the floating panel on that page (nothing on the page is read) |
 | optional `*://*/*` | Asked **per site** when you add it to focus mode, never otherwise |
 
-> **No analytics, and no network requests of its own.** The search bar opens results from the engine you chose. Removing the extension deletes all of its data.
+> **No analytics.** The only request Intent Tab makes by itself is a daily check on GitHub for a newer version, and only in copies installed from the ZIP (the Web Store updates by itself). The search bar opens results from the engine you chose. Removing the extension deletes all of its data.
 
 ## 🧑‍💻 Development
 

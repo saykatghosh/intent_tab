@@ -7,6 +7,7 @@
 import { get, set, getSettings, saveSettings, updateDay, dayKey, uid, creditFocus, BREAK_RE, FOCUS_MS, INTENT_MAX_AGE_MS, focusTodayMs, badgeFor } from './store.js';
 import { t, setLang, applyStrings, digits } from './strings.js';
 import { ROBOT_SVG, HANDS_SVG } from './robot-svg.js';
+import { pendingUpdate, buildNotice } from './update.js';
 
 const $ = (id) => document.getElementById(id);
 // Opened as the floating panel on a web page (inside an iframe) rather than the popup.
@@ -568,6 +569,13 @@ async function init() {
   initRobot();
   bindEvents();
   render();
+
+  const update = await pendingUpdate().catch(() => null);
+  if (update) {
+    const card = buildNotice(update);
+    const head = document.querySelector('.pop-panel > .pop-head');
+    if (head) head.after(card); else document.querySelector('.pop-panel').prepend(card);
+  }
   setInterval(tick, 1000);
 
   // Say hello the first time today, then something useful.

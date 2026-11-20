@@ -23,6 +23,7 @@ import { initPrefs, applyAccent } from './prefs.js';
 import { initLayout } from './layout.js';
 import { initNotes } from './notes.js';
 import { initOnboarding } from './onboarding.js';
+import { pendingUpdate, buildNotice } from './update.js';
 
 const $ = (id) => document.getElementById(id);
 
@@ -207,6 +208,14 @@ async function main() {
   $('devTopBtn').addEventListener('click', () => openTool());
   initProjects(toast).catch((err) => console.warn('[Intent Tab] projects', err));
   initOnboarding().catch((err) => console.warn('[Intent Tab] tour', err));
+
+  // A newer version is out (ZIP installs): a small card in the corner.
+  pendingUpdate().then((u) => {
+    if (!u) return;
+    const card = buildNotice(u);
+    card.classList.add('is-page');
+    document.body.append(card);
+  }).catch(() => {});
 
   // The toolbar popup's Settings button opens newtab.html#settings.
   if (location.hash === '#settings') {
