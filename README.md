@@ -11,7 +11,7 @@ It asks one quick question every time you open a tab, remembers the answer, and 
 
 **[🌐 Website](https://saykatghosh.github.io/intent_tab/)** · **[⬇️ Download .zip](https://saykatghosh.github.io/intent_tab/download/intent-tab.zip)** · **[▶️ Video tour](https://saykatghosh.github.io/intent_tab/#video)** · **[🔒 Privacy](https://saykatghosh.github.io/intent_tab/privacy.html)**
 
-![Version](https://img.shields.io/badge/version-1.0.0-7FE0C0?style=flat-square)
+![Version](https://img.shields.io/badge/version-1.0.1-7FE0C0?style=flat-square)
 ![Free](https://img.shields.io/badge/price-free-7FE0C0?style=flat-square)
 ![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white)
 ![No dependencies](https://img.shields.io/badge/dependencies-0-success?style=flat-square)
