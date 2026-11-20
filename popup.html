@@ -9,19 +9,27 @@
 <body>
   <header class="pop-head">
     <span class="pop-brand"><img src="icons/icon48.png" alt="" width="20" height="20">Intent Tab</span>
-    <span class="pop-focus" id="popFocusTime" title=""></span>
+    <span class="pop-head-end">
+      <span class="pop-focus" id="popFocusTime" title=""></span>
+      <button type="button" class="pop-close" id="popClose" data-i18n-aria="close" data-i18n-title="close" hidden>
+        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </span>
   </header>
 
-  <!-- Intent, the robot, with a speech bubble -->
-  <section class="pop-buddy">
+  <!-- Intent, the robot: peeks over the panel and holds its top edge -->
+  <section class="pop-stage">
     <button type="button" class="tabi pop-robot" id="popRobot" data-i18n-aria="tabiLabel" data-i18n-title="tabiLabel"></button>
+    <div class="pop-hands" id="popHands" aria-hidden="true"></div>
     <div class="pop-bubble" aria-live="polite">
       <span class="tabi-name">Intent</span>
       <p id="popSay"></p>
     </div>
   </section>
 
-  <!-- The running intent, or a box to set one -->
+  <main class="pop-panel">
+
+  <!-- Focus timer: running, or pick a length and start -->
   <section class="pop-card" id="popIntentRun" hidden>
     <div class="pop-label"><span class="dot"></span><span data-i18n="popNow"></span></div>
     <p class="pop-intent" id="popIntentText"></p>
@@ -32,16 +40,14 @@
     <div class="pop-row">
       <button type="button" class="pop-btn is-primary" id="popDone" data-i18n="done"></button>
       <button type="button" class="pop-btn" id="popAddTime" data-i18n="addTime"></button>
-      <button type="button" class="pop-btn is-quiet" id="popNewIntent" data-i18n="newIntent"></button>
+      <button type="button" class="pop-btn is-quiet" id="popStop" data-i18n="popStop"></button>
     </div>
   </section>
-  <form class="pop-card pop-ask" id="popIntentForm" autocomplete="off" hidden>
-    <label class="pop-label" for="popIntentInput"><span class="dot"></span><span data-i18n="setIntentLink"></span></label>
-    <div class="pop-input">
-      <input id="popIntentInput" type="text" maxlength="120" data-i18n-placeholder="intentPlaceholder">
-      <button type="submit" class="pop-btn is-primary" data-i18n="intentSubmit"></button>
-    </div>
-  </form>
+  <section class="pop-card" id="popTimerPick" hidden>
+    <div class="pop-label"><span class="dot"></span><span data-i18n="popTimerTitle"></span></div>
+    <div class="pop-durs" id="popDurs" role="radiogroup"></div>
+    <button type="button" class="pop-btn is-primary is-wide" id="popStart"></button>
+  </section>
 
   <!-- Today's one thing -->
   <section class="pop-card pop-one" id="popOne">
@@ -70,18 +76,29 @@
     </form>
   </section>
 
-  <!-- Focus mode + links -->
-  <section class="pop-foot">
-    <label class="pop-switch" id="popFocusModeRow">
+  <!-- Focus mode: the sites to block -->
+  <section class="pop-card">
+    <label class="pop-switch">
       <input type="checkbox" id="popFocusMode">
       <span class="pop-knob" aria-hidden="true"></span>
       <span class="pop-switch-text"><b data-i18n="focusModeToggle"></b><small id="popFocusSites"></small></span>
     </label>
+    <ul class="pop-sites" id="popSiteList"></ul>
+    <form id="popSiteForm" class="pop-input is-small" autocomplete="off">
+      <input id="popSiteInput" type="text" maxlength="100" data-i18n-placeholder="popSitePlaceholder">
+      <button type="submit" class="pop-btn" data-i18n="todoAdd"></button>
+    </form>
+    <p class="pop-error" id="popSiteError" hidden></p>
+  </section>
+
+  <section class="pop-foot">
     <div class="pop-row">
       <button type="button" class="pop-btn" id="popOpenTab" data-i18n="popOpenTab"></button>
       <button type="button" class="pop-btn is-quiet" id="popSettings" data-i18n="settings"></button>
     </div>
   </section>
+
+  </main>
 
   <script type="module" src="js/popup.js"></script>
 </body>

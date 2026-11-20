@@ -7,25 +7,10 @@ import { get, dayKey } from './store.js';
 import { t } from './strings.js';
 import { startIntent, isBreakIntent } from './intent.js';
 import { isIdle } from './effects.js';
-import { ROBOT_SVG } from './robot-svg.js';
+import { ROBOT_SVG, HANDS_SVG } from './robot-svg.js';
 
 const $ = (id) => document.getElementById(id);
 const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-
-// Little mitten hands that hold the top edge of the card (drawn in front of it).
-const HANDS_SVG = `
-<svg viewBox="0 0 120 48" aria-hidden="true">
-  <g class="tabi-finger"><rect x="84" y="14" width="10" height="26" rx="5" fill="#f1f4fc" stroke="#aab5d4" stroke-width="1.4"/></g>
-  <g fill="url(#tabiHand)" stroke="#aab5d4" stroke-width="1.4">
-    <rect x="18" y="2" width="26" height="20" rx="10"/>
-    <rect x="76" y="2" width="26" height="20" rx="10"/>
-  </g>
-  <g stroke="#aab5d4" stroke-width="1.2" stroke-linecap="round" opacity=".7">
-    <line x1="27" y1="11" x2="27" y2="19"/><line x1="35" y1="11" x2="35" y2="19"/>
-    <line x1="85" y1="11" x2="85" y2="19"/><line x1="93" y1="11" x2="93" y2="19"/>
-  </g>
-  <defs><linearGradient id="tabiHand" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f9ff"/><stop offset="1" stop-color="#d4dbef"/></linearGradient></defs>
-</svg>`;
 
 let robot, hands, bubble, anchor = null;
 let tips = [];

@@ -1,17 +1,20 @@
 // Intent Tab service worker. Runs in the background (no page needed) for:
-//   • Focus mode  – while an intent runs, chosen sites redirect to a calm "blocked" page
+//   • Focus mode  – while it's on, chosen sites redirect to a calm "blocked" page
+//   • Badge       – today's focus time on the toolbar icon
+//   • Panel       – clicking the icon opens a floating panel on the page
 //   • Notification – "Time's up" when the focus timer ends (with Done / +5 min)
 //   • Focus sounds – rain / ocean / fan, played from an offscreen document
 //   • Data sync    – to-dos, notes and projects through Chrome sync (js/sync.js)
 // Everything is driven by chrome.storage, so the new-tab page just writes data.
 
-import { get, set, getSettings, updateDay, dayKey, BREAK_RE, creditFocus } from './js/store.js';
-import { t, setLang } from './js/strings.js';
+import { get, set, getSettings, updateDay, dayKey, BREAK_RE, creditFocus, badgeFor } from './js/store.js';
+import { t, setLang, digits } from './js/strings.js';
 import { initSync, reconcileAll } from './js/sync.js';
 
 const RULE_BASE = 1000;
 const ALARM_SYNC = 'focus-sync';
 const ALARM_END = 'intent-end';
+const ALARM_BADGE = 'badge';
 const NOTIFY_ID = 'intent-end';
 
 async function loadLang() {
@@ -45,7 +48,9 @@ async function syncRules() {
   const now = Date.now();
   let domains = [];
 
-  if (s.focusMode && isRunning(intent, now) && !isBreak(intent.text)) {
+  // Focus mode on = the listed sites are blocked (except during a break).
+  const onBreak = isRunning(intent, now) && isBreak(intent.text);
+  if (s.focusMode && !onBreak) {
     const { origins = [] } = await chrome.permissions.getAll();
     domains = (s.focusSites || [])
       .filter((d) => !(focusAllow[d] > now))
@@ -144,6 +149,59 @@ chrome.notifications.onClicked.addListener((id) => {
 });
 
 // =========================================================
+// Badge: the countdown while a timer runs, otherwise today's focus time
+// =========================================================
+function fmtDur(ms) {
+  const total = Math.round(ms / 60000);
+  const h = Math.floor(total / 60);
+  const m = total % 60;
+  return digits(h ? t('durHM', { h, m }) : t('durM', { m }));
+}
+
+async function syncBadge() {
+  await loadLang();
+  const { intent, days = {} } = await get(['intent', 'days']);
+  const b = badgeFor(days, intent);
+  await chrome.action.setBadgeBackgroundColor({ color: b.color });
+  if (chrome.action.setBadgeTextColor) await chrome.action.setBadgeTextColor({ color: '#ffffff' });
+  await chrome.action.setBadgeText({ text: b.text });
+  // Hovering the icon tells both: time left and today's total.
+  await chrome.action.setTitle({ title: b.countdown
+    ? t('badgeTitleTimer', { left: fmtDur(b.leftMs), total: fmtDur(b.focusMs) })
+    : t('badgeTitle', { total: fmtDur(b.focusMs) }) });
+  // While a timer runs the numbers change, so refresh every 30 s (the shortest alarm
+  // Chrome allows). Otherwise refresh once at midnight, when the day starts over.
+  const running = isRunning(intent);
+  const a = await chrome.alarms.get(ALARM_BADGE);
+  if (running && !(a && a.periodInMinutes)) chrome.alarms.create(ALARM_BADGE, { periodInMinutes: 0.5 });
+  if (!running) {
+    const midnight = new Date();
+    midnight.setHours(24, 0, 5, 0);
+    chrome.alarms.create(ALARM_BADGE, { when: midnight.getTime() });
+  }
+}
+
+// =========================================================
+// Toolbar click: a floating panel on the page (the popup where pages can't have one)
+// =========================================================
+chrome.action.onClicked.addListener(async (tab) => {
+  try {
+    if (!tab || !tab.id || !/^https?:|^file:/.test(tab.url || '')) throw new Error('not a web page');
+    await chrome.scripting.executeScript({ target: { tabId: tab.id }, files: ['js/panel-inject.js'] });
+  } catch {
+    // chrome:// pages, the Web Store, the new tab page…: open the regular popup instead.
+    try {
+      await chrome.action.setPopup({ tabId: tab.id, popup: 'popup.html' });
+      await chrome.action.openPopup({ windowId: tab.windowId });
+    } catch {
+      chrome.tabs.create({});
+    } finally {
+      setTimeout(() => chrome.action.setPopup({ tabId: tab.id, popup: '' }).catch(() => {}), 500);
+    }
+  }
+});
+
+// =========================================================
 // Focus sounds (offscreen document plays Web Audio)
 // =========================================================
 let creating = null;
@@ -191,7 +249,7 @@ async function syncSound() {
 // Wiring
 // =========================================================
 async function syncAll() {
-  await Promise.allSettled([syncRules(), scheduleEnd(), syncSound()]);
+  await Promise.allSettled([syncRules(), scheduleEnd(), syncSound(), syncBadge()]);
 }
 
 chrome.storage.onChanged.addListener((changes, area) => {
@@ -200,6 +258,7 @@ chrome.storage.onChanged.addListener((changes, area) => {
     syncRules().catch((e) => console.warn('[Intent Tab] rules', e));
   }
   if (changes.intent) scheduleEnd();
+  if (changes.intent || changes.days) syncBadge();
   if (changes.intent || changes.sound) syncSound();
 });
 
@@ -208,6 +267,10 @@ chrome.alarms.onAlarm.addListener(async (alarm) => {
     await notifyEnd();
     await syncRules();
     await syncSound();
+  }
+  if (alarm.name === ALARM_BADGE) {
+    await syncBadge();
+    return;
   }
   if (alarm.name === ALARM_SYNC) {
     await syncRules();

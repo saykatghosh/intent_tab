@@ -28,12 +28,13 @@ Every new tab asks one gentle question: **why did you open this tab?** Type a re
 • Smart asking: only after a break, always, during work hours, or never
 • Focus timer: 5, 10, 25 or 50 minutes, with a 5-minute break after long sessions
 • Breathing breaks: a calm orb guides you (in 4 s, hold 4 s, out 6 s)
-• Focus mode (optional): sites you choose show a calm reminder while your intent runs, and you can always open them anyway
+• Focus mode (optional): while it's on, the sites you list show a calm "You're in focus mode" page, and you can always open one anyway for 5 minutes
 • "Time's up" notification with Done / +5 min
 • Ambient focus sounds: rain, ocean, fan
 
 **On every site, one click away**
-• Click the robot in the toolbar: your intent and timer, today's one thing, your to-do list, focus time and focus mode, without opening a new tab
+• Click the robot in the toolbar: a floating panel with the focus timer, today's one thing, your to-do list and focus mode, right on the page you're on
+• Today's focus time is always on the toolbar icon
 
 **Meet Intent, your focus buddy**
 • A tiny robot on your new tab that remembers today's one thing
@@ -95,7 +96,9 @@ Intent Tab replaces the new tab page with a calm start page that helps people op
 | `topSites` | Shows the user's most visited sites on the new tab page. |
 | `alarms` | Wakes the extension when the user's focus timer ends, to show the notification and to end focus mode on time. |
 | `notifications` | Shows a "Time's up" notification when the focus timer ends (can be turned off in settings). |
-| `declarativeNetRequest` | Focus mode: while the user's intent is running, redirects only the sites the user has listed to a calm reminder page inside the extension. No page content is read. |
+| `declarativeNetRequest` | Focus mode: while the user has focus mode turned on, redirects only the sites the user has listed to a calm reminder page inside the extension. No page content is read. |
+| `activeTab` | When the user clicks the toolbar icon, the extension shows its floating panel on that tab. It does not read or change the page's content. |
+| `scripting` | Used together with activeTab, only after the user clicks the toolbar icon, to add the floating panel (an extension page in a frame) to the current tab. |
 | `offscreen` | Plays optional ambient focus sounds (rain, ocean, fan), generated with Web Audio, while the user works in other tabs. |
 | Optional host permissions (`*://*/*`) | Requested at run time for each individual site the user adds to focus mode (for example youtube.com), so that only those sites can be redirected. Never requested otherwise. |
 

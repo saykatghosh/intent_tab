@@ -1,10 +1,9 @@
 {
   "manifest_version": 3,
   "name": "Intent Tab",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A calm new tab that asks why you opened it. To-dos, bookmarks, focus timer and on-device AI.",
   "action": {
-    "default_popup": "popup.html",
     "default_title": "Intent Tab",
     "default_icon": {
       "16": "icons/icon16.png",
@@ -27,13 +26,22 @@
     "alarms",
     "notifications",
     "declarativeNetRequest",
-    "offscreen"
+    "offscreen",
+    "activeTab",
+    "scripting"
   ],
-  "optional_host_permissions": ["*://*/*"],
+  "optional_host_permissions": [
+    "*://*/*"
+  ],
   "web_accessible_resources": [
     {
-      "resources": ["blocked.html"],
-      "matches": ["<all_urls>"]
+      "resources": [
+        "blocked.html",
+        "popup.html"
+      ],
+      "matches": [
+        "<all_urls>"
+      ]
     }
   ],
   "icons": {

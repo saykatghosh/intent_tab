@@ -119,6 +119,7 @@
 
   const noop = async () => {};
   const evt = () => ({ addListener() {}, removeListener() {} });
+  const granted = [];
   window.chrome = {
     storage: { local, sync: { get: async () => ({}), set: noop }, onChanged: { addListener: (fn) => listeners.push(fn), removeListener() {} } },
     bookmarks: {
@@ -134,7 +135,7 @@
     tabs: { query: async () => new Array(9).fill({}), create: noop, update: noop, getCurrent: async () => null, onCreated: evt(), onRemoved: evt() },
     windows: { create: noop },
     runtime: { getURL: (p) => location.origin + (p.startsWith('/') ? p : '/' + p), getManifest: () => (__MANIFEST__), id: 'intent-tab', onMessage: evt(), sendMessage: noop },
-    permissions: { request: async () => true, remove: async () => true, contains: async () => true },
+    permissions: { request: async (o) => { granted.push(...((o && o.origins) || [])); return true; }, remove: async () => true, contains: async () => true, getAll: async () => ({ origins: granted.slice() }), onAdded: evt(), onRemoved: evt() },
     alarms: { create: noop, clear: noop, onAlarm: evt() },
   };
 

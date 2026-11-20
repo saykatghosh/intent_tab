@@ -136,6 +136,39 @@ async function updateDayNow(fn, key) {
   return day;
 }
 
+// Today's focus time, including the part of a running intent not yet counted.
+export function focusTodayMs(days = {}, intent = null, now = Date.now()) {
+  const today = dayKey(new Date(now));
+  let ms = (days[today] && days[today].focusMs) || 0;
+  if (intent && intent.text && intent.startedAt && !BREAK_RE.test(intent.text) && dayKey(new Date(intent.startedAt)) === today) {
+    const spent = Math.min(FOCUS_CAP_MS, Math.max(0, Math.min(now, intent.endsAt || now) - intent.startedAt));
+    if (spent >= 60000 || intent.creditedMs) ms += Math.max(0, spent - (intent.creditedMs || 0));
+  }
+  return ms;
+}
+
+// Short text for the toolbar badge: "35m", "1h05", "12h". Empty under a minute.
+export function badgeText(ms) {
+  const total = Math.floor(ms / 60000);
+  if (total < 1) return '';
+  if (total < 60) return `${total}m`;
+  const h = Math.floor(total / 60);
+  return h >= 10 ? `${h}h` : `${h}h${String(total % 60).padStart(2, '0')}`;
+}
+
+// What the toolbar icon shows: the countdown while a timer runs (orange, or blue
+// for a break), otherwise today's total focus time (green).
+export function badgeFor(days = {}, intent = null, now = Date.now()) {
+  const focusMs = focusTodayMs(days, intent, now);
+  if (intent && intent.text && intent.endsAt > now && (intent.startedAt || 0) <= now) {
+    const leftMs = intent.endsAt - now;
+    const min = Math.ceil(leftMs / 60000);
+    const brk = BREAK_RE.test(intent.text);
+    return { text: min > 99 ? `${Math.floor(min / 60)}h` : `${min}m`, color: brk ? '#5b7fb0' : '#d9822b', countdown: true, leftMs, focusMs };
+  }
+  return { text: badgeText(focusMs), color: '#2f8f6f', countdown: false, leftMs: 0, focusMs };
+}
+
 export function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }

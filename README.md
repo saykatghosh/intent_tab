@@ -11,7 +11,7 @@ It asks one quick question every time you open a tab, remembers the answer, and 
 
 **[🌐 Website](https://saykatghosh.github.io/intent_tab/)** · **[⬇️ Download .zip](https://saykatghosh.github.io/intent_tab/download/intent-tab.zip)** · **[▶️ Video tour](https://saykatghosh.github.io/intent_tab/#video)** · **[🔒 Privacy](https://saykatghosh.github.io/intent_tab/privacy.html)**
 
-![Version](https://img.shields.io/badge/version-1.1.0-7FE0C0?style=flat-square)
+![Version](https://img.shields.io/badge/version-1.2.0-7FE0C0?style=flat-square)
 ![Free](https://img.shields.io/badge/price-free-7FE0C0?style=flat-square)
 ![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white)
 ![No dependencies](https://img.shields.io/badge/dependencies-0-success?style=flat-square)
@@ -44,7 +44,7 @@ A tiny robot sits on your new tab. It remembers today's one thing and nudges you
 | <img src="docs/assets/shots/1-intent-light.png" alt="The intent question in the Daylight theme"> | <img src="docs/assets/shots/3-command-palette.png" alt="The command palette"> |
 | **Set an intent.** Every new tab asks why you're here. Type it, or tap a suggestion from your to-dos. | **Command palette.** Press Ctrl K to jump to any project link, start a new intent or add a quick note. |
 | <img src="docs/assets/shots/4-project-view.png" alt="A project with its tasks, progress and links"> | <img src="docs/assets/shots/5-focus-mode.png" alt="Focus mode pausing youtube.com"> |
-| **Projects.** Tasks, progress and every link for a project in one place. Open all its links in one click. | **Focus mode.** *youtube.com can wait.* Distracting sites pause while your intent timer runs. |
+| **Projects.** Tasks, progress and every link for a project in one place. Open all its links in one click. | **Focus mode.** *youtube.com can wait.* The sites you list are blocked while focus mode is on. |
 
 ▶️ **[Watch the 90-second video tour](https://saykatghosh.github.io/intent_tab/#video)** (Bangla voice-over and captions, with an install guide).
 
@@ -87,7 +87,7 @@ It shows today's one thing when you open a tab and offers to start it, or to mov
 
 <details><summary><b>How does focus mode work?</b></summary>
 
-While your intent's timer runs, distracting sites show a calm pause screen. Go back to your intent, or open the site anyway for 5 minutes. You can turn it off in settings.
+Add the sites you want to block (from the toolbar popup or Settings) and turn focus mode on. Those sites then show a calm "You're in focus mode" page instead. Go back, or open the site anyway for 5 minutes. Turn it off with one click in the popup.
 </details>
 
 <details><summary><b>Where is my data stored?</b></summary>
@@ -99,14 +99,15 @@ On your own computer, inside Chrome (`chrome.storage.local`). There are no serve
 
 | | Feature | What it does |
 |:-:|---|---|
-| 🧩 | **Toolbar popup** | Click the robot in Chrome's toolbar on any site: your intent and timer, today's one thing, to-dos, focus time and focus mode, with Intent the robot. |
+| 🧩 | **Floating panel** | Click the robot in Chrome's toolbar on any site: a rounded panel floats over the page with the focus timer, today's one thing, to-dos and focus mode, and Intent the robot holds its edge. The icon always shows today's focus time. |
 | 🎯 | **Intent question** | Type a reason or pick a chip. Your intent then shows large, with a focus timer and **Done**. |
 | 🌌 | **Cosmos** | A deep-space sky with stars, a nebula, shooting stars and a ringed planet. In light mode it's a pastel sky. |
 | 🤖 | **Intent, the robot** | A small robot that peeks over your To-do card, points at the next task and cheers when you finish one. |
 | ✅ | **To-do and today's one thing** | Daily tasks with progress and a 7-day chart, plus one goal for the day. |
 | 🗂️ | **Projects** | Links, tasks and progress for each project, in a popup that opens with one click. |
 | ⏱️ | **Focus time** | Counts how long you really focused today, with a session count. |
-| 🛡️ | **Focus mode** | Distracting sites you choose redirect to a calm page while an intent runs. |
+| 🛡️ | **Focus mode** | While it's on, the sites you list redirect to a calm "You're in focus mode" page (not during breaks). |
+| ⏳ | **Focus timer** | Start a 5, 10, 25 or 50-minute timer from the panel; today's total focus time shows on the toolbar icon. |
 | 🧠 | **On-device AI** | Suggestions, a coach, a day summary and Ask AI, all from Gemini Nano on your computer. |
 | ⌨️ | **Command palette** | Press Ctrl+K to search bookmarks, run tools, set intents and change settings. |
 | 🛠️ | **Developer card** | Seven dev tools, search shortcuts and your projects on the page. |
@@ -303,8 +304,9 @@ A new tab page should never slow Chrome down.
 | `topSites` | Show your most visited sites |
 | `alarms` | Wake up when the focus timer ends |
 | `notifications` | Show the *Time's up* notification |
-| `declarativeNetRequest` | Focus mode: redirect only the sites you listed, only while an intent runs |
+| `declarativeNetRequest` | Focus mode: redirect only the sites you listed, only while focus mode is on |
 | `offscreen` | Play focus sounds in the background |
+| `activeTab`, `scripting` | When you click the toolbar icon, show the floating panel on that page (nothing on the page is read) |
 | optional `*://*/*` | Asked **per site** when you add it to focus mode, never otherwise |
 
 > **No analytics, and no network requests of its own.** The search bar opens results from the engine you chose. Removing the extension deletes all of its data.
@@ -331,7 +333,7 @@ The ZIP leaves out `store/`, `scripts/`, `.git`, `.github`, `package.json` and t
 ```
 manifest.json
 newtab.html            the page
-popup.html             the toolbar popup (css/popup.css)
+popup.html             the panel (css/popup.css); floats over the page, or opens as a popup on chrome:// pages
 background.js          service worker: focus-mode rules, timer notification, focus time, sounds
 offscreen.html/.js     generates focus sounds (Web Audio)
 blocked.html/.js       the calm page shown by focus mode
@@ -363,7 +365,8 @@ js/
   prefs.js             engine, accent, photo, focus sites, sync, export/import, backup reminder, sounds
   sync.js              to-dos, notes and projects through Chrome sync (run by the service worker)
   settings.js          settings panel
-  popup.js             the toolbar popup (intent, one thing, to-dos, focus mode, robot)
+  popup.js             the panel: focus timer, one thing, to-dos, focus mode, robot
+  panel-inject.js      puts the panel on the current page when the toolbar icon is clicked
   robot-svg.js         the robot drawing, shared by the page and the popup
   onboarding.js        welcome tour
   theme-boot.js        sets theme and accent before first paint

@@ -1,4 +1,4 @@
-// The calm page shown instead of a distracting site while an intent runs.
+// The calm page shown instead of a blocked site while focus mode is on.
 // It never locks you out: "Open anyway for 5 minutes" always works.
 
 import { get, set, getSettings } from './js/store.js';
@@ -26,12 +26,12 @@ async function main() {
   const { intent } = await get('intent');
 
   document.title = t('blockedTitleShort');
-  $('bSite').textContent = host || t('blockedThisSite');
+  $('bSite').textContent = t('blockedFocusOn');
   $('bTitle').textContent = t('blockedTitle', { site: host || t('blockedThisSite') });
   $('bLabel').textContent = t('blockedFocusing');
   $('bIntent').textContent = intent && intent.text ? intent.text : '';
   $('bLabel').parentElement.hidden = !(intent && intent.text);
-  $('bBack').textContent = t('blockedBack');
+  $('bBack').textContent = intent && intent.text && intent.endsAt > Date.now() ? t('blockedBack') : t('blockedGoBack');
   $('bAllow').textContent = t('blockedAllow');
   $('bNote').textContent = t('blockedNote');
 

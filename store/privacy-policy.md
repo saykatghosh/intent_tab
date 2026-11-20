@@ -23,8 +23,11 @@ You can delete all of it at any time by removing the extension. You can also exp
 ## Bookmarks, most visited and tabs
 Intent Tab reads your bookmarks and most-visited sites **only to display them on the new tab page**, and changes bookmarks **only when you ask it to** (add, edit, rename, move, delete). It counts open tabs to show the number; it does not read tab addresses or contents.
 
+## Toolbar panel
+When you click the Intent Tab icon in the toolbar, Intent Tab shows its panel over the page you are on (using Chrome's `activeTab` permission, only for that click). The panel is part of the extension; Intent Tab does not read, store or send anything from the page.
+
 ## Focus mode
-If you turn on focus mode and add sites (for example `youtube.com`), Chrome asks you to allow Intent Tab access to **those sites only**. While an intent is running, visits to those sites are redirected to a calm reminder page inside the extension. Intent Tab does not read, store or send the pages you visit.
+If you turn on focus mode and add sites (for example `youtube.com`), Chrome asks you to allow Intent Tab access to **those sites only**. While focus mode is on, visits to those sites are redirected to a calm reminder page inside the extension. Intent Tab does not read, store or send the pages you visit.
 
 ## On-device AI
 AI features use **Chrome's built-in model (Gemini Nano)**, which runs on your computer. Prompts and answers are processed locally by Chrome and are not sent to Intent Tab or to any other server by this extension. If the model is not available, simple built-in rules are used instead. You can turn AI features off in Settings.

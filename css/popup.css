@@ -66,7 +66,8 @@ body {
   color: var(--text);
   font: 14px/1.45 var(--sans);
   -webkit-font-smoothing: antialiased;
-  display: flex; flex-direction: column; gap: 10px;
+  display: flex; flex-direction: column; gap: 6px;
+  padding-bottom: 20px;
 }
 button, input { font: inherit; color: inherit; }
 button { cursor: pointer; }
@@ -83,23 +84,58 @@ button { cursor: pointer; }
 }
 .pop-focus::before { content: "⏱"; font-size: 11px; }
 
-/* ---------- Robot + bubble ---------- */
-.pop-buddy { display: flex; align-items: center; gap: 6px; min-height: 84px; }
-.pop-robot { flex: none; width: 76px; height: 82px; padding: 0; border: 0; background: none; border-radius: 18px; }
-.pop-robot svg { width: 100%; height: 100%; overflow: visible; }
+/* ---------- Robot + bubble ----------
+   The robot stands behind the panel, so only its head shows above the top
+   edge, and its mitten hands hold that edge (drawn in front of the panel). */
+.pop-stage { position: relative; height: 100px; margin-top: 0; }
+.pop-robot {
+  position: absolute; z-index: 1; left: 16px; bottom: -52px;
+  width: 100px; height: 107px; padding: 0; border: 0; background: none; border-radius: 18px;
+  animation: popRise .8s cubic-bezier(.3, 1.4, .5, 1) .15s both;
+}
+@keyframes popRise { from { translate: 0 64px; } to { translate: 0 0; } }
+.pop-robot svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 8px 14px rgba(0, 0, 0, .3)); }
+.pop-hands {
+  position: absolute; z-index: 3; left: 23px; bottom: -31px; width: 86px; height: 34px; pointer-events: none;
+  animation: popRise .8s cubic-bezier(.3, 1.4, .5, 1) .15s both;
+}
+.pop-hands svg { width: 100%; height: 100%; overflow: visible; filter: drop-shadow(0 3px 3px rgba(0, 0, 0, .25)); }
+.tabi-finger { display: none; }
 .pop-bubble {
-  position: relative; flex: 1; min-width: 0;
-  background: var(--surface); border: 1px solid var(--border); border-radius: 16px 16px 16px 6px;
-  padding: 9px 12px; box-shadow: var(--shadow);
+  position: absolute; left: 126px; right: 2px; top: 6px;
+  background: var(--surface); border: 1px solid var(--border-strong); border-radius: 16px;
+  padding: 8px 12px; box-shadow: 0 10px 24px -12px rgba(0, 0, 0, .45);
+  animation: popIn .45s cubic-bezier(.3, 1.5, .5, 1) .5s both;
 }
 .pop-bubble::before {
-  content: ""; position: absolute; left: -6px; bottom: 12px; width: 10px; height: 10px;
-  background: var(--surface); border-left: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  content: ""; position: absolute; left: -6px; top: 34px; width: 10px; height: 10px;
+  background: var(--surface); border-left: 1px solid var(--border-strong); border-bottom: 1px solid var(--border-strong);
   transform: rotate(45deg);
 }
-.pop-bubble p { margin: 0; font-size: 13px; color: var(--text); overflow-wrap: anywhere; }
+.pop-bubble p { margin: 0; font-size: 12.5px; line-height: 1.4; color: var(--text); overflow-wrap: anywhere; }
 .pop-bubble p.is-pop { animation: popIn .3s cubic-bezier(.3, 1.5, .5, 1) both; }
 @keyframes popIn { from { opacity: 0; transform: translateY(4px) scale(.97); } to { opacity: 1; transform: none; } }
+
+/* ---------- The panel: one rounded slab with a little depth ---------- */
+.pop-panel {
+  position: relative; z-index: 2;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 14px 12px 12px;
+  border-radius: 24px;
+  background: linear-gradient(180deg, color-mix(in oklab, var(--surface) 88%, #fff 12%), var(--surface) 40%);
+  border: 1px solid var(--border-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .14),
+    inset 0 -2px 0 rgba(0, 0, 0, .06),
+    0 7px 0 -1px color-mix(in oklab, var(--surface) 70%, #000 30%),
+    0 26px 40px -18px rgba(0, 0, 0, .6);
+  transform: perspective(1100px) rotateX(1.6deg);
+  transform-origin: 50% 0;
+}
+.pop-panel .pop-card {
+  background: color-mix(in oklab, var(--bg) 55%, var(--surface));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .05), 0 1px 2px rgba(0, 0, 0, .12);
+}
 
 /* Robot parts (same class names as the new tab page) */
 .tabi { --tabi-eye: #5ff2d2; --look-x: 0px; --look-y: 0px; --tilt: 0deg; }
@@ -193,6 +229,31 @@ button { cursor: pointer; }
 .pop-del:hover { background: var(--surface-2); color: var(--text); }
 .pop-empty { margin: 0; font-size: 13px; color: var(--muted); }
 
+/* Timer length picker */
+.pop-durs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.pop-dur {
+  padding: 8px 0; border-radius: 10px; border: 1px solid var(--border-strong); background: var(--bg);
+  font-size: 13px; font-weight: 650; color: var(--text-2); font-variant-numeric: tabular-nums;
+}
+.pop-dur:hover { border-color: var(--accent); color: var(--text); }
+.pop-dur[aria-checked="true"] { border-color: var(--accent); background: var(--accent-soft); color: var(--text); box-shadow: inset 0 0 0 1px var(--accent); }
+.pop-btn.is-wide { width: 100%; padding: 9px 12px; }
+
+/* Focus mode sites */
+.pop-sites { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.pop-sites:empty { display: none; }
+.pop-site {
+  display: inline-flex; align-items: center; gap: 4px; max-width: 100%;
+  padding: 3px 4px 3px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border);
+  font-size: 12.5px; font-weight: 600;
+}
+.pop-site > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.pop-site.is-pending { border-style: dashed; color: var(--muted); }
+.pop-site-allow { border: 0; border-radius: 999px; padding: 2px 8px; font-size: 11px; font-weight: 700; background: var(--accent); color: var(--accent-ink); }
+.pop-site-x { width: 20px; height: 20px; border: 0; border-radius: 50%; background: none; color: var(--muted); display: grid; place-items: center; padding: 0; }
+.pop-site-x:hover { background: var(--border); color: var(--text); }
+.pop-error { margin: 0; font-size: 12px; color: #d9534f; }
+
 /* Footer: focus mode switch + links */
 .pop-foot { display: flex; flex-direction: column; gap: 10px; padding: 2px; }
 .pop-switch { display: flex; align-items: center; gap: 10px; cursor: pointer; }
@@ -210,3 +271,28 @@ button { cursor: pointer; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ---------- Header end: focus time + close button (floating panel only) ---------- */
+.pop-head-end { display: flex; align-items: center; gap: 6px; }
+.pop-close {
+  width: 28px; height: 28px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface-2);
+  color: var(--text-2); display: grid; place-items: center; padding: 0;
+}
+.pop-close:hover { color: var(--text); border-color: var(--border-strong); }
+
+/* ---------- Floating panel on a web page ----------
+   The frame is transparent: only the rounded panel and the robot holding its
+   top edge show, floating over the page. Keep color-scheme "normal" so Chrome
+   doesn't paint an opaque backdrop behind the frame. */
+:root.is-embed { color-scheme: normal !important; }
+:root.is-embed, :root.is-embed body { background: transparent !important; }
+:root.is-embed body { width: auto; padding: 4px 14px 30px 10px; gap: 0; }
+:root.is-embed .pop-stage { height: 104px; }
+:root.is-embed .pop-panel { padding-top: 10px; box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .14),
+    inset 0 -2px 0 rgba(0, 0, 0, .06),
+    0 8px 0 -1px color-mix(in oklab, var(--surface) 68%, #000 32%),
+    0 30px 50px -16px rgba(0, 0, 0, .55),
+    0 0 0 1px rgba(0, 0, 0, .08); }
+:root.is-embed .pop-head { padding: 2px 2px 4px; }
+:root.is-embed .pop-bubble { box-shadow: 0 14px 30px -12px rgba(0, 0, 0, .5), 0 0 0 1px rgba(0, 0, 0, .06); }

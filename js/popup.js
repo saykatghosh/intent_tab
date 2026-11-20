@@ -1,15 +1,19 @@
-// The toolbar popup: the running intent and its timer, today's one thing,
-// the to-do list, focus time and focus mode, with Intent the robot on top.
+// The toolbar popup: the focus timer, today's one thing, the to-do list,
+// focus time and focus mode (the sites to block), with Intent the robot on top.
+// While the timer runs, the background shows the minutes left on the icon.
 // It reads and writes the same chrome.storage keys as the new tab page, so
 // both stay in step (and Chrome sync picks up changes made here too).
 
-import { get, set, getSettings, saveSettings, updateDay, dayKey, uid, creditFocus, BREAK_RE, FOCUS_MS, INTENT_MAX_AGE_MS } from './store.js';
+import { get, set, getSettings, saveSettings, updateDay, dayKey, uid, creditFocus, BREAK_RE, FOCUS_MS, INTENT_MAX_AGE_MS, focusTodayMs, badgeFor } from './store.js';
 import { t, setLang, applyStrings, digits } from './strings.js';
-import { ROBOT_SVG } from './robot-svg.js';
+import { ROBOT_SVG, HANDS_SVG } from './robot-svg.js';
 
 const $ = (id) => document.getElementById(id);
+// Opened as the floating panel on a web page (inside an iframe) rather than the popup.
+const EMBED = new URLSearchParams(location.search).has('embed');
 const ADD_MS = 5 * 60 * 1000;
 const HISTORY_MAX = 80;
+const TIMER_CHOICES = [5, 10, 25, 50];
 
 const state = {
   settings: null,
@@ -20,6 +24,8 @@ const state = {
   editingOne: false,
   tipIndex: 0,
   sayKey: '',
+  minutes: 25,     // the length picked for the next focus timer
+  granted: [],     // origins Chrome has allowed (focus mode needs them per site)
 };
 
 // ---------- rules (same as the new tab page) ----------
@@ -62,11 +68,11 @@ function applyLook(s) {
 // =========================================================
 // Intent
 // =========================================================
-async function setIntent(text) {
+async function setIntent(text, minutes) {
   text = String(text || '').trim();
   if (!text) return;
   const now = Date.now();
-  const min = isBreak(text) ? 5 : Number(state.settings.timerMin) || FOCUS_MS / 60000;
+  const min = minutes || (isBreak(text) ? 5 : Number(state.settings.timerMin) || FOCUS_MS / 60000);
   await creditFocus(); // the intent being replaced
   state.intent = { text, startedAt: now, endsAt: now + min * 60 * 1000 };
   await set({ intent: state.intent });
@@ -75,7 +81,8 @@ async function setIntent(text) {
   history.push({ text, at: now, done: false });
   await set({ history: history.slice(-HISTORY_MAX) });
   render();
-  robotSay('tabiWatching', { text }, 'is-wave');
+  const [key, vars] = tips()[0];
+  robotSay(key, vars, 'is-wave');
 }
 
 async function markDone() {
@@ -101,20 +108,53 @@ async function addTime() {
   render();
 }
 
-async function newIntent() {
+// Start a focus timer from the popup (no intent text needed).
+function startTimer() {
+  return setIntent(t('popFocusSession'), state.minutes);
+}
+
+async function stopTimer() {
   await creditFocus();
   state.intent = null;
   await set({ intent: null });
   render();
-  $('popIntentInput').focus();
+  pickTip();
 }
 
 function renderIntent() {
   const running = intentActive(state.intent);
   $('popIntentRun').hidden = !running;
-  $('popIntentForm').hidden = running;
+  $('popTimerPick').hidden = running;
   if (running) $('popIntentText').textContent = state.intent.text;
+  else renderDurations();
   tick();
+}
+
+function renderDurations() {
+  const box = $('popDurs');
+  box.textContent = '';
+  for (const n of TIMER_CHOICES) {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'pop-dur';
+    b.setAttribute('role', 'radio');
+    b.setAttribute('aria-checked', String(n === state.minutes));
+    b.textContent = t('minShort', { n });
+    b.addEventListener('click', () => { state.minutes = n; renderDurations(); });
+    box.append(b);
+  }
+  $('popStart').textContent = `${t('tabiStart')} · ${t('minShort', { n: state.minutes })}`;
+}
+
+// The toolbar icon: countdown while a timer runs, otherwise today's focus time.
+// The background keeps it up to date; setting it here keeps it exact while open.
+let lastBadge = null;
+function setBadge(b) {
+  const key = b.text + b.color;
+  if (key === lastBadge || !chrome.action || !chrome.action.setBadgeText) return;
+  lastBadge = key;
+  chrome.action.setBadgeBackgroundColor({ color: b.color }).catch(() => {});
+  chrome.action.setBadgeText({ text: b.text }).catch(() => {});
 }
 
 // Timer and focus time, every second.
@@ -131,12 +171,8 @@ function tick() {
     $('popAddTime').hidden = !up;
   }
   // Focus time today, including the intent that is running right now.
-  const d = state.days[dayKey()] || {};
-  let ms = d.focusMs || 0;
-  if (it && it.text && !isBreak(it.text) && it.startedAt && dayKey(new Date(it.startedAt)) === dayKey()) {
-    const spent = Math.max(0, Math.min(now, it.endsAt || now) - it.startedAt);
-    if (spent >= 60000 || it.creditedMs) ms += Math.max(0, spent - (it.creditedMs || 0));
-  }
+  const ms = focusTodayMs(state.days, it, now);
+  setBadge(badgeFor(state.days, it, now));
   $('popFocusTime').textContent = ms >= 60000 ? fmtDur(ms) : fmtDur(0);
   $('popFocusTime').title = t('idleFocusLabel');
 }
@@ -258,27 +294,98 @@ function renderTodos() {
 }
 
 // =========================================================
-// Focus mode
+// Focus mode: the sites to block
 // =========================================================
+function cleanDomain(raw) {
+  let v = String(raw || '').trim().toLowerCase();
+  if (!v) return '';
+  v = v.replace(/^[a-z]+:\/\//, '').replace(/^www\./, '').split(/[/?#:]/)[0];
+  return /^[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(v) ? v : '';
+}
+const originsFor = (d) => [`*://${d}/*`, `*://*.${d}/*`];
+const isGranted = (d) => originsFor(d).every((o) => state.granted.includes(o));
+
+async function loadGranted() {
+  try { state.granted = (await chrome.permissions.getAll()).origins || []; } catch { state.granted = []; }
+}
+
+// Chrome asks once per site. The popup may close while Chrome shows its question,
+// so the site is saved first; the background picks it up once it's allowed.
+async function askFor(domains) {
+  try { return await chrome.permissions.request({ origins: domains.flatMap(originsFor) }); } catch { return false; }
+}
+
+async function saveFocus(patch) {
+  const s = await getSettings();
+  state.settings = { ...s, ...patch };
+  await saveSettings(state.settings);
+  renderFocusMode();
+}
+
+async function addSite(raw) {
+  const d = cleanDomain(raw);
+  const err = $('popSiteError');
+  if (!d) { err.textContent = t('focusSiteInvalid'); err.hidden = false; return; }
+  err.hidden = true;
+  $('popSiteInput').value = '';
+  const sites = state.settings.focusSites || [];
+  if (!sites.includes(d)) await saveFocus({ focusSites: [...sites, d], focusMode: true });
+  else if (!state.settings.focusMode) await saveFocus({ focusMode: true });
+  if (!isGranted(d)) {
+    await askFor([d]);
+    await loadGranted();
+    renderFocusMode();
+  }
+}
+
+async function removeSite(d) {
+  await saveFocus({ focusSites: (state.settings.focusSites || []).filter((v) => v !== d) });
+  chrome.permissions.remove({ origins: originsFor(d) }).catch(() => {});
+}
+
+async function toggleFocusMode(on) {
+  const sites = state.settings.focusSites || [];
+  if (on && !sites.length) { $('popFocusMode').checked = false; $('popSiteInput').focus(); return; }
+  await saveFocus({ focusMode: on });
+  const missing = sites.filter((d) => !isGranted(d));
+  if (on && missing.length) { await askFor(missing); await loadGranted(); renderFocusMode(); }
+}
+
 function renderFocusMode() {
   const s = state.settings;
   const sites = s.focusSites || [];
   $('popFocusMode').checked = !!s.focusMode;
-  $('popFocusSites').textContent = sites.length
-    ? sites.slice(0, 2).join(', ') + (sites.length > 2 ? ` +${digits(String(sites.length - 2))}` : '')
-    : t('popFocusNoSites');
-}
+  const names = sites.slice(0, 2).join(', ') + (sites.length > 2 ? ` +${digits(String(sites.length - 2))}` : '');
+  $('popFocusSites').textContent = !sites.length ? t('popFocusNoSites')
+    : s.focusMode ? t('popFocusOnNote', { sites: names }) : t('popFocusOffNote', { sites: names });
 
-async function toggleFocusMode(on) {
-  const s = await getSettings();
-  if (on && !(s.focusSites || []).length) {
-    $('popFocusMode').checked = false;
-    openSettings();
-    return;
+  const list = $('popSiteList');
+  list.textContent = '';
+  for (const d of sites) {
+    const li = document.createElement('li');
+    li.className = 'pop-site' + (isGranted(d) ? '' : ' is-pending');
+    const name = document.createElement('span');
+    name.textContent = d;
+    li.append(name);
+    if (!isGranted(d)) {
+      const ok = document.createElement('button');
+      ok.type = 'button';
+      ok.className = 'pop-site-allow';
+      ok.textContent = t('popSiteAllow');
+      ok.title = t('popSiteAllowTitle');
+      ok.addEventListener('click', async () => { await askFor([d]); await loadGranted(); renderFocusMode(); });
+      li.append(ok);
+    }
+    const x = document.createElement('button');
+    x.type = 'button';
+    x.className = 'pop-site-x';
+    x.setAttribute('aria-label', t('popSiteRemove', { site: d }));
+    x.title = t('popSiteRemove', { site: d });
+    x.innerHTML = '<svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>';
+    x.addEventListener('click', () => removeSite(d));
+    li.append(x);
+    list.append(li);
   }
-  state.settings = { ...s, focusMode: on };
-  await saveSettings(state.settings);
-  renderFocusMode();
 }
 
 // =========================================================
@@ -314,6 +421,7 @@ function tips() {
   if (intentActive(it)) {
     if (it.endsAt <= Date.now()) out.push(['timeUp', {}]);
     else if (isBreak(it.text)) out.push(['tabiBreak', {}]);
+    else if (it.text === t('popFocusSession')) out.push(['popWatching', {}]);
     else out.push(['tabiWatching', { text: it.text }]);
   }
   const f = todayFocus(state.focus);
@@ -341,6 +449,7 @@ function nextTip() {
 function initRobot() {
   const robot = $('popRobot');
   robot.innerHTML = ROBOT_SVG;
+  $('popHands').innerHTML = HANDS_SVG;
   robot.addEventListener('click', nextTip);
   // Eyes follow the mouse inside the popup.
   document.addEventListener('mousemove', (e) => {
@@ -365,21 +474,36 @@ function render() {
   renderFocusMode();
 }
 
+// Close the popup, or ask the page to remove the floating panel.
+function closeMe() {
+  if (EMBED) window.parent.postMessage({ intentTabPanel: 'close' }, '*');
+  else window.close();
+}
+
 function openSettings() {
   chrome.tabs.create({ url: 'newtab.html#settings' });
-  window.close();
+  closeMe();
+}
+
+// Floating panel: header moves inside the panel, a close button appears, and the
+// page is told how tall the panel is so its frame fits.
+function initEmbed() {
+  document.documentElement.classList.add('is-embed');
+  const panel = document.querySelector('.pop-panel');
+  panel.prepend(document.querySelector('.pop-head'));
+  $('popClose').hidden = false;
+  $('popClose').addEventListener('click', closeMe);
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMe(); });
+  const report = () => window.parent.postMessage({ intentTabPanel: 'size', h: Math.ceil(document.documentElement.scrollHeight) }, '*');
+  new ResizeObserver(report).observe(document.body);
+  report();
 }
 
 function bindEvents() {
-  $('popIntentForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    const v = $('popIntentInput').value;
-    $('popIntentInput').value = '';
-    setIntent(v);
-  });
+  $('popStart').addEventListener('click', startTimer);
   $('popDone').addEventListener('click', markDone);
   $('popAddTime').addEventListener('click', addTime);
-  $('popNewIntent').addEventListener('click', newIntent);
+  $('popStop').addEventListener('click', stopTimer);
 
   $('popOneForm').addEventListener('submit', (e) => { e.preventDefault(); saveOne($('popOneInput').value); });
   $('popOneInput').addEventListener('keydown', (e) => {
@@ -402,7 +526,9 @@ function bindEvents() {
   });
 
   $('popFocusMode').addEventListener('change', (e) => toggleFocusMode(e.target.checked));
-  $('popOpenTab').addEventListener('click', () => { chrome.tabs.create({}); window.close(); });
+  $('popSiteForm').addEventListener('submit', (e) => { e.preventDefault(); addSite($('popSiteInput').value); });
+  chrome.permissions.onAdded.addListener(async () => { await loadGranted(); renderFocusMode(); });
+  $('popOpenTab').addEventListener('click', () => { chrome.tabs.create({}); closeMe(); });
   $('popSettings').addEventListener('click', openSettings);
 
   // Changes from the new tab page (or another computer through sync) show up here at once.
@@ -429,6 +555,8 @@ async function init() {
   applyStrings();
   document.title = 'Intent Tab';
   applyLook(state.settings);
+  state.minutes = TIMER_CHOICES.includes(Number(state.settings.timerMin)) ? Number(state.settings.timerMin) : 25;
+  await loadGranted();
 
   const data = await get(['intent', 'todos', 'focus', 'days']);
   state.intent = data.intent || null;
@@ -436,6 +564,7 @@ async function init() {
   state.focus = data.focus || null;
   state.days = data.days || {};
 
+  if (EMBED) initEmbed();
   initRobot();
   bindEvents();
   render();
@@ -446,7 +575,6 @@ async function init() {
   if (first[0] === 'tabiHello') robotSay('tabiHello', {}, 'is-wave');
   else robotSay(first[0], first[1], 'is-wave');
 
-  if (!intentActive(state.intent)) $('popIntentInput').focus();
 }
 
 init().catch((err) => console.warn('[Intent Tab] popup', err));
