@@ -39,4 +39,4 @@ Intent Tab is not directed at children and collects no personal information from
 If this policy changes, the new version will be published with an updated date.
 
 ## Contact
-Questions about this policy: **[add your support email or website here]**
+Questions about this policy: open an issue on GitHub: https://github.com/saykatghosh/intent_tab/issues

@@ -32,6 +32,14 @@ Every new tab asks one gentle question: **why did you open this tab?** Type a re
 • "Time's up" notification with Done / +5 min
 • Ambient focus sounds: rain, ocean, fan
 
+**On every site, one click away**
+• Click the robot in the toolbar: your intent and timer, today's one thing, your to-do list, focus time and focus mode, without opening a new tab
+
+**Meet Intent, your focus buddy**
+• A tiny robot on your new tab that remembers today's one thing
+• Points at your next task and offers Start or Next
+• Cheers when you finish something, and its eyes follow your cursor
+
 **Plan your day**
 • Today's one thing: one goal for the day, always in view
 • To-do list with daily progress and a 7-day chart
@@ -43,6 +51,11 @@ Every new tab asks one gentle question: **why did you open this tab?** Type a re
 • Right-click like Chrome: open in new tab or window or Incognito, edit, rename, delete (with Undo), add page or folder
 • Drag & drop to reorder or move into folders, and drop links from any page
 • Custom icons: any emoji or your own image, plus background colours
+
+**Projects and developer tools**
+• Projects: tasks, progress and every link (repo, local, staging, production, design) in one place; open them all in one click
+• Seven local dev tools: JSON, Base64/JWT, timestamps, colours, UUIDs, regex and units
+• Search shortcuts: type mdn, npm, gh, so and more to search those sites directly
 
 **One shortcut for everything**
 • Ctrl+K command palette: search bookmarks, add tasks, set an intent, ask AI, change settings
@@ -66,8 +79,6 @@ Everything is stored locally in your browser. No analytics, no tracking, no serv
 ## Website and privacy policy URL
 - Website: https://saykatghosh.github.io/intent_tab/
 - Privacy policy (paste into the Privacy tab): https://saykatghosh.github.io/intent_tab/privacy.html
-
-Both go live once GitHub Pages is turned on for the `docs/` folder.
 
 ---
 
@@ -102,7 +113,7 @@ Intent Tab replaces the new tab page with a calm start page that helps people op
 - `../docs/assets/shots/5-focus-mode.png` (1280×800)
 - `promo-small-440x280.png`: small promo tile
 - `promo-marquee-1400x560.png`: marquee promo tile
-- Store icon: use `../icons/icon128.png`
+- Store icon: use `store-icon-128.png` (the robot at 96×96 inside 128×128, as the Web Store asks)
 
 ---
 
@@ -118,4 +129,7 @@ Intent Tab replaces the new tab page with a calm start page that helps people op
 • উপরে বুকমার্ক বার: রাইট-ক্লিক মেনু, drag & drop, নিজের আইকন
 • Ctrl+K দিয়ে সব কিছু এক জায়গা থেকে
 • Chrome-এর নিজের Gemini Nano দিয়ে AI, সব ডেটা আপনার কম্পিউটারেই থাকে
+• টুলবারের রোবটে ক্লিক করলেই যেকোনো সাইট থেকে intent, টাইমার, টুডু আর ফোকাস মোড
+• Intent নামের ছোট্ট রোবট, যে আজকের লক্ষ্য মনে রাখে আর পরের কাজ দেখায়
+• প্রজেক্ট আর ডেভেলপারদের ৭টা টুল
 • লাইট/ডার্ক থিম, ৫টা রং, নিজের ছবি, ইংরেজি আর বাংলা

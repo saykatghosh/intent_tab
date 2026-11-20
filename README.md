@@ -11,7 +11,7 @@ It asks one quick question every time you open a tab, remembers the answer, and 
 
 **[🌐 Website](https://saykatghosh.github.io/intent_tab/)** · **[⬇️ Download .zip](https://saykatghosh.github.io/intent_tab/download/intent-tab.zip)** · **[▶️ Video tour](https://saykatghosh.github.io/intent_tab/#video)** · **[🔒 Privacy](https://saykatghosh.github.io/intent_tab/privacy.html)**
 
-![Version](https://img.shields.io/badge/version-1.0.1-7FE0C0?style=flat-square)
+![Version](https://img.shields.io/badge/version-1.1.0-7FE0C0?style=flat-square)
 ![Free](https://img.shields.io/badge/price-free-7FE0C0?style=flat-square)
 ![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white)
 ![No dependencies](https://img.shields.io/badge/dependencies-0-success?style=flat-square)
@@ -99,6 +99,7 @@ On your own computer, inside Chrome (`chrome.storage.local`). There are no serve
 
 | | Feature | What it does |
 |:-:|---|---|
+| 🧩 | **Toolbar popup** | Click the robot in Chrome's toolbar on any site: your intent and timer, today's one thing, to-dos, focus time and focus mode, with Intent the robot. |
 | 🎯 | **Intent question** | Type a reason or pick a chip. Your intent then shows large, with a focus timer and **Done**. |
 | 🌌 | **Cosmos** | A deep-space sky with stars, a nebula, shooting stars and a ringed planet. In light mode it's a pastel sky. |
 | 🤖 | **Intent, the robot** | A small robot that peeks over your To-do card, points at the next task and cheers when you finish one. |
@@ -330,6 +331,7 @@ The ZIP leaves out `store/`, `scripts/`, `.git`, `.github`, `package.json` and t
 ```
 manifest.json
 newtab.html            the page
+popup.html             the toolbar popup (css/popup.css)
 background.js          service worker: focus-mode rules, timer notification, focus time, sounds
 offscreen.html/.js     generates focus sounds (Web Audio)
 blocked.html/.js       the calm page shown by focus mode
@@ -361,6 +363,8 @@ js/
   prefs.js             engine, accent, photo, focus sites, sync, export/import, backup reminder, sounds
   sync.js              to-dos, notes and projects through Chrome sync (run by the service worker)
   settings.js          settings panel
+  popup.js             the toolbar popup (intent, one thing, to-dos, focus mode, robot)
+  robot-svg.js         the robot drawing, shared by the page and the popup
   onboarding.js        welcome tour
   theme-boot.js        sets theme and accent before first paint
 fonts/                 Inter + Instrument Serif (WOFF2, OFL), bundled, no web requests

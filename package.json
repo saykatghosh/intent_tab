@@ -1,6 +1,6 @@
 {
   "name": "intent-tab",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "description": "A calm Chrome new tab that asks why you opened it.",
   "type": "module",

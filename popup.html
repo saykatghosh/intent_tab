@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Intent Tab</title>
+  <script src="js/theme-boot.js"></script>
+  <link rel="stylesheet" href="css/popup.css">
+</head>
+<body>
+  <header class="pop-head">
+    <span class="pop-brand"><img src="icons/icon48.png" alt="" width="20" height="20">Intent Tab</span>
+    <span class="pop-focus" id="popFocusTime" title=""></span>
+  </header>
+
+  <!-- Intent, the robot, with a speech bubble -->
+  <section class="pop-buddy">
+    <button type="button" class="tabi pop-robot" id="popRobot" data-i18n-aria="tabiLabel" data-i18n-title="tabiLabel"></button>
+    <div class="pop-bubble" aria-live="polite">
+      <span class="tabi-name">Intent</span>
+      <p id="popSay"></p>
+    </div>
+  </section>
+
+  <!-- The running intent, or a box to set one -->
+  <section class="pop-card" id="popIntentRun" hidden>
+    <div class="pop-label"><span class="dot"></span><span data-i18n="popNow"></span></div>
+    <p class="pop-intent" id="popIntentText"></p>
+    <div class="pop-timer">
+      <div class="pop-track"><div class="pop-fill" id="popTimerBar"></div></div>
+      <span class="pop-left" id="popTimerText"></span>
+    </div>
+    <div class="pop-row">
+      <button type="button" class="pop-btn is-primary" id="popDone" data-i18n="done"></button>
+      <button type="button" class="pop-btn" id="popAddTime" data-i18n="addTime"></button>
+      <button type="button" class="pop-btn is-quiet" id="popNewIntent" data-i18n="newIntent"></button>
+    </div>
+  </section>
+  <form class="pop-card pop-ask" id="popIntentForm" autocomplete="off" hidden>
+    <label class="pop-label" for="popIntentInput"><span class="dot"></span><span data-i18n="setIntentLink"></span></label>
+    <div class="pop-input">
+      <input id="popIntentInput" type="text" maxlength="120" data-i18n-placeholder="intentPlaceholder">
+      <button type="submit" class="pop-btn is-primary" data-i18n="intentSubmit"></button>
+    </div>
+  </form>
+
+  <!-- Today's one thing -->
+  <section class="pop-card pop-one" id="popOne">
+    <div class="pop-label"><span class="dot is-star"></span><span data-i18n="focusQuestion"></span></div>
+    <div id="popOneShow" class="pop-one-show" hidden>
+      <button type="button" class="pop-check" id="popOneDone" role="checkbox" aria-checked="false"></button>
+      <span id="popOneText" class="pop-one-text"></span>
+    </div>
+    <form id="popOneForm" class="pop-input is-small" autocomplete="off" hidden>
+      <input id="popOneInput" type="text" maxlength="120" data-i18n-placeholder="focusPlaceholder">
+    </form>
+  </section>
+
+  <!-- To-do -->
+  <section class="pop-card">
+    <div class="pop-label">
+      <span class="dot"></span><span data-i18n="todoTitle"></span>
+      <span class="pop-count" id="popTodoCount"></span>
+    </div>
+    <div class="pop-track is-thin"><div class="pop-fill" id="popTodoBar"></div></div>
+    <ul class="pop-todos" id="popTodoList"></ul>
+    <p class="pop-empty" id="popTodoEmpty" data-i18n="todoEmpty" hidden></p>
+    <form id="popTodoForm" class="pop-input is-small" autocomplete="off">
+      <input id="popTodoInput" type="text" maxlength="200" data-i18n-placeholder="todoPlaceholder">
+      <button type="submit" class="pop-btn" data-i18n="todoAdd"></button>
+    </form>
+  </section>
+
+  <!-- Focus mode + links -->
+  <section class="pop-foot">
+    <label class="pop-switch" id="popFocusModeRow">
+      <input type="checkbox" id="popFocusMode">
+      <span class="pop-knob" aria-hidden="true"></span>
+      <span class="pop-switch-text"><b data-i18n="focusModeToggle"></b><small id="popFocusSites"></small></span>
+    </label>
+    <div class="pop-row">
+      <button type="button" class="pop-btn" id="popOpenTab" data-i18n="popOpenTab"></button>
+      <button type="button" class="pop-btn is-quiet" id="popSettings" data-i18n="settings"></button>
+    </div>
+  </section>
+
+  <script type="module" src="js/popup.js"></script>
+</body>
+</html>

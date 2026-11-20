@@ -207,6 +207,12 @@ async function main() {
   $('devTopBtn').addEventListener('click', () => openTool());
   initProjects(toast).catch((err) => console.warn('[Intent Tab] projects', err));
   initOnboarding().catch((err) => console.warn('[Intent Tab] tour', err));
+
+  // The toolbar popup's Settings button opens newtab.html#settings.
+  if (location.hash === '#settings') {
+    history.replaceState(null, '', location.pathname);
+    openSettings();
+  }
   initRobot(settings.modules.robot !== false).catch((err) => console.warn('[Intent Tab] robot', err));
 
   // "/" jumps to the search bar (when not already typing somewhere).

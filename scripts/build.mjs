@@ -51,6 +51,7 @@ function check() {
   if ((manifest.description || '').length > 132) fail(`description is ${manifest.description.length} chars (max 132)`);
   const referenced = [
     manifest.chrome_url_overrides?.newtab,
+    manifest.action?.default_popup,
     manifest.background?.service_worker,
     ...Object.values(manifest.icons || {}),
     ...(manifest.web_accessible_resources || []).flatMap((w) => w.resources).filter((r) => !r.includes('*')),
@@ -78,12 +79,13 @@ function check() {
     }
   }
 
-  // 4. $('id') used by page scripts exists in newtab.html
-  const html = read('newtab.html');
-  const ids = new Set([...html.matchAll(/id="([^"]+)"/g)].map((m) => m[1]));
+  // 4. $('id') used by page scripts exists in its page (popup.js → popup.html, the rest → newtab.html)
+  const idsOf = (page) => new Set([...read(page).matchAll(/id="([^"]+)"/g)].map((m) => m[1]));
+  const pageIds = { 'newtab.html': idsOf('newtab.html'), 'popup.html': idsOf('popup.html') };
   for (const f of jsFiles.filter((f) => rel(f).startsWith('js/'))) {
+    const page = rel(f) === 'js/popup.js' ? 'popup.html' : 'newtab.html';
     for (const m of fs.readFileSync(f, 'utf8').matchAll(/\$\('([A-Za-z0-9_-]+)'\)/g)) {
-      if (!ids.has(m[1]) && !DYNAMIC_IDS.has(m[1])) fail(`${rel(f)}: #${m[1]} is not in newtab.html`);
+      if (!pageIds[page].has(m[1]) && !DYNAMIC_IDS.has(m[1])) fail(`${rel(f)}: #${m[1]} is not in ${page}`);
     }
   }
 
@@ -94,7 +96,7 @@ function check() {
   const en = keys(block('en: {', 'bn: {'));
   const bn = keys(block('bn: {', '// Locale used'));
   const used = new Set();
-  for (const f of [...jsFiles, path.join(ROOT, 'newtab.html'), path.join(ROOT, 'blocked.html')]) {
+  for (const f of [...jsFiles, path.join(ROOT, 'newtab.html'), path.join(ROOT, 'blocked.html'), path.join(ROOT, 'popup.html')]) {
     const src = fs.readFileSync(f, 'utf8');
     for (const m of src.matchAll(/\bt\('([A-Za-z0-9_]+)'/g)) used.add(m[1]);
     for (const m of src.matchAll(/data-i18n(?:-placeholder|-title|-aria)?="([A-Za-z0-9_]+)"/g)) used.add(m[1]);

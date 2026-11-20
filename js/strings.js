@@ -325,6 +325,12 @@ export const STRINGS = {
     tabiNice: 'Nice! One down ✓',
     tabiStart: 'Start',
     tabiNext: 'Next',
+
+    // Toolbar popup
+    popNow: 'Now',
+    popLeft: '{time} left',
+    popOpenTab: 'Open new tab',
+    popFocusNoSites: 'Add distracting sites in Settings',
     devShort_json: 'JSON',
     devShort_encode: 'Encode',
     devShort_time: 'Time',
@@ -815,6 +821,12 @@ export const STRINGS = {
     tabiNice: 'দারুণ! একটা শেষ ✓',
     tabiStart: 'শুরু',
     tabiNext: 'পরেরটা',
+
+    // Toolbar popup
+    popNow: 'এখন',
+    popLeft: '{time} বাকি',
+    popOpenTab: 'নতুন ট্যাব খুলুন',
+    popFocusNoSites: 'সেটিংস থেকে মনোযোগ নষ্ট করা সাইট যোগ করুন',
     devShort_json: 'JSON',
     devShort_encode: 'Encode',
     devShort_time: 'সময়',
