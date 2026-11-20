@@ -1801,6 +1801,9 @@ input[type="text"], input[type="search"], input[type="time"] {
 .accent-swatch[data-accent-choice="amber"]  { background: linear-gradient(135deg, #e0952f, #a8620e); }
 .accent-swatch[data-accent-choice="rose"]   { background: linear-gradient(135deg, #e0708f, #b33f66); }
 .data-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.data-status { color: var(--muted); }
+.data-status.is-warn { color: var(--text); font-weight: 500; }
+.data-warn { color: var(--muted); padding-left: 10px; border-left: 2px solid var(--accent); }
 
 /* ---------- Welcome tour ---------- */
 .tour {

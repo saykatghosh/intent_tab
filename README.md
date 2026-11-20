@@ -245,8 +245,9 @@ This runs entirely on your computer through Chrome's Prompt API. There's no API 
 <details>
 <summary><b>💾 Your data and sync</b></summary>
 
-- **Export backup** downloads everything as JSON, and **Import backup** restores it.
-- **Sync settings** copies only your settings, through Chrome sync. To-dos, notes and history stay on this computer.
+- **Export backup** downloads everything as JSON, and **Import backup** restores it. Settings shows when you last made one, and a gentle reminder appears after a week without a backup (a month with sync on).
+- **Sync** copies settings, to-dos, notes and projects through Chrome sync, so they follow you to every Chrome signed in to your Google account and come back after a reinstall. The first time a computer joins, its data is merged, not replaced. History and the background photo stay on this computer. Chrome sync holds about 100 KB; Settings tells you if it's full.
+- **Switching to another browser** (Edge, Brave, Firefox…) needs Export on the old one and Import on the new one. Chrome sync doesn't cross browsers.
 - **Search engine.** Choose Google, Bing, DuckDuckGo, Brave, YouTube, Perplexity or ChatGPT.
 
 </details>
@@ -325,7 +326,8 @@ js/
   robot.js             Intent, the robot companion
   effects.js           transitions, word reveal, count-up, burst, ripple, idle pause
   layout.js            drag cards between columns
-  prefs.js             engine, accent, photo, focus sites, sync, export/import, sounds
+  prefs.js             engine, accent, photo, focus sites, sync, export/import, backup reminder, sounds
+  sync.js              to-dos, notes and projects through Chrome sync (run by the service worker)
   settings.js          settings panel
   onboarding.js        welcome tour
   theme-boot.js        sets theme and accent before first paint

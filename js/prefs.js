@@ -1,9 +1,10 @@
 // Extra settings and controls added in v1.2:
 //   search engine, accent colour, background photo, focus mode sites,
-//   notifications, sync, export / import, reset layout, and focus sounds.
+//   notifications, sync, export / import (with a backup reminder), reset layout,
+//   and focus sounds.
 
-import { get, set } from './store.js';
-import { t } from './strings.js';
+import { get, set, dayKey } from './store.js';
+import { t, locale } from './strings.js';
 import { registerCommands } from './palette.js';
 import { applySettings, currentSettings } from './settings.js';
 import { ENGINES, setEngine } from './search.js';
@@ -135,14 +136,20 @@ async function setSound(kind) {
 }
 
 // ---------- Export / import ----------
-async function exportData() {
+// Bookkeeping that belongs to this computer only, never to a backup file.
+const LOCAL_ONLY = ['syncMeta', 'syncState'];
+
+export async function exportData() {
   const all = await chrome.storage.local.get(null);
+  for (const k of LOCAL_ONLY) delete all[k];
   const blob = new Blob([JSON.stringify({ app: 'intent-tab', version: chrome.runtime.getManifest().version, exportedAt: new Date().toISOString(), data: all }, null, 2)], { type: 'application/json' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `intent-tab-backup-${new Date().toISOString().slice(0, 10)}.json`;
   a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  const { backup = {} } = await get('backup');
+  await set({ backup: { ...backup, lastAt: Date.now() } });
   toastFn(t('exportDone'));
 }
 
@@ -152,6 +159,7 @@ async function importData(file) {
     const data = json && json.app === 'intent-tab' ? json.data : null;
     if (!data || typeof data !== 'object') throw new Error('not an Intent Tab backup');
     if (!confirm(t('importConfirm'))) return;
+    for (const k of LOCAL_ONLY) delete data[k];
     await chrome.storage.local.clear();
     await chrome.storage.local.set(data);
     location.reload();
@@ -159,6 +167,54 @@ async function importData(file) {
     console.warn('[Intent Tab] import', err);
     toastFn(t('importFailed'));
   }
+}
+
+// ---------- Backup status and reminder ----------
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+function shortDate(ms) {
+  return new Date(ms).toLocaleDateString(locale(), { day: 'numeric', month: 'short' });
+}
+
+function shortTime(ms) {
+  const d = new Date(ms);
+  if (dayKey(d) !== dayKey()) return shortDate(ms);
+  return d.toLocaleTimeString(locale(), { hour: 'numeric', minute: '2-digit' });
+}
+
+// "Last backup: 12 Nov" and, with sync on, "Last synced: 10:32" (or why it failed).
+async function renderDataStatus() {
+  const el = $('dataStatus');
+  if (!el) return;
+  const { backup = {}, syncState = {} } = await get(['backup', 'syncState']);
+  const lines = [backup.lastAt ? t('backupLast', { date: shortDate(backup.lastAt) }) : t('backupNever')];
+  if (currentSettings().sync) {
+    if (syncState.error === 'quota') lines.push(t('syncTooBig'));
+    else if (syncState.error) lines.push(t('syncFailed'));
+    else if (syncState.at) lines.push(t('syncLast', { time: shortTime(syncState.at) }));
+    else lines.push(t('syncWaiting'));
+  }
+  el.textContent = lines.join(' · ');
+  el.classList.toggle('is-warn', !backup.lastAt || !!syncState.error);
+}
+
+function hasData({ todos = [], notes = {}, projects = [] }) {
+  return todos.length > 0 || projects.length > 0 || !!(notes.text || '').trim();
+}
+
+// No backup for a week (a month with sync on)? Say so once, then wait 3 days.
+async function remindBackup() {
+  const now = Date.now();
+  const all = await get(['backup', 'todos', 'notes', 'projects']);
+  const backup = all.backup || {};
+  if (!backup.firstSeen) { await set({ backup: { ...backup, firstSeen: now } }); return; }
+  if (!hasData(all) || (backup.snoozeUntil || 0) > now) return;
+  const every = (currentSettings().sync ? 30 : 7) * DAY_MS;
+  const since = backup.lastAt || backup.firstSeen;
+  if (now - since < every) return;
+  await set({ backup: { ...backup, snoozeUntil: now + 3 * DAY_MS } });
+  const days = Math.floor((now - since) / DAY_MS);
+  toastFn(t(backup.lastAt ? 'backupRemind' : 'backupRemindFirst', { n: days }), { label: t('backupNow'), run: exportData });
 }
 
 // ---------- Fill the settings controls ----------
@@ -254,13 +310,19 @@ export function initPrefs(settings, toast) {
     if (f) importData(f);
   });
   $('resetLayoutBtn').addEventListener('click', () => applySettings({ layout: null }));
+  renderDataStatus();
+  chrome.storage.onChanged.addListener((c, area) => {
+    if (area === 'local' && (c.backup || c.syncState || c.settings)) renderDataStatus();
+  });
+  // Wait until the page has settled so the reminder doesn't cover the intent question.
+  setTimeout(() => remindBackup().catch((e) => console.warn('[Intent Tab] backup', e)), 4000);
 
   // Sounds under the timer
   renderSound();
   chrome.storage.onChanged.addListener((c, area) => { if (area === 'local' && c.sound) renderSound(); });
 
   document.addEventListener('intent:settings', (e) => applyAll(e.detail));
-  document.addEventListener('intent:lang', () => { applyAll(currentSettings()); renderSound(); });
+  document.addEventListener('intent:lang', () => { applyAll(currentSettings()); renderSound(); renderDataStatus(); });
   applyAll(settings);
 
   // Palette commands

@@ -2,10 +2,12 @@
 //   • Focus mode  – while an intent runs, chosen sites redirect to a calm "blocked" page
 //   • Notification – "Time's up" when the focus timer ends (with Done / +5 min)
 //   • Focus sounds – rain / ocean / fan, played from an offscreen document
+//   • Data sync    – to-dos, notes and projects through Chrome sync (js/sync.js)
 // Everything is driven by chrome.storage, so the new-tab page just writes data.
 
 import { get, set, getSettings, updateDay, dayKey, BREAK_RE, creditFocus } from './js/store.js';
 import { t, setLang } from './js/strings.js';
+import { initSync, reconcileAll } from './js/sync.js';
 
 const RULE_BASE = 1000;
 const ALARM_SYNC = 'focus-sync';
@@ -217,3 +219,8 @@ chrome.permissions.onAdded.addListener(() => syncRules());
 chrome.permissions.onRemoved.addListener(() => syncRules());
 chrome.runtime.onStartup.addListener(syncAll);
 chrome.runtime.onInstalled.addListener(syncAll);
+
+// To-dos, notes and projects through Chrome sync (when turned on in Settings).
+initSync();
+chrome.runtime.onStartup.addListener(reconcileAll);
+chrome.runtime.onInstalled.addListener(reconcileAll);
