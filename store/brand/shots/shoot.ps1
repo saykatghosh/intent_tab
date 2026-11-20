@@ -1,7 +1,7 @@
 # Store screenshots (1280x800) of the real page with sample data.
 # 1) node store/brand/shots/server.mjs . 8765     (serves the extension with a fake chrome.* API)
 # 2) .\store\brand\shots\shoot.ps1 -Scenes question,idle,palette,project,focus
-# PNGs land next to this script; copy them to store/screenshots/.
+# PNGs land next to this script; copy them to docs/assets/shots/.
 param([string[]]$Scenes)
 $S = $PSScriptRoot
 $chrome = "C:\Program Files\Google\Chrome\Application\chrome.exe"

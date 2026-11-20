@@ -1,54 +1,60 @@
 <div align="center">
 
-<picture>
-  <source media="(prefers-color-scheme: dark)" srcset="store/brand/wordmark-dark.png">
-  <img src="store/brand/wordmark-light.png" width="520" alt="Intent Tab">
-</picture>
+<img src="docs/assets/robot.svg" width="96" alt="">
 
-### A calm new tab that asks one question: *“Why did you open this tab?”*
+# Intent Tab
 
-To-dos, projects, a focus timer, bookmarks and on-device AI. Everything stays on your computer.
+### Why did you open *this tab?*
 
-![Version](https://img.shields.io/badge/version-1.0.0-7fd6bd?style=flat-square)
+Your new tab, with a little robot that keeps you on track.<br>
+It asks one quick question every time you open a tab, remembers the answer, and gently pulls you back when you drift.
+
+**[🌐 Website](https://saykatghosh.github.io/intent_tab/)** · **[⬇️ Download .zip](https://saykatghosh.github.io/intent_tab/download/intent-tab.zip)** · **[▶️ Video tour](https://saykatghosh.github.io/intent_tab/#video)** · **[🔒 Privacy](https://saykatghosh.github.io/intent_tab/privacy.html)**
+
+![Version](https://img.shields.io/badge/version-1.0.0-7FE0C0?style=flat-square)
+![Free](https://img.shields.io/badge/price-free-7FE0C0?style=flat-square)
 ![Manifest V3](https://img.shields.io/badge/Chrome-Manifest%20V3-4285F4?style=flat-square&logo=googlechrome&logoColor=white)
 ![No dependencies](https://img.shields.io/badge/dependencies-0-success?style=flat-square)
-![Vanilla JS](https://img.shields.io/badge/vanilla-JS%20%2B%20CSS-f7df1e?style=flat-square&logo=javascript&logoColor=black)
 ![Languages](https://img.shields.io/badge/lang-English%20%C2%B7%20%E0%A6%AC%E0%A6%BE%E0%A6%82%E0%A6%B2%E0%A6%BE-b48cff?style=flat-square)
 
-<img src="store/promo-marquee-1400x560.png" alt="Intent Tab" width="100%">
+<img src="docs/assets/shots/2-cosmos-dark.png" alt="Intent Tab new tab page in the Cosmos theme" width="100%">
 
 </div>
 
 ---
 
-## ✨ Why
+## 🤖 Meet your focus buddy
 
-Most tabs are opened out of habit. Intent Tab asks you why you opened each one, gently. You can pick a reason with one click or skip the question, and the search bar always works. Over a day you open more tabs on purpose and fewer by reflex.
+A tiny robot sits on your new tab. It remembers today's one thing and nudges you at the right moment, never nagging, always friendly. Its eyes even follow your cursor.
 
-- 🔒 **Private.** Everything is stored in `chrome.storage.local`. There's no server, no account, no analytics and no tracking.
-- 🪶 **Light.** It's plain HTML, CSS and ES modules, with no framework and no build step. Animations pause when the page is idle.
-- 🌏 **Bilingual.** It works fully in English and বাংলা, with Bangla digits too.
+- **Reminds your intent.** Every new tab shows what you said you're here to do.
+- **Suggests the next task.** Its bubble offers **Start** and **Next**.
+- **Celebrates your streak.** It cheers when you finish something.
 
-## 📸 Screenshots
+## 🔢 Small numbers, big focus
+
+| **1** | **Ctrl K** | **5 min** | **2** |
+|:-:|:-:|:-:|:-:|
+| clear intent for every tab you open | to reach any project, link or action | is all a distraction gets in focus mode | moods: Cosmos and Daylight |
+
+## 📸 Take the tour
 
 | | |
 |:---:|:---:|
-| <img src="store/screenshots/1-intent-light.png" alt="The intent question in light mode"> | <img src="store/screenshots/2-cosmos-dark.png" alt="The quiet centre with the Cosmos background and the robot"> |
-| **The question:** set an intent in one click | **Cosmos:** next task, focus time and Intent the robot |
-| <img src="store/screenshots/3-command-palette.png" alt="The command palette"> | <img src="store/screenshots/4-project-view.png" alt="A project with its tasks, progress and links"> |
-| **Ctrl+K:** do anything from the keyboard | **Projects:** tasks, progress and links in one popup |
+| <img src="docs/assets/shots/1-intent-light.png" alt="The intent question in the Daylight theme"> | <img src="docs/assets/shots/3-command-palette.png" alt="The command palette"> |
+| **Set an intent.** Every new tab asks why you're here. Type it, or tap a suggestion from your to-dos. | **Command palette.** Press Ctrl K to jump to any project link, start a new intent or add a quick note. |
+| <img src="docs/assets/shots/4-project-view.png" alt="A project with its tasks, progress and links"> | <img src="docs/assets/shots/5-focus-mode.png" alt="Focus mode pausing youtube.com"> |
+| **Projects.** Tasks, progress and every link for a project in one place. Open all its links in one click. | **Focus mode.** *youtube.com can wait.* Distracting sites pause while your intent timer runs. |
 
-<p align="center"><img src="store/screenshots/5-focus-mode.png" alt="Focus mode page" width="70%"><br><b>Focus mode:</b> distracting sites can wait while an intent runs</p>
+▶️ **[Watch the 90-second video tour](https://saykatghosh.github.io/intent_tab/#video)** (Bangla voice-over and captions, with an install guide).
 
-## 🚀 Install
+## 🚀 Ready in three steps
 
-> Not on the Chrome Web Store yet. Load it unpacked, which takes about 30 seconds.
+> Coming soon to the Chrome Web Store. Until then, install it from the .zip in about 30 seconds.
 
-1. Download or clone this repository.
-2. Open **`chrome://extensions`** in Chrome.
-3. Turn on **Developer mode** (top right).
-4. Click **Load unpacked** and select this folder (the one with `manifest.json`).
-5. Open a new tab. If Chrome asks about the changed new tab page, choose **Keep it**.
+1. **Add to Chrome.** [Download the .zip](https://saykatghosh.github.io/intent_tab/download/intent-tab.zip) and unzip it (or clone this repository). Open **`chrome://extensions`**, turn on **Developer mode** (top right), click **Load unpacked** and pick the folder with `manifest.json`.
+2. **Open a new tab.** Your robot says hi. If Chrome asks about the changed new tab page, choose **Keep it**. Pick Cosmos or Daylight.
+3. **Set your first intent.** Type what you're here to do, and go do it.
 
 After you edit a file, click ↻ on the extension card and open a new tab.
 
@@ -57,12 +63,36 @@ After you edit a file, click ↻ on the extension card and open a new tab.
 <details>
 <summary><b>ইনস্টল (বাংলায়)</b></summary>
 
-1. এই রিপোজিটরি ডাউনলোড বা clone করুন।
+1. [.zip ফাইলটা ডাউনলোড করে](https://saykatghosh.github.io/intent_tab/download/intent-tab.zip) আনজিপ করুন (অথবা এই রিপোজিটরি clone করুন)।
 2. Chrome-এ **`chrome://extensions`** খুলুন।
 3. উপরে ডানদিকের **Developer mode** চালু করুন।
-4. **Load unpacked** চাপুন, তারপর এই ফোল্ডারটা (যেখানে `manifest.json` আছে) সিলেক্ট করুন।
+4. **Load unpacked** চাপুন, তারপর যে ফোল্ডারে `manifest.json` আছে সেটা সিলেক্ট করুন।
 5. নতুন ট্যাব খুলুন। Chrome জিজ্ঞেস করলে **Keep it** চাপুন।
 
+ভিডিওতে ধাপে ধাপে দেখানো আছে: [ভিডিও দেখুন](https://saykatghosh.github.io/intent_tab/#video)
+
+</details>
+
+## ❓ Questions? Answered.
+
+<details><summary><b>Is Intent Tab free?</b></summary>
+
+Yes, completely free. No account, no ads, no paid plan.
+</details>
+
+<details><summary><b>What does the robot do?</b></summary>
+
+It shows today's one thing when you open a tab and offers to start it, or to move on to the next task.
+</details>
+
+<details><summary><b>How does focus mode work?</b></summary>
+
+While your intent's timer runs, distracting sites show a calm pause screen. Go back to your intent, or open the site anyway for 5 minutes. You can turn it off in settings.
+</details>
+
+<details><summary><b>Where is my data stored?</b></summary>
+
+On your own computer, inside Chrome (`chrome.storage.local`). There are no servers, no analytics and no tracking. You can export a backup any time, and if you turn on sync in Settings, your to-dos, notes and projects follow you through your own Chrome sync. See the [privacy policy](https://saykatghosh.github.io/intent_tab/privacy.html).
 </details>
 
 ## 🧭 Highlights
@@ -332,9 +362,10 @@ js/
   onboarding.js        welcome tour
   theme-boot.js        sets theme and accent before first paint
 fonts/                 Inter + Instrument Serif (WOFF2, OFL), bundled, no web requests
-icons/                 16, 48, 128 px
+icons/                 16, 48, 128 px, rendered from docs/assets/robot.svg
 scripts/build.mjs      check / bump / zip
-store/                 Web Store listing, privacy policy, screenshots, promo tiles
+docs/                  the website (GitHub Pages): index.html, privacy.html, screenshots, video, download
+store/                 Web Store listing, privacy policy, promo tiles
 ```
 
 </details>
@@ -381,8 +412,8 @@ Everything you need is in [`store/`](store/):
 - **Listing text:** [`listing.md`](store/listing.md) has the descriptions (English and বাংলা), a justification for each permission, and the data-usage answers.
 - **Privacy policy:** publish [`privacy-policy.md`](store/privacy-policy.md) at a public URL first, after adding your contact email to it.
 - **Images:**
-  - screenshots (1280×800)
-  - promo tiles
+  - screenshots (1280×800) in [`docs/assets/shots/`](docs/assets/shots/)
+  - promo tiles in [`store/`](store/)
   - `icons/icon128.png` as the store icon
 
 Raise the version with `npm run bump:patch`, run `npm run build`, then upload `dist/intent-tab-v<version>.zip`.
@@ -393,5 +424,6 @@ Raise the version with `npm run bump:patch`, run `npm run build`, then upload `d
 - **Focus sounds:** made live with Web Audio. No audio files are shipped.
 
 <div align="center">
-<sub>Made with care for calmer browsing · <b>Intent Tab</b></sub>
+<img src="docs/assets/robot.svg" width="40" alt=""><br>
+<sub><b>Your robot is waiting.</b> · <a href="https://saykatghosh.github.io/intent_tab/">saykatghosh.github.io/intent_tab</a></sub>
 </div>

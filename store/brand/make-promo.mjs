@@ -6,7 +6,7 @@ const ROOT = process.argv[2];
 const OUT = process.argv[3];
 const rootUrl = 'file:///' + ROOT.replace(/\\/g, '/');
 
-const logo = fs.readFileSync(path.join(ROOT, 'store/brand/logo.svg'), 'utf8').replace(/<!--[\s\S]*?-->/g, '');
+const logo = fs.readFileSync(path.join(ROOT, 'docs/assets/robot.svg'), 'utf8').replace(/<!--[\s\S]*?-->/g, '');
 const robotSrc = fs.readFileSync(path.join(ROOT, 'js/robot.js'), 'utf8');
 const robot = robotSrc.match(/const ROBOT_SVG = `([\s\S]*?)`;/)[1].replace(/<!--[\s\S]*?-->/g, '');
 const sized = (svg, n) => svg.replace(/width="\d+" height="\d+">/, `width="${n}" height="${n}">`);
