@@ -322,6 +322,8 @@ npm run release      # bump patch + check + zip in one go
 The ZIP leaves out `store/`, `scripts/`, `.git`, `.github`, `package.json` and this README.
 **CI:** [`.github/workflows/build.yml`](.github/workflows/build.yml) runs the same check and build on every push and pull request, and attaches the ZIP to the run.
 
+**Releases are automatic.** Raise the version (`npm run bump:patch`), commit and push to `main`. [`.github/workflows/release.yml`](.github/workflows/release.yml) sees a version with no release yet, tags it, builds the ZIP and publishes a GitHub Release. To write the release notes yourself, add `.github/release-notes/v<version>.md` before pushing; otherwise GitHub lists the commits.
+
 <details>
 <summary><b>📁 Project structure</b></summary>
 

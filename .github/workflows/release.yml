@@ -1,0 +1,68 @@
+name: Release
+
+# Publishes a GitHub Release with the extension ZIP whenever main has a version
+# (manifest.json) that has no release yet. So: bump the version, push, done.
+# Release notes come from .github/release-notes/v<version>.md when that file
+# exists, otherwise GitHub writes them from the commit list.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - manifest.json
+      - .github/workflows/release.yml
+      - .github/release-notes/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Find the version
+        id: v
+        run: |
+          tag="v$(node -p "require('./manifest.json').version")"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          if gh release view "$tag" > /dev/null 2>&1; then
+            echo "Release $tag already exists, nothing to do."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+          notes=".github/release-notes/$tag.md"
+          if [ -f "$notes" ]; then cp "$notes" "$RUNNER_TEMP/notes.md"; fi
+
+      # If the tag was made earlier, build exactly that code; otherwise tag this commit.
+      - name: Check out the tagged code
+        if: steps.v.outputs.skip != 'true'
+        run: |
+          if git rev-parse -q --verify "refs/tags/${{ steps.v.outputs.tag }}" > /dev/null; then
+            git checkout -q "${{ steps.v.outputs.tag }}"
+          fi
+
+      - name: Check and build the extension
+        if: steps.v.outputs.skip != 'true'
+        run: node scripts/build.mjs
+
+      - name: Publish the release
+        if: steps.v.outputs.skip != 'true'
+        run: |
+          tag="${{ steps.v.outputs.tag }}"
+          if [ -f "$RUNNER_TEMP/notes.md" ]; then args=(--notes-file "$RUNNER_TEMP/notes.md"); else args=(--generate-notes); fi
+          if ! git rev-parse -q --verify "refs/tags/$tag" > /dev/null; then args+=(--target "$GITHUB_SHA"); fi
+          gh release create "$tag" dist/*.zip --title "Intent Tab ${tag#v}" "${args[@]}"
