@@ -128,7 +128,7 @@ Intent Tab replaces the new tab page. No account or login is needed, and the ext
 
 How to test the main features:
 1. Open a new tab. Type a reason in "Why did you open this tab?" and press Enter. The intent and a focus timer appear.
-2. Focus mode: Settings → Focus mode → add a site (e.g. youtube.com). The browser asks for permission for that one site. Turn focus mode on, then open the site: a calm reminder page appears instead, with an "Open anyway for 5 minutes" button.
+2. Focus mode: on the new tab, open Settings (the sliders icon, top right) → Focus → turn on "Focus mode". A box to add sites appears; add a site (e.g. youtube.com). The browser asks for permission for that one site. Then open the site: a calm reminder page appears instead, with an "Open anyway for 5 minutes" button.
 3. Toolbar panel: open any web page and click the robot icon in the toolbar. A floating panel with the timer, today's goal and to-dos appears on that page. It does not read the page.
 4. Press Ctrl+K on the new tab to open the command palette.
 
