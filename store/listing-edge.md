@@ -6,7 +6,7 @@ Copy each section into the matching field in Partner Center
 ---
 
 ## Package
-Upload `../dist/intent-tab-v1.3.0.zip` (manifest.json sits at the root of the ZIP).
+Upload `../dist/intent-tab-v1.3.1.zip` (manifest.json sits at the root of the ZIP).
 
 ---
 
@@ -85,7 +85,7 @@ PRIVATE, ON-DEVICE AI (where your browser provides a built-in model)
 
 MAKE IT YOURS
 • Light and dark themes, five accent colours, an animated ambient background or your own photo
-• Choose your search engine: Bing, Google, DuckDuckGo, Brave, YouTube, Perplexity or ChatGPT
+• Choose your favourite search engine from a list of popular ones
 • Rearrange the cards, turn modules on or off
 • English and বাংলা (Bangla)
 

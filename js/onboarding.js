@@ -2,6 +2,7 @@
 
 import { get, set } from './store.js';
 import { t } from './strings.js';
+import { IS_EDGE } from './browser.js';
 import { registerCommands } from './palette.js';
 
 const $ = (id) => document.getElementById(id);
@@ -52,8 +53,9 @@ export function openTour() {
 
 // Chrome adds its own bar under every extension's new tab ("Intent Tab ·
 // Customize Chrome"). Extensions can't hide it, so tell people once how to.
+// Edge has no such bar, so the tip is Chrome-only.
 function initFooterTip(ui) {
-  if (ui.footerTipDismissed) return;
+  if (ui.footerTipDismissed || IS_EDGE) return;
   const show = () => setTimeout(() => { $('footerTip').hidden = false; }, 1200);
   if ($('tour').open) $('tour').addEventListener('close', show, { once: true });
   else show();

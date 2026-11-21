@@ -1,5 +1,6 @@
 // Bookmarks bar at the top of the page (like Chrome's own bar) + Most visited grid.
 import { t } from './strings.js';
+import { bookmarksManagerUrl } from './browser.js';
 import { get, set } from './store.js';
 import { openIconDialog, paintIcon, iconFor, displayTitle, effectiveIcon, onIconsChanged, moveIcon, leadingEmoji } from './icons.js';
 import { showContextMenu, isContextMenuOpen } from './contextmenu.js';
@@ -116,7 +117,7 @@ async function openBookmarkMenu(e, node, el) {
     { label: t('ctxAddPage'), icon: 'page', run: () => { closeMenu(); openAddDialog(parent, 'bookmark'); } },
     { label: t('ctxAddFolder'), icon: 'folder', run: () => { closeMenu(); openAddDialog(parent, 'folder'); } },
     'sep',
-    { label: t('ctxManager'), icon: 'manager', run: () => chrome.tabs.create({ url: 'chrome://bookmarks/?id=' + (isFolder ? node.id : node.parentId) }) },
+    { label: t('ctxManager'), icon: 'manager', run: () => chrome.tabs.create({ url: bookmarksManagerUrl(isFolder ? node.id : node.parentId) }) },
   );
   showContextMenu(ctxPoint(e, el), items);
 }
@@ -407,7 +408,7 @@ export async function initBookmarks(toast) {
     const out = [
       { group: 'actions', icon: 'bookmark', label: t('bmAddTitle'), keywords: 'bookmark add new link', run: () => openAddDialog({ id: rootIds.bar, title: t('bookmarksRoot') }, 'bookmark') },
       { group: 'actions', icon: 'folder', label: t('bmAddFolderTitle'), keywords: 'bookmark folder new', run: () => openAddDialog({ id: rootIds.bar, title: t('bookmarksRoot') }, 'folder') },
-      { group: 'actions', icon: 'bookmark', label: t('ctxManager'), keywords: 'bookmarks manager organize', run: () => chrome.tabs.create({ url: 'chrome://bookmarks/' }) },
+      { group: 'actions', icon: 'bookmark', label: t('ctxManager'), keywords: 'bookmarks manager organize', run: () => chrome.tabs.create({ url: bookmarksManagerUrl() }) },
     ];
     if (q) {
       const found = (await chrome.bookmarks.search(q)).filter((b) => b.url && !b.url.startsWith('javascript:')).slice(0, 8);

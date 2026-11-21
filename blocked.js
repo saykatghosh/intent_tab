@@ -3,6 +3,7 @@
 
 import { get, set, getSettings } from './js/store.js';
 import { t, setLang, digits } from './js/strings.js';
+import { newTabUrl } from './js/browser.js';
 
 const $ = (id) => document.getElementById(id);
 const ALLOW_MS = 5 * 60 * 1000;
@@ -48,7 +49,7 @@ async function main() {
     if (history.length > 1) history.back();
     else {
       const tab = await chrome.tabs.getCurrent();
-      if (tab) chrome.tabs.update(tab.id, { url: 'chrome://newtab/' });
+      if (tab) chrome.tabs.update(tab.id, { url: newTabUrl() });
     }
   });
 

@@ -2,6 +2,8 @@
 // To add another language, copy the `en` block to a new key, translate the
 // values, add its locale to LOCALES and a button in the Settings panel.
 
+import { IS_EDGE } from './browser.js';
+
 export const STRINGS = {
   en: {
     pageTitle: 'New Tab',
@@ -1034,6 +1036,45 @@ export const STRINGS = {
   },
 };
 
+// In Microsoft Edge these replace the Chrome wording above (InPrivate,
+// favorites bar, Edge sync, edge:// pages, no Gemini Nano).
+const EDGE_STRINGS = {
+  en: {
+    ctxOpenIncognito: 'Open in InPrivate window',
+    ctxOpenAllIncognito: 'Open all in InPrivate window',
+    aiStatusReady: 'Ready. Runs on this device with the browser’s built-in AI model. Nothing leaves your computer.',
+    aiStatusDownloadable: 'The browser’s on-device AI model needs a one-time download (a few GB). Until then, simple built-in suggestions are used.',
+    focusPermNote: 'Edge asks once for permission for each site you add. Nothing else is read or blocked.',
+    syncToggle: 'Sync across your Edge browsers',
+    syncNote: 'Settings, to-dos, notes and projects, through Edge sync. History and the background photo stay on this computer.',
+    syncTooBig: 'Too much to sync (Edge allows about 100 KB). Export a backup instead.',
+    syncFailed: 'Sync didn’t work. Is Edge sync turned on?',
+    tour2Body: 'All your bookmarks live in the bar at the top — right-click for more, drag to reorder. Press Ctrl+Shift+B to hide Edge’s own favorites bar.',
+    updateHow: 'Download the ZIP, unzip it into the same folder as before (replace the old files), then click Reload on Intent Tab at edge://extensions. Your data stays.',
+    popSiteAllowTitle: 'Edge needs your OK once before this site can be blocked',
+    bmTip: 'All your bookmarks are now up here. To hide Edge’s own favorites bar, press',
+    iconBarSync: 'Also show this emoji in Edge’s favorites bar',
+    iconBarSyncHint: 'Adds it to the start of the bookmark’s name. Edge can’t show custom icons there.',
+  },
+  bn: {
+    ctxOpenIncognito: 'InPrivate উইন্ডোতে খুলুন',
+    ctxOpenAllIncognito: 'সব InPrivate উইন্ডোতে খুলুন',
+    aiStatusReady: 'প্রস্তুত। ব্রাউজারের নিজের AI মডেল দিয়ে এই কম্পিউটারেই চলে, কোনো ডেটা বাইরে যায় না। AI-এর লেখা আপাতত ইংরেজিতে আসবে।',
+    aiStatusDownloadable: 'ব্রাউজারের on-device AI মডেল একবার ডাউনলোড করতে হবে (কয়েক GB)। ততক্ষণ সাধারণ বিল্ট-ইন সাজেশন চলবে।',
+    focusPermNote: 'প্রতিটা সাইট যোগ করার সময় Edge একবার অনুমতি চাইবে। আর কিছু পড়া বা আটকানো হয় না।',
+    syncToggle: 'সব Edge-এ sync করুন',
+    syncNote: 'সেটিংস, টুডু, নোট আর প্রজেক্ট Edge sync দিয়ে যায়। ইতিহাস আর ব্যাকগ্রাউন্ড ছবি এই কম্পিউটারেই থাকে।',
+    syncTooBig: 'ডেটা sync-এর জন্য বেশি বড় (Edge প্রায় ১০০ KB পর্যন্ত দেয়)। ব্যাকআপ export করে রাখুন।',
+    syncFailed: 'sync হয়নি। Edge sync চালু আছে তো?',
+    tour2Body: 'আপনার সব বুকমার্ক উপরের বারে। রাইট ক্লিকে আরও অপশন, টেনে ক্রম বদলান। Edge-এর নিজের favorites বার লুকাতে Ctrl+Shift+B চাপুন।',
+    updateHow: 'ZIP নামিয়ে আগের ফোল্ডারেই আনজিপ করুন (পুরনো ফাইলগুলো বদলে দিন), তারপর edge://extensions-এ Intent Tab-এর Reload চাপুন। আপনার ডেটা থেকে যাবে।',
+    popSiteAllowTitle: 'এই সাইট বন্ধ করার আগে Edge একবার আপনার অনুমতি চায়',
+    bmTip: 'আপনার সব বুকমার্ক এখন এখানে। Edge-এর নিজের favorites বার লুকাতে চাপুন',
+    iconBarSync: 'Edge-এর favorites বারেও এই ইমোজি দেখাও',
+    iconBarSyncHint: 'বুকমার্কের নামের শুরুতে বসানো হবে। Edge সেখানে নিজের আইকন দেখাতে দেয় না।',
+  },
+};
+
 // Locale used for numbers and dates in each language.
 const LOCALES = { en: 'en', bn: 'bn-BD' };
 
@@ -1063,7 +1104,8 @@ export function digits(str) {
 
 export function t(key, vars = {}) {
   const table = STRINGS[LANG] || STRINGS.en;
-  let s = table[key] ?? STRINGS.en[key] ?? key;
+  const edge = IS_EDGE ? (EDGE_STRINGS[LANG] || EDGE_STRINGS.en)[key] : undefined;
+  let s = edge ?? table[key] ?? STRINGS.en[key] ?? key;
   for (const [k, v] of Object.entries(vars)) {
     s = s.replaceAll(`{${k}}`, typeof v === 'number' ? num(v) : v);
   }
