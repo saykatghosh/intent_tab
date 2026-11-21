@@ -56,14 +56,14 @@
   <article class="doc">
     <p class="eyebrow">Privacy</p>
     <h1>Privacy <span class="serif">Policy</span></h1>
-    <p class="muted">Last updated: November 20, 2026</p>
+    <p class="muted">Last updated: November 22, 2026</p>
 
-    <p>Intent Tab is a Chrome extension that replaces the new tab page. This policy explains what happens to your information when you use it.</p>
+    <p>Intent Tab is a browser extension for Google Chrome and Microsoft Edge that replaces the new tab page. This policy explains what happens to your information when you use it.</p>
 
     <p class="short"><b>The short version:</b> Intent Tab does not collect, send, sell or share any of your data. It has no servers, no accounts, no analytics and no tracking. Everything stays in your browser.</p>
 
     <h2>What is stored, and where</h2>
-    <p>Intent Tab saves the following <b>only on your computer</b>, in Chrome’s extension storage (<code>chrome.storage.local</code>):</p>
+    <p>Intent Tab saves the following <b>only on your computer</b>, in your browser’s extension storage (<code>chrome.storage.local</code>):</p>
     <ul>
       <li>your settings (theme, language, timer length, search engine, and so on)</li>
       <li>the intents you type, your daily goal, to-dos, notes and projects</li>
@@ -72,25 +72,25 @@
       <li>cached AI suggestions and summaries</li>
     </ul>
     <p>You can delete all of it at any time by removing the extension. You can also export it to a file, or import it from one, in <b>Settings → Your data</b>.</p>
-    <p><b>Optional sync:</b> if you turn on “Sync across your Chrome browsers”, your settings, to-dos, notes and projects are copied to Chrome sync (<code>chrome.storage.sync</code>), which Google handles under your Google account and Chrome’s own privacy terms. Intent Tab itself still sends nothing anywhere. History and your background photo are never synced. Turning sync off stops all copying.</p>
+    <p><b>Optional sync:</b> if you turn on sync in <b>Settings</b>, your settings, to-dos, notes and projects are copied to your browser’s own sync (<code>chrome.storage.sync</code>). In Chrome, Google handles this under your Google account and Google’s privacy terms. In Microsoft Edge, Microsoft handles it under your Microsoft account and Microsoft’s privacy statement. Intent Tab itself still sends nothing anywhere. History and your background photo are never synced. Turning sync off stops all copying.</p>
 
     <h2>Bookmarks, most visited and tabs</h2>
     <p>Intent Tab reads your bookmarks and most-visited sites <b>only to display them on the new tab page</b>, and changes bookmarks <b>only when you ask it to</b> (add, edit, rename, move, delete). It counts open tabs to show the number; it does not read tab addresses or contents.</p>
 
     <h2>Toolbar panel</h2>
-    <p>When you click the Intent Tab icon in the toolbar, Intent Tab shows its panel over the page you are on (using Chrome’s <code>activeTab</code> permission, only for that click). The panel is part of the extension; Intent Tab does not read, store or send anything from the page.</p>
+    <p>When you click the Intent Tab icon in the toolbar, Intent Tab shows its panel over the page you are on (using the browser’s <code>activeTab</code> permission, only for that click). The panel is part of the extension; Intent Tab does not read, store or send anything from the page.</p>
 
     <h2>Focus mode</h2>
-    <p>If you turn on focus mode and add sites (for example <code>youtube.com</code>), Chrome asks you to allow Intent Tab access to <b>those sites only</b>. While focus mode is on, visits to those sites are redirected to a calm reminder page inside the extension. Intent Tab does not read, store or send the pages you visit.</p>
+    <p>If you turn on focus mode and add sites (for example <code>youtube.com</code>), your browser asks you to allow Intent Tab access to <b>those sites only</b>. While focus mode is on, visits to those sites are redirected to a calm reminder page inside the extension. Intent Tab does not read, store or send the pages you visit.</p>
 
     <h2>On-device AI</h2>
-    <p>AI features use <b>Chrome’s built-in model (Gemini Nano)</b>, which runs on your computer. Prompts and answers are processed locally by Chrome and are not sent to Intent Tab or to any other server by this extension. If the model is not available, simple built-in rules are used instead. You can turn AI features off in Settings.</p>
+    <p>AI features use <b>the browser’s own built-in, on-device model</b> where the browser provides one (in Chrome, this is Gemini Nano). It runs on your computer. Prompts and answers are processed locally by the browser and are not sent to Intent Tab or to any other server by this extension. If your browser or device has no such model, simple built-in rules are used instead. You can turn AI features off in Settings.</p>
 
     <h2>Search</h2>
     <p>The search bar sends your query to the search engine you choose (Google by default), the same way typing into that site would. Intent Tab does not see or keep these searches.</p>
 
     <h2>Update check (ZIP installs only)</h2>
-    <p>If you installed Intent Tab from the ZIP file rather than the Chrome Web Store, it asks GitHub (<code>api.github.com</code>) once a day for the latest version number, so it can tell you when an update is out. Nothing about you or your data is sent; GitHub sees an ordinary web request under its own privacy statement. Copies from the Chrome Web Store never do this, because Chrome updates them.</p>
+    <p>If you installed Intent Tab from the ZIP file rather than from the Chrome Web Store or Microsoft Edge Add-ons, it asks GitHub (<code>api.github.com</code>) once a day for the latest version number, so it can tell you when an update is out. Nothing about you or your data is sent; GitHub sees an ordinary web request under its own privacy statement. Copies installed from either store never do this, because the browser updates them.</p>
 
     <h2>This website</h2>
     <p>This website is hosted on GitHub Pages. It uses no cookies, analytics or trackers of its own. GitHub may keep standard server logs; see GitHub’s privacy statement.</p>
@@ -110,7 +110,7 @@
   <div class="foot">
     <span style="display:flex;flex-direction:column;line-height:1.35"><span style="font-weight:800;font-size:17px;color:var(--fg)">Intent Tab</span><span style="font-size:13px">Developed by <a href="https://github.com/saykatghosh" style="color:var(--accent);font-weight:700;text-decoration:none">Saykat Ghosh</a></span></span>
     <nav aria-label="Footer"><a href="./">Home</a><a href="https://github.com/saykatghosh/intent_tab">GitHub</a></nav>
-    <span>© 2026 Intent Tab · Chrome is a trademark of Google LLC.</span>
+    <span>© 2026 Intent Tab · Chrome is a trademark of Google LLC. Microsoft Edge is a trademark of Microsoft Corporation.</span>
   </div>
 </footer>
 </body>
